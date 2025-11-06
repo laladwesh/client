@@ -155,7 +155,7 @@ const Home = () => {
       tl.fromTo(
         leftImage,
         { x: 0, opacity: 1 },
-        { x: -550, opacity: 1, duration: 1, ease: 'power2.out' },
+        { x: -400, opacity: 1, duration: 1, ease: 'power2.out' },
         0
       );
 
@@ -163,7 +163,7 @@ const Home = () => {
       tl.fromTo(
         rightImage,
         { x: 0, opacity: 1 },
-        { x: 550, opacity: 1, duration: 1, ease: 'power2.out' },
+        { x: 400, opacity: 1, duration: 1, ease: 'power2.out' },
         0
       );
 
@@ -217,13 +217,13 @@ const Home = () => {
       </section>
 
       {/* Section 02 - Mission Statement */}
-      <div ref={contentRef} className="bg-white py-24 overflow-hidden">
+      <div ref={contentRef} className="bg-white py-12 overflow-hidden">
         <div className="w-screen">
           <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-semibold leading-[1.1] text-black px-4 md:px-4 lg:px-4 pr-0">
             We make everyday clothes for people who like dres-<br />-sing up everyday. We free culture of the shackles of nostalgia, and let it take its place in today's everyday - in your everyday.
           </h1>
           
-          <div className="mt-32 px-4 flex justify-start space-x-80 md:px-8 lg:px-12">
+          <div className="mt-16 px-4 flex justify-start space-x-80 md:px-8 lg:px-12">
             <h3 className="text-xs font-bold mb-4 text-black uppercase tracking-wider">Vision</h3>
             <p className="text-sm leading-relaxed max-w-xl text-gray-900">
               Redefining minimalism through material authenticity and design order. Forma moves beyond simple forms to create considered designs that shape spaces.
@@ -235,25 +235,25 @@ const Home = () => {
       {/* Horizontal Scroll Section - Material Driven */}
       <div ref={scrollSection1} className="min-h-screen bg-white overflow-hidden relative">
         <div className="horizontal-scroll-container h-screen flex items-center justify-center relative px-0">
-          {/* Fixed Text on sides */}
-          <div className="fixed left-4 top-1/2 -translate-y-1/2 text-sm font-medium z-10">
+          {/* Fixed Text on sides - BEHIND images */}
+          <div className="fixed left-8 top-1/2 -translate-y-1/2 text-sm font-medium z-0">
             Material
           </div>
-          <div className="fixed right-4 top-1/2 -translate-y-1/2 text-sm font-medium z-10">
+          <div className="fixed right-8 top-1/2 -translate-y-1/2 text-sm font-medium z-0">
             Driven
           </div>
 
-          {/* Image Container - All 3 images stacked */}
+          {/* Image Container - All 3 images stacked, will spread to full width */}
           <div className="images-wrapper relative w-full h-full flex items-center justify-center">
             
-            {/* Left Image - Slides in from left (behind center) */}
-            <div className="left-image absolute left-1/2 -translate-x-1/2 w-[450px]" style={{ zIndex: 10 }}>
+            {/* Left Image - Slides to left edge, fills 1/3 width */}
+            <div className="left-image absolute left-1/2 -translate-x-1/2 w-[33.33vw]" style={{ zIndex: 10 }}>
               <img
                 src="/images/Experimental-Marketing_1Experimental Marketing.webp"
                 alt="Arco Shelf Metal"
-                className="w-full h-auto"
+                className="w-full h-auto object-cover"
               />
-              <div className="product-info mt-6 opacity-0">
+              <div className="product-info mt-6 opacity-0 px-6">
                 <h3 className="text-base font-medium mb-3">Arco Shelf Metal</h3>
                 <div className="flex items-center gap-4">
                   <button className="bg-black text-white px-6 py-2.5 text-sm font-medium">Shop now</button>
@@ -262,14 +262,14 @@ const Home = () => {
               </div>
             </div>
 
-            {/* Center Image - Always visible, stays in center */}
-            <div className="center-image absolute left-1/2 -translate-x-1/2 w-[450px]" style={{ zIndex: 20 }}>
+            {/* Center Image - Stays in center, fills 1/3 width */}
+            <div className="center-image absolute left-1/2 -translate-x-1/2 w-[33.33vw]" style={{ zIndex: 20 }}>
               <img
                 src="/images/Group-262_1Group 262.webp"
                 alt="Arco Sofa Metal"
-                className="w-full h-auto"
+                className="w-full h-auto object-cover"
               />
-              <div className="product-info mt-6 opacity-0">
+              <div className="product-info mt-6 opacity-0 px-6">
                 <h3 className="text-base font-medium mb-3">Arco Sofa Metal</h3>
                 <div className="flex items-center gap-4">
                   <button className="bg-black text-white px-6 py-2.5 text-sm font-medium">Shop now</button>
@@ -278,14 +278,14 @@ const Home = () => {
               </div>
             </div>
 
-            {/* Right Image - Slides in from right (behind center) */}
-            <div className="right-image absolute left-1/2 -translate-x-1/2 w-[450px]" style={{ zIndex: 10 }}>
+            {/* Right Image - Slides to right edge, fills 1/3 width */}
+            <div className="right-image absolute left-1/2 -translate-x-1/2 w-[33.33vw]" style={{ zIndex: 10 }}>
               <img
                 src="/images/Group-1009002131-1_1Group 1009002131 (1).webp"
                 alt="Arco Stool Metal"
-                className="w-full h-auto"
+                className="w-full h-auto object-cover"
               />
-              <div className="product-info mt-6 opacity-0">
+              <div className="product-info mt-6 opacity-0 px-6">
                 <h3 className="text-base font-medium mb-3">Arco Stool Metal</h3>
                 <div className="flex items-center gap-4">
                   <button className="bg-black text-white px-6 py-2.5 text-sm font-medium">Shop now</button>
