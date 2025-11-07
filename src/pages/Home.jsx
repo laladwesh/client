@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
-import { Link } from 'react-router-dom';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import Demo from '../components/Demo';
+import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
+import { Link } from "react-router-dom";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Demo from "../components/Demo";
 gsap.registerPlugin(ScrollTrigger);
 
 const Home = () => {
-  const [activeTab, setActiveTab] = useState('Tab 2');
-  const [activeView, setActiveView] = useState('image');
+  const [activeTab, setActiveTab] = useState("Tab 2");
+  const [activeView, setActiveView] = useState("image");
   const [scrollEnabled, setScrollEnabled] = useState(false);
   const logoRef = useRef(null);
   const heroRef = useRef(null);
@@ -16,9 +16,9 @@ const Home = () => {
   const scrollSection2 = useRef(null);
   const scrollSection3 = useRef(null);
 
-   useLayoutEffect(() => {
-    if ('scrollRestoration' in window.history) {
-      window.history.scrollRestoration = 'manual';
+  useLayoutEffect(() => {
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
     }
     // reset scroll for all browsers
     window.scrollTo(0, 0);
@@ -27,8 +27,8 @@ const Home = () => {
   }, []);
   useEffect(() => {
     // Disable scroll initially
-    document.body.style.overflow = 'hidden';
-    document.body.style.height = '100vh';
+    document.body.style.overflow = "hidden";
+    document.body.style.height = "100vh";
 
     let scrollAmount = 0;
     const maxScroll = 150;
@@ -36,8 +36,8 @@ const Home = () => {
     let isComplete = false;
 
     const logo = logoRef.current;
-    const navbar = document.querySelector('.navbar-logo-wrapper-home');
-    const navbarImg = navbar?.querySelector('img');
+    const navbar = document.querySelector(".navbar-logo-wrapper-home");
+    const navbarImg = navbar?.querySelector("img");
 
     if (!logo || !navbar || !navbarImg) return;
 
@@ -46,7 +46,7 @@ const Home = () => {
       const rect = navbarImg.getBoundingClientRect();
       return {
         x: rect.left + rect.width / 2,
-        y: rect.top + rect.height / 2
+        y: rect.top + rect.height / 2,
       };
     };
 
@@ -55,13 +55,13 @@ const Home = () => {
 
     // Set initial position
     gsap.set(logo, {
-      position: 'fixed',
+      position: "fixed",
       left: startX,
       top: startY,
       xPercent: -50,
       yPercent: -50,
       scale: 1,
-      zIndex: 10000
+      zIndex: 10000,
     });
 
     const handleWheel = (e) => {
@@ -88,50 +88,50 @@ const Home = () => {
 
       // Use GSAP for smooth animation
       animationFrame = requestAnimationFrame(() => {
-        const targetScale = 1 - (0.39 * progress);
+        const targetScale = 1 - 0.39 * progress;
         const currentX = startX + (targetX - startX) * progress;
         const currentY = startY + (targetY - startY) * progress;
 
         gsap.to(logo, {
           duration: 0.3,
-          ease: 'power2.out',
+          ease: "power2.out",
           left: currentX,
           top: currentY,
           scale: targetScale,
           xPercent: -50,
-          yPercent: -50
+          yPercent: -50,
         });
       });
 
       // Hide navbar logo during animation
-      navbar.style.opacity = '0';
+      navbar.style.opacity = "0";
 
       // Check for completion
       if (progress >= 0.99 && !isComplete) {
         isComplete = true;
-        
+
         setTimeout(() => {
           // Hide center logo, show navbar logo
-          gsap.set(logo, { visibility: 'hidden' });
-          navbar.style.opacity = '1';
-          
-          document.body.style.overflow = 'auto';
-          document.body.style.height = 'auto';
-          window.removeEventListener('wheel', handleWheel);
+          gsap.set(logo, { visibility: "hidden" });
+          navbar.style.opacity = "1";
+
+          document.body.style.overflow = "auto";
+          document.body.style.height = "auto";
+          window.removeEventListener("wheel", handleWheel);
           setScrollEnabled(true);
         }, 300);
       }
     };
 
-    window.addEventListener('wheel', handleWheel, { passive: false });
+    window.addEventListener("wheel", handleWheel, { passive: false });
 
     return () => {
-      window.removeEventListener('wheel', handleWheel);
+      window.removeEventListener("wheel", handleWheel);
       if (animationFrame) {
         cancelAnimationFrame(animationFrame);
       }
-      document.body.style.overflow = 'auto';
-      document.body.style.height = 'auto';
+      document.body.style.overflow = "auto";
+      document.body.style.height = "auto";
     };
   }, []);
 
@@ -144,16 +144,17 @@ const Home = () => {
     if (scrollSection1.current) {
       // --- FIX 1: GET NAVBAR HEIGHT ---
       // Get the navbar element (using the same selector as your intro animation)
-      const navbar = document.querySelector('.navbar-logo-wrapper-home'); 
+      const navbar = document.querySelector(".navbar-logo-wrapper-home");
       // Get its height, provide a fallback (e.g., 80px) if it's not found
-      const navbarHeight = navbar ? navbar.offsetHeight : 80; 
+      const navbarHeight = navbar ? navbar.offsetHeight : 80;
       // --- END OF FIX 1 ---
 
-      const leftImage = scrollSection1.current.querySelector('.left-image');
-      const centerImage = scrollSection1.current.querySelector('.center-image');
-      const rightImage = scrollSection1.current.querySelector('.right-image');
-      const productInfos = scrollSection1.current.querySelectorAll('.product-info');
-      
+      const leftImage = scrollSection1.current.querySelector(".left-image");
+      const centerImage = scrollSection1.current.querySelector(".center-image");
+      const rightImage = scrollSection1.current.querySelector(".right-image");
+      const productInfos =
+        scrollSection1.current.querySelectorAll(".product-info");
+
       // Create timeline
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -162,7 +163,7 @@ const Home = () => {
           // Start when the top of the section hits the BOTTOM of the navbar
           start: `top ${navbarHeight}px`,
           // --- END OF FIX 1 ---
-          end: '+=2000', // Shorter scroll for quicker animation
+          end: "+=2000", // Shorter scroll for quicker animation
           scrub: 1,
           pin: true,
           anticipatePin: 1,
@@ -175,7 +176,7 @@ const Home = () => {
         leftImage,
         { x: 0, opacity: 1 },
         // Use '-33.33vw' to move it left by one-third of the viewport width
-        { x: '-33.33vw', opacity: 1, duration: 1, ease: 'power2.out' },
+        { x: "-33.33vw", opacity: 1, duration: 1, ease: "power2.out" },
         0
       );
 
@@ -184,7 +185,7 @@ const Home = () => {
         rightImage,
         { x: 0, opacity: 1 },
         // Use '33.33vw' to move it right by one-third of the viewport width
-        { x: '33.33vw', opacity: 1, duration: 1, ease: 'power2.out' },
+        { x: "33.33vw", opacity: 1, duration: 1, ease: "power2.out" },
         0
       );
       // --- END OF FIX 2 ---
@@ -200,7 +201,7 @@ const Home = () => {
     }
 
     return () => {
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
     };
   }, [scrollEnabled]);
 
@@ -210,15 +211,20 @@ const Home = () => {
       <div
         ref={logoRef}
         style={{
-          position: 'fixed',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
+          position: "fixed",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
           zIndex: 1000,
-          transition: 'opacity 0.3s',
+          transition: "opacity 0.3s",
         }}
       >
-        <img width="200" loading="lazy" alt="Nufab Logo" src="/images/Logo--White.svg" />
+        <img
+          width="200"
+          loading="lazy"
+          alt="Nufab Logo"
+          src="/images/Logo--White.svg"
+        />
       </div>
 
       {/* Hero Section */}
@@ -230,7 +236,10 @@ const Home = () => {
               loop
               muted
               playsInline
-              style={{ backgroundImage: 'url("/videos/5821504-hd_1920_1080_25fps-poster-00001.jpg")' }}
+              style={{
+                backgroundImage:
+                  'url("/videos/5821504-hd_1920_1080_25fps-poster-00001.jpg")',
+              }}
             >
               <source src="/videos/5821504-hd_1920_1080_25fps-transcode.mp4" />
               <source src="/videos/5821504-hd_1920_1080_25fps-transcode.webm" />
@@ -244,20 +253,30 @@ const Home = () => {
       <div ref={contentRef} className="bg-white py-12 overflow-hidden">
         <div className="w-screen">
           <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-semibold leading-[1.1] text-black px-4 md:px-4 lg:px-4 pr-0">
-            We make everyday clothes for people who like dres-<br />-sing up everyday. We free culture of the shackles of nostalgia, and let it take its place in today's everyday - in your everyday.
+            We make everyday clothes for people who like dres-
+            <br />
+            -sing up everyday. We free culture of the shackles of nostalgia, and
+            let it take its place in today's everyday - in your everyday.
           </h1>
-          
+
           <div className="mt-16 px-4 flex justify-start space-x-80 md:px-8 lg:px-12">
-            <h3 className="text-xs font-bold mb-4 text-black uppercase tracking-wider">Vision</h3>
+            <h3 className="text-xs font-bold mb-4 text-black uppercase tracking-wider">
+              Vision
+            </h3>
             <p className="text-sm leading-relaxed max-w-xl text-gray-900">
-              Redefining minimalism through material authenticity and design order. Forma moves beyond simple forms to create considered designs that shape spaces.
+              Redefining minimalism through material authenticity and design
+              order. Forma moves beyond simple forms to create considered
+              designs that shape spaces.
             </p>
           </div>
         </div>
       </div>
 
       {/* Horizontal Scroll Section - Material Driven */}
-      <div ref={scrollSection1} className="min-h-screen bg-white overflow-hidden relative">
+      <div
+        ref={scrollSection1}
+        className="min-h-screen bg-white overflow-hidden relative"
+      >
         <div className="horizontal-scroll-container h-screen flex items-center justify-center relative px-0">
           {/* Fixed Text on sides - BEHIND images */}
           <div className="fixed left-8 top-1/2 -translate-y-1/2 text-sm font-medium z-0">
@@ -269,55 +288,116 @@ const Home = () => {
 
           {/* Image Container - All 3 images stacked, will spread to full width */}
           <div className="images-wrapper relative w-full h-full flex items-center justify-center">
-            
             {/* Left Image - Slides to left edge, fills 1/3 width */}
-            <div className="left-image absolute left-1/2 -translate-x-1/2 w-[33.33vw]" style={{ zIndex: 10 }}>
+            <div
+              className="left-image absolute left-1/2 -translate-x-1/2 w-[33.33vw]"
+              style={{ zIndex: 10 }}
+            >
               <img
                 src="/images/Experimental-Marketing_1Experimental Marketing.webp"
                 alt="Arco Shelf Metal"
-                className="w-full h-auto object-cover"
+                className="w-full h-[75vh] object-cover"
               />
               <div className="product-info mt-6 opacity-0 px-6">
                 <h3 className="text-base font-medium mb-3">Arco Shelf Metal</h3>
-                <div className="flex items-center gap-4">
-                  <button className="bg-black text-white px-6 py-2.5 text-sm font-medium">Shop now</button>
-                  <span className="text-sm">$ 4,200.00 USD</span>
-                </div>
+                {/* --- NEW ANIMATED BUTTON --- */}
+                <button
+                  type="button"
+                  className="group mt-2 w-full bg-black text-white px-5 py-4 flex items-center justify-between text-[15px] font-semibold tracking-wide"
+                >
+                  <div className="relative h-5 overflow-hidden">
+                    <div className="relative flex flex-col transition-transform duration-300 ease-in-out group-hover:-translate-y-1/2">
+                      <span className="flex h-5 items-center">Shop now</span>
+                      <span className="flex h-5 items-center">Shop now</span>
+                    </div>
+                  </div>
+                  <div className="relative h-5 overflow-hidden">
+                    <div className="relative flex flex-col transition-transform duration-300 ease-in-out group-hover:-translate-y-1/2">
+                      <span className="flex h-5 items-center text-white/90">
+                        $ 4,200.00 USD
+                      </span>
+                      <span className="flex h-5 items-center text-white/90">
+                        $ 4,200.00 USD
+                      </span>
+                    </div>
+                  </div>
+                </button>
               </div>
             </div>
 
             {/* Center Image - Stays in center, fills 1/3 width */}
-            <div className="center-image absolute left-1/2 -translate-x-1/2 w-[33.33vw]" style={{ zIndex: 20 }}>
+            <div
+              className="center-image absolute left-1/2 -translate-x-1/2 w-[33.33vw]"
+              style={{ zIndex: 20 }}
+            >
               <img
                 src="/images/Group-262_1Group 262.webp"
                 alt="Arco Sofa Metal"
-                className="w-full h-auto object-cover"
+                className="w-full h-[75vh] object-cover"
               />
               <div className="product-info mt-6 opacity-0 px-6">
                 <h3 className="text-base font-medium mb-3">Arco Sofa Metal</h3>
-                <div className="flex items-center gap-4">
-                  <button className="bg-black text-white px-6 py-2.5 text-sm font-medium">Shop now</button>
-                  <span className="text-sm">$ 7,500.00 USD</span>
-                </div>
+                {/* --- NEW ANIMATED BUTTON --- */}
+                <button
+                  type="button"
+                  className="group mt-2 w-full bg-black text-white px-5 py-4 flex items-center justify-between text-[15px] font-semibold tracking-wide"
+                >
+                  <div className="relative h-5 overflow-hidden">
+                    <div className="relative flex flex-col transition-transform duration-300 ease-in-out group-hover:-translate-y-1/2">
+                      <span className="flex h-5 items-center">Shop now</span>
+                      <span className="flex h-5 items-center">Shop now</span>
+                    </div>
+                  </div>
+                  <div className="relative h-5 overflow-hidden">
+                    <div className="relative flex flex-col transition-transform duration-300 ease-in-out group-hover:-translate-y-1/2">
+                      <span className="flex h-5 items-center text-white/90">
+                        $ 7,500.00 USD
+                      </span>
+                      <span className="flex h-5 items-center text-white/90">
+                        $ 7,500.00 USD
+                      </span>
+                    </div>
+                  </div>
+                </button>
               </div>
             </div>
 
             {/* Right Image - Slides to right edge, fills 1/3 width */}
-            <div className="right-image absolute left-1/2 -translate-x-1/2 w-[33.33vw]" style={{ zIndex: 10 }}>
+            <div
+              className="right-image absolute left-1/2 -translate-x-1/2 w-[33.33vw]"
+              style={{ zIndex: 10 }}
+            >
               <img
                 src="/images/Group-1009002131-1_1Group 1009002131 (1).webp"
                 alt="Arco Stool Metal"
-                className="w-full h-auto object-cover"
+                className="w-full h-[75vh] object-cover"
               />
               <div className="product-info mt-6 opacity-0 px-6">
                 <h3 className="text-base font-medium mb-3">Arco Stool Metal</h3>
-                <div className="flex items-center gap-4">
-                  <button className="bg-black text-white px-6 py-2.5 text-sm font-medium">Shop now</button>
-                  <span className="text-sm">$ 1,500.00 USD</span>
-                </div>
+                {/* --- NEW ANIMATED BUTTON --- */}
+                <button
+                  type="button"
+                  className="group mt-2 w-full bg-black text-white px-5 py-4 flex items-center justify-between text-[15px] font-semibold tracking-wide"
+                >
+                  <div className="relative h-5 overflow-hidden">
+                    <div className="relative flex flex-col transition-transform duration-300 ease-in-out group-hover:-translate-y-1/2">
+                      <span className="flex h-5 items-center">Shop now</span>
+                      <span className="flex h-5 items-center">Shop now</span>
+                    </div>
+                  </div>
+                  <div className="relative h-5 overflow-hidden">
+                    <div className="relative flex flex-col transition-transform duration-300 ease-in-out group-hover:-translate-y-1/2">
+                      <span className="flex h-5 items-center text-white/90">
+                        $ 1,500.00 USD
+                      </span>
+                      <span className="flex h-5 items-center text-white/90">
+                        $ 1,500.00 USD
+                      </span>
+                    </div>
+                  </div>
+                </button>
               </div>
             </div>
-
           </div>
         </div>
       </div>
@@ -378,7 +458,7 @@ const Home = () => {
             Collection
           </h1>
         </div>
-        <Demo/>
+        <Demo />
       </div>
 
       {/* Section 05 - Product List */}
@@ -396,21 +476,25 @@ const Home = () => {
           <div className="product-view-home w-tabs">
             <div className="product-view-tab-menu-home w-tab-menu">
               <button
-                onClick={() => setActiveView('image')}
-                className={`product-view-tab-link-home w-inline-block w-tab-link ${activeView === 'image' ? 'w--current' : ''}`}
+                onClick={() => setActiveView("image")}
+                className={`product-view-tab-link-home w-inline-block w-tab-link ${
+                  activeView === "image" ? "w--current" : ""
+                }`}
               >
                 <div className="body-regular">Image</div>
               </button>
               <button
-                onClick={() => setActiveView('list')}
-                className={`product-view-tab-link-home w-inline-block w-tab-link ${activeView === 'list' ? 'w--current' : ''}`}
+                onClick={() => setActiveView("list")}
+                className={`product-view-tab-link-home w-inline-block w-tab-link ${
+                  activeView === "list" ? "w--current" : ""
+                }`}
               >
                 <div className="body-regular">List</div>
               </button>
             </div>
 
             <div className="w-tab-content">
-              {activeView === 'image' && (
+              {activeView === "image" && (
                 <div className="w-tab-pane w--tab-active">
                   <div className="product-cms-image-home w-dyn-list">
                     <div className="w-dyn-empty">
@@ -419,7 +503,7 @@ const Home = () => {
                   </div>
                 </div>
               )}
-              {activeView === 'list' && (
+              {activeView === "list" && (
                 <div className="w-tab-pane w--tab-active">
                   <div className="product-cms-list w-dyn-list">
                     <div className="w-dyn-empty">
@@ -453,12 +537,17 @@ const Home = () => {
                 className="rt-full-width-3 rt-full-height"
               />
               <div className="rt-portfolio-card-contain rt-active">
-                <div className="rt-component-heading-five rt-text-white">To Preserve and Evolve?</div>
+                <div className="rt-component-heading-five rt-text-white">
+                  To Preserve and Evolve?
+                </div>
                 <div className="paragraph-last-section">
-                  Nufab is a movement to preserve culture by allowing it to evolve. We see local materials, motifs,
-                  and skills as invaluable design resources. To honour them means keeping them alive in practice,
-                  and letting them take shape with time. Culture does not belong in a museum to be occasionally
-                  recalled with nostalgia. It belongs where it was born: with the people, in the everyday.
+                  Nufab is a movement to preserve culture by allowing it to
+                  evolve. We see local materials, motifs, and skills as
+                  invaluable design resources. To honour them means keeping them
+                  alive in practice, and letting them take shape with time.
+                  Culture does not belong in a museum to be occasionally
+                  recalled with nostalgia. It belongs where it was born: with
+                  the people, in the everyday.
                 </div>
                 <Link to="/about" className="button-about w-button">
                   About Us
@@ -496,7 +585,7 @@ const Home = () => {
             </div>
           </div>
         </div>
-      </div> 
+      </div>
     </div>
   );
 };
