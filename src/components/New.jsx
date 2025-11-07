@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 // --- Product Data using your provided images ---
 const products = [
@@ -6,48 +7,56 @@ const products = [
     id: 1,
     name: 'Vera Shelf Red',
     price: 3500.00,
+    category: 'Roz Roz',
     imageUrl: 'https://cdn.prod.website-files.com/68558d427ad3bce190a51b77/68558d427ad3bce190a51b6e_8-2.webp',
   },
   {
     id: 2,
     name: 'Vera Stool Green',
     price: 1200.00,
+    category: 'Roz Roz',
     imageUrl: 'https://cdn.prod.website-files.com/68558d427ad3bce190a51b77/68558d427ad3bce190a51b6f_7-2.webp',
   },
   {
     id: 3,
     name: 'Arca Sofa Metal',
     price: 7800.00,
+    category: 'Kuch Kuch',
     imageUrl: 'https://cdn.prod.website-files.com/68558d427ad3bce190a51b77/68558d427ad3bce190a51b70_6-2.webp',
   },
   {
     id: 4,
     name: 'Luno Stool Blue',
     price: 1300.00,
+    category: 'Kuch Kuch',
     imageUrl: 'https://cdn.prod.website-files.com/67a7721e638cc64a55110750/67ad9b7fdaa7aa4b594f62f4_5.webp',
   },
   {
     id: 5,
     name: 'Luno Shelf Red',
     price: 3600.00,
+    category: 'Roz Roz',
     imageUrl: 'https://cdn.prod.website-files.com/67a7721e638cc64a55110750/67ad9b4f3bd234953e76f057_4.webp',
   },
   {
     id: 6,
     name: 'Luno Sofa Yellow',
     price: 9200.00,
+    category: 'Kuch Kuch',
     imageUrl: 'https://cdn.prod.website-files.com/67a7721e638cc64a55110750/67ad9afb0cd024e19c7378f8_3.webp',
   },
   {
     id: 7,
     name: 'Kux Stool White',
     price: 1100.00,
+    category: 'Roz Roz',
     imageUrl: 'https://cdn.prod.website-files.com/67a7721e638cc64a55110750/67ad96dcb08629ee808e5994_2.webp',
   },
   {
     id: 8,
     name: 'Rixo Shelf Black',
     price: 4100.00,
+    category: 'Kuch Kuch',
     imageUrl: 'https://cdn.prod.website-files.com/67a7721e638cc64a55110750/67ad96ab106d8fb7eb7c1eab_1.webp',
   },
 ];
@@ -78,9 +87,15 @@ const ArrowRight = () => (
 const ProductDisplay = () => {
   const [view, setView] = useState('grid'); // 'grid' or 'list'
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [selectedCategory, setSelectedCategory] = useState('All'); // 'All', 'Roz Roz', 'Kuch Kuch'
+
+  // Filter products based on selected category
+  const filteredProducts = selectedCategory === 'All' 
+    ? products 
+    : products.filter(product => product.category === selectedCategory);
 
   const itemsPerView = 3;
-  const maxIndex = Math.max(0, products.length - itemsPerView);
+  const maxIndex = Math.max(0, filteredProducts.length - itemsPerView);
 
   const prevSlide = () => {
     setCurrentIndex((prev) => Math.max(prev - 1, 0));
@@ -90,6 +105,12 @@ const ProductDisplay = () => {
     setCurrentIndex((prev) => Math.min(prev + 1, maxIndex));
   };
 
+  // Reset current index when category changes
+  const handleCategoryChange = (category) => {
+    setSelectedCategory(category);
+    setCurrentIndex(0);
+  };
+
   return (
     <div className="w-full bg-white text-black font-sans min-h-screen flex flex-col">
       
@@ -97,14 +118,42 @@ const ProductDisplay = () => {
       <div className="flex justify-between items-center py-4 px-6 border-b border-gray-200 sticky top-0 bg-white z-10">
         {/* Left Side: Filters */}
         <div className="flex items-center space-x-2">
-          <span className="text-sm text-gray-500">Sort By +</span>
-          <button className="px-3 py-1 text-sm bg-gray-100 rounded-full hover:bg-gray-200 transition-colors">All</button>
-          <button className="px-3 py-1 text-sm bg-gray-100 rounded-full hover:bg-gray-200 transition-colors">Roz Roz</button>
-          <button className="px-3 py-1 text-sm bg-gray-100 rounded-full hover:bg-gray-200 transition-colors">Kuch Kuch</button>
+          <button className="text-sm text-gray-500 hover:text-black transition-colors">Filter</button>
+          <button 
+            onClick={() => handleCategoryChange('All')}
+            className={`px-3 py-1 text-sm rounded-full transition-colors ${
+              selectedCategory === 'All' 
+                ? 'bg-black text-white' 
+                : 'bg-gray-100 hover:bg-gray-200 text-black'
+            }`}
+          >
+            All
+          </button>
+          <button 
+            onClick={() => handleCategoryChange('Roz Roz')}
+            className={`px-3 py-1 text-sm rounded-full transition-colors ${
+              selectedCategory === 'Roz Roz' 
+                ? 'bg-black text-white' 
+                : 'bg-gray-100 hover:bg-gray-200 text-black'
+            }`}
+          >
+            Roz Roz
+          </button>
+          <button 
+            onClick={() => handleCategoryChange('Kuch Kuch')}
+            className={`px-3 py-1 text-sm rounded-full transition-colors ${
+              selectedCategory === 'Kuch Kuch' 
+                ? 'bg-black text-white' 
+                : 'bg-gray-100 hover:bg-gray-200 text-black'
+            }`}
+          >
+            Kuch Kuch
+          </button>
         </div>
         
         {/* Right Side: View Toggles & Arrows */}
         <div className="flex items-center space-x-4">
+
             {view === 'grid' && (
             <div className="flex items-center space-x-2 border-l border-gray-200 pl-4">
               <button
@@ -149,33 +198,52 @@ const ProductDisplay = () => {
             className="flex h-full transition-transform duration-500 ease-in-out"
             style={{ transform: `translateX(-${currentIndex * (100 / itemsPerView)}%)` }}
           >
-            {products.map((product) => (
+            {filteredProducts.map((product) => (
               <div
                 key={product.id}
                 className="w-1/3 flex-shrink-0 border-r border-gray-200 flex flex-col"
                 style={{ flexBasis: `${100 / itemsPerView}%` }}
               >
-                {/* 1. Image - now takes up more space, no internal padding */}
+                {/* 1. Image */}
                 <div className="flex-grow w-full bg-gray-100 overflow-hidden flex items-center justify-center">
                   <img
                     src={product.imageUrl}
                     alt={product.name}
-                    className="w-full h-full object-cover" // object-cover to fit and fill without white space
+                    className="w-full h-full object-cover"
                   />
                 </div>
                 
-                {/* 2. Text (Name) */}
-                <p className="text-sm text-black py-4 px-2">
-                  {product.name}
-                </p>
-                
-                {/* 3. Shop Now Button (Exactly matching) */}
-                <a
-                  href="#"
-                  className="block w-full bg-black text-white text-left px-4 py-3 text-sm hover:bg-gray-800 transition-colors"
-                >
-                  Shop now
-                </a>
+                {/* --- THIS IS THE NEW BLOCK YOU PROVIDED --- */}
+                {/* I replaced the old <p> and <a> with this */}
+                <div className="product-info mt-6  pb-6">
+                  <h3 className="text-base font-medium mb-3 px-4">{product.name}</h3>
+                  
+                  <button
+                    type="button"
+                    className="group w-full bg-black text-white px-5 py-4 flex items-center justify-between text-[15px] font-semibold tracking-wide"
+                  >
+                    {/* Animated "Shop now" */}
+                    <div className="relative h-5 overflow-hidden">
+                      <div className="relative flex flex-col transition-transform duration-300 ease-in-out group-hover:-translate-y-1/2">
+                        <span className="flex h-5 items-center">Shop now</span>
+                        <span className="flex h-5 items-center">Shop now</span>
+                      </div>
+                    </div>
+                    {/* Animated Price */}
+                    <div className="relative h-5 overflow-hidden">
+                      <div className="relative flex flex-col transition-transform duration-300 ease-in-out group-hover:-translate-y-1/2">
+                        <span className="flex h-5 items-center text-white/90">
+                          {formatPrice(product.price)}
+                        </span>
+                        <span className="flex h-5 items-center text-white/90">
+                          {formatPrice(product.price)}
+                        </span>
+                      </div>
+                    </div>
+                  </button>
+                </div>
+                {/* --- END OF NEW BLOCK --- */}
+
               </div>
             ))}
           </div>
@@ -183,7 +251,7 @@ const ProductDisplay = () => {
       ) : (
         // --- List View ---
         <div className="divide-y divide-gray-200 flex-grow">
-          {products.map((product) => (
+          {filteredProducts.map((product) => (
             <div key={product.id} className="flex justify-between items-center p-6 hover:bg-gray-50 transition-colors">
               {/* Left: Title & Shop Now */}
               <div className="flex-1">
@@ -212,6 +280,17 @@ const ProductDisplay = () => {
           ))}
         </div>
       )}
+
+      {/* --- View All Link --- */}
+      <div className="py-8 flex justify-center items-center">
+        <Link 
+          to="/store" 
+          className="flex items-center space-x-2 text-sm text-black hover:underline transition-all group"
+        >
+          <span>View all</span>
+          <ArrowRight />
+        </Link>
+      </div>
     </div>
   );
 };
