@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
+import Demo from '../components/Demo';
 gsap.registerPlugin(ScrollTrigger);
 
 const Home = () => {
@@ -16,106 +16,110 @@ const Home = () => {
   const scrollSection2 = useRef(null);
   const scrollSection3 = useRef(null);
 
+   useLayoutEffect(() => {
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+    // reset scroll for all browsers
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  }, []);
   useEffect(() => {
     // Disable scroll initially
     document.body.style.overflow = 'hidden';
     document.body.style.height = '100vh';
 
-    let scrollCount = 0;
-    let isAnimating = false;
+    let scrollAmount = 0;
+    const maxScroll = 150;
+    let animationFrame = null;
+    let isComplete = false;
+
+    const logo = logoRef.current;
+    const navbar = document.querySelector('.navbar-logo-wrapper-home');
+    const navbarImg = navbar?.querySelector('img');
+
+    if (!logo || !navbar || !navbarImg) return;
+
+    // Function to get accurate navbar position
+    const getNavbarPosition = () => {
+      const rect = navbarImg.getBoundingClientRect();
+      return {
+        x: rect.left + rect.width / 2,
+        y: rect.top + rect.height / 2
+      };
+    };
+
+    const startX = window.innerWidth / 2;
+    const startY = window.innerHeight / 2;
+
+    // Set initial position
+    gsap.set(logo, {
+      position: 'fixed',
+      left: startX,
+      top: startY,
+      xPercent: -50,
+      yPercent: -50,
+      scale: 1,
+      zIndex: 10000
+    });
 
     const handleWheel = (e) => {
       e.preventDefault();
 
-      if (isAnimating) return;
+      if (isComplete) return;
 
-      if (scrollCount === 0) {
-        // First scroll: Move logo to CENTER of navbar (pixel-accurate)
-        isAnimating = true;
-        scrollCount++;
+      // Increase scroll amount
+      scrollAmount += Math.abs(e.deltaY) * 0.3;
+      scrollAmount = Math.min(scrollAmount, maxScroll);
 
-        const logo = logoRef.current;
-        const navbar = document.querySelector('.navbar-logo-wrapper-home');
-        const navbarImg = navbar?.querySelector('img');
+      // Calculate progress (0 to 1)
+      const progress = scrollAmount / maxScroll;
 
-        if (logo && navbar && navbarImg) {
-          // Ensure navbar starts hidden and will fade in
-          navbar.style.opacity = '0';
-          navbar.style.transition = 'opacity 0.25s';
+      // Get current navbar position (in case of any shifts)
+      const navbarPos = getNavbarPosition();
+      const targetX = navbarPos.x;
+      const targetY = navbarPos.y;
 
-          // read bounding boxes
-          const logoRect = logo.getBoundingClientRect();
-          const navbarImgRect = navbarImg.getBoundingClientRect();
+      // Cancel previous animation frame
+      if (animationFrame) {
+        cancelAnimationFrame(animationFrame);
+      }
 
-          // compute target pixel coordinates (top,left) so logo center lines with navbar image center
-          const targetCenterX = navbarImgRect.left + navbarImgRect.width / 2;
-          const targetCenterY = navbarImgRect.top + navbarImgRect.height / 2;
-          const targetLeft = targetCenterX - logoRect.width / 2;
-          const targetTop = targetCenterY - logoRect.height / 2;
+      // Use GSAP for smooth animation
+      animationFrame = requestAnimationFrame(() => {
+        const targetScale = 1 - (0.39 * progress);
+        const currentX = startX + (targetX - startX) * progress;
+        const currentY = startY + (targetY - startY) * progress;
 
-          // Freeze the logo at current pixel coordinates by removing percent-centered transform
-          // and setting top/left explicitly to current position.
-          // (This avoids transform stacking issues.)
-          logo.style.transform = 'none';
-          logo.style.position = 'fixed';
-          logo.style.top = `${logoRect.top}px`;
-          logo.style.left = `${logoRect.left}px`;
-          logo.style.margin = '0';
-          // ensure it stays above navbar
-          logo.style.zIndex = 10000;
-          // make sure it has no CSS transitions that conflict
-          logo.style.transition = 'none';
-          // prepare for GPU acceleration & smoothness
-          logo.style.willChange = 'top,left,transform,opacity';
+        gsap.to(logo, {
+          duration: 0.3,
+          ease: 'power2.out',
+          left: currentX,
+          top: currentY,
+          scale: targetScale,
+          xPercent: -50,
+          yPercent: -50
+        });
+      });
 
-          // Animate to exact pixel position target with scale
-          gsap.to(logo, {
-            duration: 2,
-            ease: 'power2.inOut',
-            top: targetTop,
-            left: targetLeft,
-            scale: 0.61,
-            onUpdate: function () {
-              const progress = this.progress();
-              // fade navbar in smoothly as the logo arrives (starts when 70% done)
-              if (progress > 0.7) {
-                const navOpacity = (progress - 0.7) / 0.3;
-                navbar.style.opacity = `${Math.min(1, navOpacity)}`;
-              }
-            },
-            onComplete: () => {
-              // fade out the centered logo gently, leaving the navbar visible
-              gsap.to(logo, {
-                duration: 0.18,
-                opacity: 0,
-                onComplete: () => {
-                  // keep navbar fully visible
-                  navbar.style.opacity = '1';
-                  // optional: hide logo from pointer events and remove it from flow (but keep DOM)
-                  logo.style.pointerEvents = 'none';
-                  isAnimating = false;
-                }
-              });
-            }
-          });
-        } else {
-          // fallback: if selectors fail, just allow next scroll
-          isAnimating = false;
-        }
-      } else if (scrollCount === 1) {
-        // Second scroll: enable scrolling
-        scrollCount++;
+      // Hide navbar logo during animation
+      navbar.style.opacity = '0';
 
-        document.body.style.overflow = 'auto';
-        document.body.style.height = 'auto';
-
-        // Smooth scroll to content
-        contentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
+      // Check for completion
+      if (progress >= 0.99 && !isComplete) {
+        isComplete = true;
+        
         setTimeout(() => {
-          setScrollEnabled(true);
+          // Hide center logo, show navbar logo
+          gsap.set(logo, { visibility: 'hidden' });
+          navbar.style.opacity = '1';
+          
+          document.body.style.overflow = 'auto';
+          document.body.style.height = 'auto';
           window.removeEventListener('wheel', handleWheel);
-        }, 500);
+          setScrollEnabled(true);
+        }, 300);
       }
     };
 
@@ -123,17 +127,28 @@ const Home = () => {
 
     return () => {
       window.removeEventListener('wheel', handleWheel);
+      if (animationFrame) {
+        cancelAnimationFrame(animationFrame);
+      }
       document.body.style.overflow = 'auto';
       document.body.style.height = 'auto';
     };
   }, []);
 
   // Scroll-based animations using GSAP ScrollTrigger
+  // Scroll-based animations using GSAP ScrollTrigger
   useEffect(() => {
     if (!scrollEnabled) return;
 
     // Horizontal scroll animation - Images slide in from behind center image
     if (scrollSection1.current) {
+      // --- FIX 1: GET NAVBAR HEIGHT ---
+      // Get the navbar element (using the same selector as your intro animation)
+      const navbar = document.querySelector('.navbar-logo-wrapper-home'); 
+      // Get its height, provide a fallback (e.g., 80px) if it's not found
+      const navbarHeight = navbar ? navbar.offsetHeight : 80; 
+      // --- END OF FIX 1 ---
+
       const leftImage = scrollSection1.current.querySelector('.left-image');
       const centerImage = scrollSection1.current.querySelector('.center-image');
       const rightImage = scrollSection1.current.querySelector('.right-image');
@@ -143,7 +158,10 @@ const Home = () => {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: scrollSection1.current,
-          start: 'top top',
+          // --- FIX 1 (CONTINUED): SET NEW START POSITION ---
+          // Start when the top of the section hits the BOTTOM of the navbar
+          start: `top ${navbarHeight}px`,
+          // --- END OF FIX 1 ---
           end: '+=2000', // Shorter scroll for quicker animation
           scrub: 1,
           pin: true,
@@ -151,11 +169,13 @@ const Home = () => {
         },
       });
 
+      // --- FIX 2: USE RESPONSIVE 'vw' UNITS ---
       // Phase 1: Left image slides out from center to left
       tl.fromTo(
         leftImage,
         { x: 0, opacity: 1 },
-        { x: -400, opacity: 1, duration: 1, ease: 'power2.out' },
+        // Use '-33.33vw' to move it left by one-third of the viewport width
+        { x: '-33.33vw', opacity: 1, duration: 1, ease: 'power2.out' },
         0
       );
 
@@ -163,11 +183,15 @@ const Home = () => {
       tl.fromTo(
         rightImage,
         { x: 0, opacity: 1 },
-        { x: 400, opacity: 1, duration: 1, ease: 'power2.out' },
+        // Use '33.33vw' to move it right by one-third of the viewport width
+        { x: '33.33vw', opacity: 1, duration: 1, ease: 'power2.out' },
         0
       );
+      // --- END OF FIX 2 ---
 
-      // Phase 3: Show buttons IMMEDIATELY when images reach position (at same time)
+      // Phase 3: Show buttons (This is correct and will work as you want)
+      // The .product-info is already inside each image div, so it will
+      // move with its parent image.
       tl.to(
         productInfos,
         { opacity: 1, duration: 0.3, stagger: 0 },
@@ -354,52 +378,7 @@ const Home = () => {
             Collection
           </h1>
         </div>
-        <div className="grid">
-          <div className="home-section-04-tab-wrap">
-            <div className="collection-tab w-tabs">
-              <div className="collection-tab-menu w-tab-menu">
-                <button
-                  onClick={() => setActiveTab('Tab 1')}
-                  className={`collection-tab-link w-inline-block w-tab-link ${activeTab === 'Tab 1' ? 'w--current' : ''}`}
-                >
-                  <p className="body-regular">001</p>
-                  <h3 className="heading03 small-height">Roz Roz</h3>
-                </button>
-                <button
-                  onClick={() => setActiveTab('Tab 2')}
-                  className={`collection-tab-link w-inline-block w-tab-link ${activeTab === 'Tab 2' ? 'w--current' : ''}`}
-                >
-                  <p className="body-regular">002</p>
-                  <h3 className="heading03 small-height">Kuch Roz</h3>
-                </button>
-              </div>
-              <div className="collection-content w-tab-content">
-                {activeTab === 'Tab 1' && (
-                  <div className="w-tab-pane w--tab-active">
-                    <div className="collection-tab-inner">
-                      <div className="w-dyn-list">
-                        <div className="w-dyn-empty">
-                          <div>No items found.</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-                {activeTab === 'Tab 2' && (
-                  <div className="w-tab-pane w--tab-active">
-                    <div className="collection-tab-inner">
-                      <div className="w-dyn-list">
-                        <div className="w-dyn-empty">
-                          <div>No items found.</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
+        <Demo/>
       </div>
 
       {/* Section 05 - Product List */}

@@ -43,3 +43,40 @@ html {
 html {
   scroll-behavior: smooth;
 }
+
+/* Sticky navbar styles */
+.navbar-logo-center-home {
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.navbar-logo-center-home.nav_bg {
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+  background-color: #000 !important;
+}
+
+/* Ensure all navbar child elements have black background when sticky */
+.navbar-logo-center-home.nav_bg * {
+  background-color: transparent;
+}
+
+.navbar-logo-center-home.nav_bg .navbar-logo-center-container-home,
+.navbar-logo-center-home.nav_bg .container-navbar-home,
+.navbar-logo-center-home.nav_bg .navbar-wrapper-home {
+  background-color: #000 !important;
+}
+
+/* Smooth appearance animation */
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.navbar-logo-center-home.nav_bg {
+  animation: slideDown 0.4s ease-in-out;
+}
