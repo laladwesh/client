@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Demo from "../components/Demo";
+import New from "../components/New";
 gsap.registerPlugin(ScrollTrigger);
 
 const Home = () => {
@@ -460,9 +461,9 @@ const Home = () => {
         </div>
         <Demo />
       </div>
-
+<New/>
       {/* Section 05 - Product List */}
-      <div className="home-section-05">
+      {/* <div className="home-section-05">
         <div className="product-list-wrap">
           <div className="product-category-wrap-home">
             <div className="product-category-list-wrap-home">
@@ -521,7 +522,7 @@ const Home = () => {
             </Link>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Section 06 - Final Section */}
       <div className="home-section-06">
