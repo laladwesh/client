@@ -3,3 +3,11 @@
   box-sizing: border-box;
 }
 
+/* Ensure App container allows scrolling */
+.App {
+  width: 100%;
+  height: auto;
+  min-height: 100vh;
+  overflow: visible;
+  position: relative;
+}

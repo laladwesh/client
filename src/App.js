@@ -20,63 +20,79 @@ function App() {
         <Routes>
           <Route path="/" element={
             <>
-              <Banner />
-              <Navbar />
-              <Home />
+              <div className="page-content">
+                <Banner />
+                <Navbar />
+                <Home />
+              </div>
               <Footer />
             </>
           } />
           <Route path="/about" element={
             <>
-              <About />
+              <div className="page-content">
+                <About />
+              </div>
               <Footer />
             </>
           } />
           <Route path="/store" element={
             <>
-              <Banner />
-              <Navbar />
-              <Store />
+              <div className="page-content">
+                <Banner />
+                <Navbar />
+                <Store />
+              </div>
               <Footer />
             </>
           } />
           <Route path="/blogs" element={
             <>
-              <Banner />
-              <Navbar />
-              <Blogs />
+              <div className="page-content">
+                <Banner />
+                <Navbar />
+                <Blogs />
+              </div>
               <Footer />
             </>
           } />
           <Route path="/contact" element={
             <>
-              <Banner />
-              <Navbar />
-              <Contact />
+              <div className="page-content">
+                <Banner />
+                <Navbar />
+                <Contact />
+              </div>
               <Footer />
             </>
           } />
           <Route path="/faq" element={
             <>
-              <Banner />
-              <Navbar />
-              <FAQ />
+              <div className="page-content">
+                <Banner />
+                <Navbar />
+                <FAQ />
+              </div>
               <Footer />
             </>
           } />
           <Route path="/photo-booth" element={
             <>
-              <Banner />
-              <Navbar />
-              <PhotoBooth />
+              <div className="page-content">
+                <Banner />
+                <Navbar />
+                <PhotoBooth />
+              </div>
               <Footer />
             </>
           } />
           <Route path="/sign-up" element={
             <>
-              <Banner />
-              <Navbar />
-              <SignUp />
+              <div className="page-content">
+                <Banner />
+                <Navbar />
+                <SignUp />
+              </div>
               <Footer />
             </>
           } />
