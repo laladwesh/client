@@ -7,15 +7,11 @@ import New from "../components/New";
 gsap.registerPlugin(ScrollTrigger);
 
 const Home = () => {
-  const [activeTab, setActiveTab] = useState("Tab 2");
-  const [activeView, setActiveView] = useState("image");
   const [scrollEnabled, setScrollEnabled] = useState(false);
   const logoRef = useRef(null);
   const heroRef = useRef(null);
   const contentRef = useRef(null);
   const scrollSection1 = useRef(null);
-  const scrollSection2 = useRef(null);
-  const scrollSection3 = useRef(null);
 
   useLayoutEffect(() => {
     if ("scrollRestoration" in window.history) {
@@ -151,7 +147,6 @@ const Home = () => {
       // --- END OF FIX 1 ---
 
       const leftImage = scrollSection1.current.querySelector(".left-image");
-      const centerImage = scrollSection1.current.querySelector(".center-image");
       const rightImage = scrollSection1.current.querySelector(".right-image");
       const productInfos =
         scrollSection1.current.querySelectorAll(".product-info");
@@ -532,7 +527,7 @@ const Home = () => {
               <img
                 width="600"
                 height="727"
-                alt="Portfolio Image"
+                alt="Portfolio"
                 src="/images/Group-1009002131-1_1Group 1009002131 (1).webp"
                 loading="lazy"
                 className="rt-full-width-3 rt-full-height"

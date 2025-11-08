@@ -13,7 +13,7 @@ const About = () => {
               </Link>
               <nav role="navigation" className="nav-menu-wrapper-three-2 w-nav-menu">
                 <div className="nav-menu-three-2">
-                  <ul role="list" className="nav-menu-block-2 w-list-unstyled">
+                  <ul className="nav-menu-block-2 w-list-unstyled">
                     <li>
                       <Link to="/about" className="nav-link-3 w--current">About Us</Link>
                     </li>
@@ -27,7 +27,7 @@ const About = () => {
                       <Link to="/store" className="nav-link-3">Collection</Link>
                     </li>
                   </ul>
-                  <ul role="list" className="nav-menu-block-2 nav_blck_gap w-list-unstyled">
+                  <ul className="nav-menu-block-2 nav_blck_gap w-list-unstyled">
                     <li>
                       <Link to="/sign-up" className="nav-link w-inline-block">
                         <div className="nav-icon_wrapper">
