@@ -64,7 +64,7 @@ const Navbar = () => {
             
             <nav role="navigation" className={`nav-menu-wrapper-three-home w-nav-menu ${isMenuOpen ? 'w--open' : ''}`}>
               <div className="nav-menu-three-home">
-                <ul role="list" className="nav-menu-block-home w-list-unstyled">
+                <ul className="nav-menu-block-home w-list-unstyled">
                   <li>
                     <Link to="/about" className="nav-link-3-home">About us</Link>
                   </li>
@@ -79,7 +79,7 @@ const Navbar = () => {
                   </li>
                 </ul>
                 <div>
-                  <ul role="list" className="nav-menu-block-home-2 nav_blck_gap w-list-unstyled">
+                  <ul className="nav-menu-block-home-2 nav_blck_gap w-list-unstyled">
                     <li>
                       <Link to="/cart" className="nav-link w-inline-block">
                         <div className="nav-icon_wrapper-home">

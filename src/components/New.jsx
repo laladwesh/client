@@ -258,9 +258,12 @@ const ProductDisplay = () => {
                 <h2 className="text-5xl font-normal mb-4">
                   {product.name}
                 </h2>
-                <a href="#" className="text-sm underline hover:text-gray-600 transition-colors">
+                <button 
+                  onClick={() => window.location.href = `/store/${product.id}`}
+                  className="text-sm underline hover:text-gray-600 transition-colors bg-transparent border-none cursor-pointer p-0"
+                >
                   Shop now
-                </a>
+                </button>
               </div>
               
               {/* Middle: Image */}
