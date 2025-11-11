@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 const products = [
   {
     id: 1,
-    name: 'Vera Shelf Red',
+    name: 'Vera Shelf Dummy',
     price: 3500.00,
     category: 'Roz Roz',
     imageUrl: 'https://cdn.prod.website-files.com/68558d427ad3bce190a51b77/68558d427ad3bce190a51b6e_8-2.webp',
@@ -252,19 +252,19 @@ const ProductDisplay = () => {
         // --- List View ---
         <div className="divide-y divide-gray-200 flex-grow">
           {filteredProducts.map((product) => (
-            <div key={product.id} className="flex justify-between items-center p-6 hover:bg-gray-50 transition-colors">
+            <div key={product.id} className="flex justify-between items-stretch p-6 hover:bg-gray-50 transition-colors min-h-[40vh]">
               {/* Left: Title & Shop Now */}
               <div className="flex-1">
-                <div className='flex-col justify-evenly items-stretch'>
-                  <h2 className="text-5xl font-normal mb-4">
-                  {product.name}
-                </h2>
-                <button 
-                  onClick={() => window.location.href = `/store/${product.id}`}
-                  className="text-sm underline hover:text-gray-600 transition-colors bg-transparent border-none cursor-pointer p-0"
-                >
-                  Shop now
-                </button>
+                <div className="flex flex-col justify-between h-full">
+                  <h2 className="text-5xl font-semibold w-1/2">
+                    {product.name}
+                  </h2>
+                  <button 
+                    onClick={() => window.location.href = `/store/${product.id}`}
+                    className="text-base font-medium hover:text-gray-600 transition-colors bg-transparent border-none cursor-pointer p-0 self-start"
+                  >
+                    Shop now
+                  </button>
                 </div>
               </div>
               
@@ -278,7 +278,7 @@ const ProductDisplay = () => {
               </div>
 
               {/* Right: Price */}
-              <div className="flex-1 text-right">
+              <div className="flex-1 text-center flex items-end font-medium justify-end">
                 <span className="text-sm hover:text-gray-600 transition-colors">{formatPrice(product.price)}</span>
               </div>
             </div>
