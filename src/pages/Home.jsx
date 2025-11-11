@@ -249,15 +249,16 @@ const Home = () => {
       <div ref={contentRef} className="bg-white py-12 overflow-hidden">
         <div className="w-screen">
           <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-semibold leading-[1.1] text-black px-4 md:px-4 lg:px-4 pr-0">
-            We make everyday clothes for people who like dressing up everyday. We free culture of the shackles of nostalgia, and
-            let it take its place in today's everyday - in your everyday.
+            We make everyday clothes for people who like dressing up everyday.
+            We free culture of the shackles of nostalgia, and let it take its
+            place in today's everyday - in your everyday.
           </h1>
 
-          <div className="mt-16 px-4 flex justify-start space-x-80 md:px-8 lg:px-12">
-            <h3 className="text-xs font-bold mb-4 text-black uppercase tracking-wider">
+          <div className="mt-16 px-4 flex justify-start space-x-[57vh] md:px-8 lg:px-12">
+            <h3 className="text-lg font-bold mb-4 text-black uppercase tracking-wider">
               Vision
             </h3>
-            <p className="text-sm leading-relaxed max-w-xl text-gray-900">
+            <p className="text-lg  leading-relaxed max-w-[70vh] text-black font-medium">
               Redefining minimalism through material authenticity and design
               order. Forma moves beyond simple forms to create considered
               designs that shape spaces.
@@ -269,9 +270,9 @@ const Home = () => {
       {/* Horizontal Scroll Section - Material Driven */}
       <div
         ref={scrollSection1}
-        className="min-h-screen bg-white overflow-hidden relative"
+        className="min-h-screen bg-white overflow-hidden relative "
       >
-        <div className="horizontal-scroll-container h-screen flex items-center justify-center relative px-0">
+        <div className="horizontal-scroll-container h-screen flex items-center justify-center relative ml-4 ">
           {/* Fixed Text on sides - BEHIND images */}
           <div className="fixed left-8 top-1/2 -translate-y-1/2 text-sm font-medium z-0">
             Material
@@ -292,7 +293,7 @@ const Home = () => {
                 alt="Arco Shelf Metal"
                 className="w-full h-[75vh] object-cover"
               />
-              <div className="product-info mt-6 opacity-0 px-6">
+              <div className="product-info mt-6 opacity-0 ">
                 <h3 className="text-base font-medium mb-3">Arco Shelf Metal</h3>
                 {/* --- NEW ANIMATED BUTTON --- */}
                 <button
@@ -329,7 +330,7 @@ const Home = () => {
                 alt="Arco Sofa Metal"
                 className="w-full h-[75vh] object-cover"
               />
-              <div className="product-info mt-6 opacity-0 px-6">
+              <div className="product-info mt-6 opacity-0 ml-0.5">
                 <h3 className="text-base font-medium mb-3">Arco Sofa Metal</h3>
                 {/* --- NEW ANIMATED BUTTON --- */}
                 <button
@@ -366,7 +367,7 @@ const Home = () => {
                 alt="Arco Stool Metal"
                 className="w-full h-[75vh] object-cover"
               />
-              <div className="product-info mt-6 opacity-0 px-6">
+              <div className="product-info mt-6 opacity-0 ml-0.5 ">
                 <h3 className="text-base font-medium mb-3">Arco Stool Metal</h3>
                 {/* --- NEW ANIMATED BUTTON --- */}
                 <button
@@ -444,9 +445,9 @@ const Home = () => {
 
       {/* ... remaining sections unchanged ... */}
 
-      <div className="home-section-04">
+      <div className="home-section-04 -mx-11 pt-16">
         <div className="grid">
-          <h1 className="heading01">
+          <h1 className="heading01 text-black">
             Discover
             <br />
             Collection
@@ -454,7 +455,7 @@ const Home = () => {
         </div>
         <Demo />
       </div>
-<New/>
+      <New />
       {/* Section 05 - Product List */}
       {/* <div className="home-section-05">
         <div className="product-list-wrap">
