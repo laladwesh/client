@@ -117,34 +117,34 @@ const ProductDisplay = () => {
       {/* --- Top Control Bar --- */}
       <div className="flex justify-between items-center py-4 px-6 border-b border-gray-200 sticky top-0 bg-white z-10">
         {/* Left Side: Filters */}
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-0">
           <button className="text-sm text-gray-500 hover:text-black transition-colors">Filter</button>
           <button 
             onClick={() => handleCategoryChange('All')}
-            className={`px-3 py-1 text-sm rounded-full transition-colors ${
+            className={`px-3 py-1 text-sm font-semibold rounded-full transition-colors ${
               selectedCategory === 'All' 
-                ? 'bg-black text-white' 
-                : 'bg-gray-100 hover:bg-gray-200 text-black'
+                ? ' text-black' 
+                : '  text-gray-600'
             }`}
           >
             All
           </button>
           <button 
             onClick={() => handleCategoryChange('Roz Roz')}
-            className={`px-3 py-1 text-sm rounded-full transition-colors ${
+            className={`px-3 py-1 text-sm font-semibold rounded-full transition-colors ${
               selectedCategory === 'Roz Roz' 
-                ? 'bg-black text-white' 
-                : 'bg-gray-100 hover:bg-gray-200 text-black'
+                ? ' text-black' 
+                : '  text-gray-600'
             }`}
           >
             Roz Roz
           </button>
           <button 
             onClick={() => handleCategoryChange('Kuch Kuch')}
-            className={`px-3 py-1 text-sm rounded-full transition-colors ${
+            className={`px-3 py-1 font-semibold text-sm rounded-full transition-colors ${
               selectedCategory === 'Kuch Kuch' 
-                ? 'bg-black text-white' 
-                : 'bg-gray-100 hover:bg-gray-200 text-black'
+                ? ' text-black' 
+                : ' text-gray-600 '
             }`}
           >
             Kuch Kuch
@@ -155,18 +155,18 @@ const ProductDisplay = () => {
         <div className="flex items-center space-x-4">
 
             {view === 'grid' && (
-            <div className="flex items-center space-x-2 border-l border-gray-200 pl-4">
+            <div className="flex items-center space-x-2  pl-4">
               <button
                 onClick={prevSlide}
                 disabled={currentIndex === 0}
-                className="p-1 rounded-full bg-gray-100 disabled:opacity-30 enabled:hover:bg-gray-200 transition-colors"
+                className="p-1 rounded-full  disabled:opacity-30 transition-colors"
               >
                 <ArrowLeft />
               </button>
               <button
                 onClick={nextSlide}
                 disabled={currentIndex === maxIndex}
-                className="p-1 rounded-full bg-gray-100 disabled:opacity-30 enabled:hover:bg-gray-200 transition-colors"
+                className="p-1 rounded-full  disabled:opacity-30 transition-colors"
               >
                 <ArrowRight />
               </button>
@@ -193,7 +193,7 @@ const ProductDisplay = () => {
       {/* --- Products Area (Main Content) --- */}
       {view === 'grid' ? (
         // --- Grid View (Slider) ---
-        <div className="overflow-hidden flex-grow border-b border-gray-200">
+        <div className="overflow-hidden flex-grow ">
           <div
             className="flex h-full transition-transform duration-500 ease-in-out"
             style={{ transform: `translateX(-${currentIndex * (100 / itemsPerView)}%)` }}
@@ -201,7 +201,7 @@ const ProductDisplay = () => {
             {filteredProducts.map((product) => (
               <div
                 key={product.id}
-                className="w-1/3 flex-shrink-0 border-r border-gray-200 flex flex-col"
+                className="w-1/3 flex-shrink-0 ml-4  flex flex-col"
                 style={{ flexBasis: `${100 / itemsPerView}%` }}
               >
                 {/* 1. Image */}
@@ -225,17 +225,17 @@ const ProductDisplay = () => {
                     {/* Animated "Shop now" */}
                     <div className="relative h-5 overflow-hidden">
                       <div className="relative flex flex-col transition-transform duration-300 ease-in-out group-hover:-translate-y-1/2">
-                        <span className="flex h-5 items-center">Shop now</span>
-                        <span className="flex h-5 items-center">Shop now</span>
+                        <span className="flex h-5 text-lg items-center">Shop now</span>
+                        <span className="flex h-5 text-lg items-center">Shop now</span>
                       </div>
                     </div>
                     {/* Animated Price */}
                     <div className="relative h-5 overflow-hidden">
                       <div className="relative flex flex-col transition-transform duration-300 ease-in-out group-hover:-translate-y-1/2">
-                        <span className="flex h-5 items-center text-white/90">
+                        <span className="flex h-5 items-center text-lg text-white/90">
                           {formatPrice(product.price)}
                         </span>
-                        <span className="flex h-5 items-center text-white/90">
+                        <span className="flex h-5 items-center text-lg text-white/90">
                           {formatPrice(product.price)}
                         </span>
                       </div>
@@ -255,7 +255,8 @@ const ProductDisplay = () => {
             <div key={product.id} className="flex justify-between items-center p-6 hover:bg-gray-50 transition-colors">
               {/* Left: Title & Shop Now */}
               <div className="flex-1">
-                <h2 className="text-5xl font-normal mb-4">
+                <div className='flex-col justify-evenly items-stretch'>
+                  <h2 className="text-5xl font-normal mb-4">
                   {product.name}
                 </h2>
                 <button 
@@ -264,6 +265,7 @@ const ProductDisplay = () => {
                 >
                   Shop now
                 </button>
+                </div>
               </div>
               
               {/* Middle: Image */}

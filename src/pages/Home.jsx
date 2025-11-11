@@ -249,9 +249,7 @@ const Home = () => {
       <div ref={contentRef} className="bg-white py-12 overflow-hidden">
         <div className="w-screen">
           <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-semibold leading-[1.1] text-black px-4 md:px-4 lg:px-4 pr-0">
-            We make everyday clothes for people who like dres-
-            <br />
-            -sing up everyday. We free culture of the shackles of nostalgia, and
+            We make everyday clothes for people who like dressing up everyday. We free culture of the shackles of nostalgia, and
             let it take its place in today's everyday - in your everyday.
           </h1>
 
