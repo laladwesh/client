@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
-    <footer className="fixed bottom-0 left-0 w-full h-[70vh] bg-black text-white flex flex-col justify-between px-12 py-8 z-10 overflow-hidden">
+    <footer className="fixed bottom-0 left-0 w-full h-[70vh] bg-black text-white flex flex-col justify-between px-4 py-8 z-10 overflow-hidden">
       <div className="flex items-start justify-between w-full pt-8">
         <div className="flex flex-col gap-1">
           <Link to="/" className="text-sm hover:opacity-70 transition-opacity">Home</Link>
@@ -25,7 +25,7 @@ const Footer = () => {
         </div>
       </div>
       
-      <h1 className="text-[35vw] font-bold leading-[0.8] text-white relative z-[99] m-0 w-screen -mx-12">Nufab</h1>
+      <h1 className="text-[38vw] text-center font-bold leading-[0.8] text-white relative z-[99] m-0 w-screen -mx-12">Nufab</h1>
     </footer>
   );
 };
