@@ -24,9 +24,6 @@ const Homeabout = () => {
       }
     });
 
-    // Animate text moving up
-    // Initial state is set in CSS/Tailwind (below the image)
-    // Final state moves it up past the image
     tl.to(text, {
       y: "-120%", // Move up by 120% of its height
       ease: "none"
