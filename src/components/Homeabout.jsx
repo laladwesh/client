@@ -12,11 +12,7 @@ const Homeabout = () => {
   useEffect(() => {
     const container = containerRef.current;
     const text = textRef.current;
-    
-    // Animation Logic
-    // We pin the container so the image stays fixed
-    // We animate the text moving upwards (y-axis)
-    
+
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: container,
