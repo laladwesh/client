@@ -16,10 +16,10 @@ const Homeabout = () => {
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: container,
-        start: "top top", // Start when container hits top of viewport
-        end: "+=100%",    // Scroll distance (adjust for speed)
-        scrub: 1,         // Smooth scrubbing effect
-        pin: true,        // Pin the container
+        start: "top top", 
+        end: "+=100%",
+        scrub: 1,
+        pin: true,
         anticipatePin: 1
       }
     });
