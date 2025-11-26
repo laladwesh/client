@@ -4,6 +4,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Demo from "../components/Demo";
 import New from "../components/New";
+import Homeabout from "../components/Homeabout";
 gsap.registerPlugin(ScrollTrigger);
 
 const Home = () => {
@@ -518,69 +519,7 @@ const Home = () => {
         </div>
       </div> */}
 
-      {/* Section 06 - Final Section */}
-      <div className="home-section-06">
-        <div className="home-section-06-last">
-          <div className="rt-portfolio-one-card-block-one">
-            <div className="rt-portfolio-one-card-block-one-left rt-background-dark">
-              <img
-                width="600"
-                height="727"
-                alt="Portfolio"
-                src="/images/Group-1009002131-1_1Group 1009002131 (1).webp"
-                loading="lazy"
-                className="rt-full-width-3 rt-full-height"
-              />
-              <div className="rt-portfolio-card-contain rt-active">
-                <div className="rt-component-heading-five rt-text-white">
-                  To Preserve and Evolve?
-                </div>
-                <div className="paragraph-last-section">
-                  Nufab is a movement to preserve culture by allowing it to
-                  evolve. We see local materials, motifs, and skills as
-                  invaluable design resources. To honour them means keeping them
-                  alive in practice, and letting them take shape with time.
-                  Culture does not belong in a museum to be occasionally
-                  recalled with nostalgia. It belongs where it was born: with
-                  the people, in the everyday.
-                </div>
-                <Link to="/about" className="button-about w-button">
-                  About Us
-                </Link>
-              </div>
-            </div>
-
-            <div className="rt-portfolio-one-card-block-one-right">
-              <div className="rt-portfolio-one-card-block-one-right-bottom rt-background-dark">
-                <img
-                  width="597"
-                  height="360"
-                  alt="home-three-section-eight--scroll-banner"
-                  src="/images/home-three-section-eight--scroll-banner.webp"
-                  loading="lazy"
-                  className="rt-full-width-3 rt-full-height"
-                />
-              </div>
-              <div className="rt-portfolio-one-card-block-one-right-bottom rt-background-dark">
-                <img
-                  width="597"
-                  height="360"
-                  alt="Background"
-                  src="/images/CTA-bg.webp"
-                  loading="lazy"
-                  className="rt-full-width-3 rt-full-height"
-                />
-                <div className="rt-portfolio-card-contain">
-                  <div className="component-heading">Show all Dresses</div>
-                  <Link to="/store" className="button-about-2 w-button">
-                    Explore Collection
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <Homeabout/>
     </div>
   );
 };
