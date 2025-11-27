@@ -41,7 +41,7 @@ const Blog = () => {
     <div className="bg-white py-12 relative" style={{ minHeight: '25vh', overflow: 'hidden' }}>
       <div className="w-screen px-4">
         {/* Top-right arrows to navigate blogs */}
-        <div className="absolute right-4 top-4 z-20 flex gap-2">
+        <div className="absolute right-4 top-4 z-20 flex gap-2 ">
           {/* Previous button */}
           <button
             aria-label="Previous blog"
