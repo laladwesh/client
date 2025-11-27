@@ -83,7 +83,7 @@ const Blog = () => {
         </div>
 
         {/* Buttons Row */}
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4 mt-4">
           <Link 
             to="/blogs" 
             className="text-black text-base font-medium uppercase tracking-tight hover:underline transition-all duration-300"
