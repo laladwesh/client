@@ -5,6 +5,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Demo from "../components/Demo";
 import New from "../components/New";
 import Homeabout from "../components/Homeabout";
+import Blog from "../components/Blog";
 gsap.registerPlugin(ScrollTrigger);
 
 const Home = () => {
@@ -203,7 +204,7 @@ const Home = () => {
   }, [scrollEnabled]);
 
   return (
-    <div>
+    <div className="-mb-96">
       {/* Centered Logo (appears on load) */}
       <div
         ref={logoRef}
@@ -519,7 +520,10 @@ const Home = () => {
         </div>
       </div> */}
 
+
+<Blog/>
       <Homeabout/>
+      
     </div>
   );
 };
