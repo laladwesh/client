@@ -11,3 +11,14 @@
   overflow: visible;
   position: relative;
 }
+
+/* Prevent overscrolling beyond footer */
+html {
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
