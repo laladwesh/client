@@ -31,6 +31,12 @@ const Navbar = () => {
       name: 'Vera',
       number: '003',
       image: '/images/Group-1009002131-1_1Group 1009002131 (1).webp'
+    },
+     {
+      id: 4,
+      name: 'Luno',
+      number: '004',
+      image: '/images/Experimental-Marketing_1Experimental Marketing.webp'
     }
   ];
 
@@ -276,7 +282,7 @@ const Navbar = () => {
         </div>
 
         {/* Collections Grid */}
-        <div className='flex flex-col md:flex-row justify-center lg:justify-end gap-6 md:gap-16 lg:gap-52 pb-4 md:pb-0 px-4 md:px-8 lg:pr-24'>
+        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 justify-items-center gap-6 md:gap-12 lg:gap-16 pb-4 md:pb-6 px-4 md:px-8 lg:px-12'>
           {collections.map((collection) => (
             <div 
               key={collection.id}
