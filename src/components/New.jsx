@@ -246,15 +246,25 @@ const ProductDisplay = ({isStore = false}) => {
                 <div className="w-full bg-gray-100 overflow-hidden">
                   <img src={product.imageUrl} alt={product.name} className="w-full h-56 md:h-72 lg:h-[75vh] object-cover" />
                 </div>
-                <div className="p-4">
-                  <h3 className="text-base font-medium mb-2">{product.name}</h3>
-                  <p className="text-sm text-gray-600 mb-4">{formatPrice(product.price)}</p>
+                <div className="pb-5 pt-5 px-0 space-y-3">
+                  <h3 className="text-base font-medium px-4">{product.name}</h3>
                   <button
                     type="button"
                     onClick={() => window.location.href = `/store/${product.id}`}
-                    className="w-full bg-black text-white py-3 font-semibold"
+                    className="group w-full bg-black text-white px-5 py-3 flex items-center justify-between text-[16px] font-semibold tracking-wide"
                   >
-                    Shop now
+                    <div className="relative h-5 overflow-hidden">
+                      <div className="relative flex flex-col transition-transform duration-300 ease-in-out group-hover:-translate-y-1/2">
+                        <span className="flex h-5 items-center">Shop now</span>
+                        <span className="flex h-5 items-center">Shop now</span>
+                      </div>
+                    </div>
+                    <div className="relative h-5 overflow-hidden">
+                      <div className="relative flex flex-col transition-transform duration-300 ease-in-out group-hover:-translate-y-1/2">
+                        <span className="flex h-5 items-center text-white/90">{formatPrice(product.price)}</span>
+                        <span className="flex h-5 items-center text-white/90">{formatPrice(product.price)}</span>
+                      </div>
+                    </div>
                   </button>
                 </div>
               </div>
