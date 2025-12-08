@@ -196,7 +196,7 @@ const ProductDisplay = ({isStore = false}) => {
         !isStore ? (
           // Slider-style view (used on Home)
           <>
-          <div className=" border-black mx-4 mb-4"></div>
+          <div className="border-t-2 border-black mx-4 mb-4"></div>
           <div className="overflow-hidden flex-grow ">
             <div
               className="flex h-full transition-transform duration-500 ease-in-out"
@@ -244,7 +244,7 @@ const ProductDisplay = ({isStore = false}) => {
         ) : (
           // Store page grid: 3 items per row, non-scrollable
           <>
-          <div className=" border-black mx-4 mb-4"></div>
+          <div className="border-t-2 border-black mx-4 mb-4"></div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-2">
             {filteredProducts.map((product) => (
               <div key={product.id} className="flex flex-col bg-white">
