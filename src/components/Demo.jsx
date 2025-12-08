@@ -39,14 +39,14 @@ export default function ProductShowcase() {
     return (
       <button onClick={() => setActiveTabId(id)} className="w-full text-left">
         <div
-          className={`text-base tracking-wide font-semibold ${
+          className={`text-base tracking-wide font-semibold font-bdogrotesk ${
             isActive ? "text-black" : "text-gray-400"
           }`}
         >
           {number}
         </div>
         <div
-          className={`pt-2 pb-4 border-b border-gray-300 text-center text-6xl leading-[1.05] font-semibold ${
+          className={`pt-2 pb-4 border-b border-gray-300 text-center text-6xl leading-[1.05] font-semibold font-bdogrotesk ${
             isActive ? "text-black" : "text-gray-400"
           }`}
         >
@@ -88,7 +88,7 @@ export default function ProductShowcase() {
           </div>
 
           {/* Product name under image (small, grey) */}
-          <div className="mt-6 text-[15px] text-gray-700">
+          <div className="mt-6 text-[15px] text-gray-700 font-bdogrotesk">
             {activeProduct.productName}
           </div>
 
@@ -97,7 +97,7 @@ export default function ProductShowcase() {
           <button
             type="button"
             // The 'group' class here will trigger BOTH animations
-            className="group mt-2 w-full bg-black text-white px-4 py-3 flex items-center justify-between text-[15px] font-semibold tracking-wide"
+            className="group mt-2 w-full bg-black text-white px-3 py-2 flex items-center justify-between text-base font-medium tracking-wide font-bdogrotesk"
           >
             
             {/* === ANIMATED "SHOP NOW" (LEFT SIDE) === */}
@@ -140,7 +140,7 @@ export default function ProductShowcase() {
                 draggable={false}
               />
             </div>
-            <p className="text-[15px] leading-6 text-gray-700">
+            <p className="text-[15px] leading-6 text-gray-700 font-bdogrotesk">
               {activeProduct.description}
             </p>
           </div>
