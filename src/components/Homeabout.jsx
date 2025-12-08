@@ -15,9 +15,9 @@ const Homeabout = () => {
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top top", 
-          end: "+=150%",
+          end: "+=100%",
           pin: true,
-          scrub: 1, 
+          scrub: 0.5, 
           refreshPriority: -1, 
         },
       });
