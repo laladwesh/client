@@ -13,6 +13,7 @@ import PhotoBooth from './pages/PhotoBooth';
 import SignUp from './pages/SignUp';
 import './App.css';
 
+
 function App() {
   return (
     <Router>
@@ -25,6 +26,7 @@ function App() {
                 <Navbar />
                 <Home />
               </div>
+
               <Footer />
             </>
           } />

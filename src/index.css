@@ -59,7 +59,7 @@ html {
   position: relative;
   z-index: 20;
   background-color: #fff;
-  margin-bottom: 70vh; /* Equal to footer height - creates reveal space */
+  margin-bottom: 0; /* allow footer to follow content in normal flow */
   min-height: 100vh; /* Ensure content has minimum height */
   width: 100%;
 }
@@ -106,7 +106,9 @@ html {
   position: relative;
   z-index: 20;
   background-color: #fff;
-  margin-bottom: 100vh; /* Equal to footer height - creates reveal space */
+  margin-bottom: 70vh; /* Matches Footer height to create reveal effect */
+  min-height: 100vh;
+  width: 100%;
 }
 
 /* Fixed Footer Reveal Effect */

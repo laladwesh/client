@@ -39,16 +39,14 @@ export default function ProductShowcase() {
     return (
       <button onClick={() => setActiveTabId(id)} className="w-full text-left">
         <div
-          className={`text-base tracking-wide font-semibold ${
-            isActive ? "text-black" : "text-gray-400"
-          }`}
+          className={`text-base tracking-wide font-semibold ${isActive ? "text-black" : "text-gray-400"
+            }`}
         >
           {number}
         </div>
         <div
-          className={`pt-2 pb-4 border-b border-gray-300 text-center text-6xl leading-[1.05] font-semibold ${
-            isActive ? "text-black" : "text-gray-400"
-          }`}
+          className={`pt-2 pb-4 border-b border-gray-300 text-center text-6xl leading-[1.05] font-semibold ${isActive ? "text-black" : "text-gray-400"
+            }`}
         >
           {name}
         </div>
@@ -99,7 +97,7 @@ export default function ProductShowcase() {
             // The 'group' class here will trigger BOTH animations
             className="group mt-2 w-full bg-black text-white px-4 py-3 flex items-center justify-between text-[15px] font-semibold tracking-wide"
           >
-            
+
             {/* === ANIMATED "SHOP NOW" (LEFT SIDE) === */}
             <div className="relative h-5 overflow-hidden">
               <div className="relative flex flex-col transition-transform duration-300 ease-in-out group-hover:-translate-y-1/2">
@@ -112,7 +110,7 @@ export default function ProductShowcase() {
             {/* We apply the *same* animation structure to the price */}
             <div className="relative h-5 overflow-hidden">
               <div className="relative flex flex-col transition-transform duration-300 ease-in-out group-hover:-translate-y-1/2">
-                
+
                 {/* Price 1 (Visible) */}
                 <span className="flex h-5 items-center text-white/90">
                   {activeProduct.price}
@@ -125,7 +123,7 @@ export default function ProductShowcase() {
 
               </div>
             </div>
-            
+
           </button>
         </div>
 

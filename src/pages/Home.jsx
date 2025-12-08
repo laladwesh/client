@@ -4,8 +4,8 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Demo from "../components/Demo";
 import New from "../components/New";
-import Homeabout from "../components/Homeabout";
-import Blog from "../components/Blog";
+import Blog from "../components/Blog"
+import HomeAbout from "../components/Homeabout";
 gsap.registerPlugin(ScrollTrigger);
 
 const Home = () => {
@@ -196,6 +196,10 @@ const Home = () => {
         { opacity: 1, duration: 0.3, stagger: 0 },
         1 // Starts right when images finish moving
       );
+
+      // Refresh ScrollTrigger to ensure downstream triggers (like HomeAbout)
+      // recalculate their positions after this pin-spacer is added.
+      setTimeout(() => ScrollTrigger.refresh(), 100);
     }
 
     return () => {
@@ -204,7 +208,7 @@ const Home = () => {
   }, [scrollEnabled]);
 
   return (
-    <div className="-mb-96">
+    <div className="relative" style={{ zIndex: 5 }}>
       {/* Centered Logo (appears on load) */}
       <div
         ref={logoRef}
@@ -521,9 +525,8 @@ const Home = () => {
       </div> */}
 
 
-<Blog/>
-      <Homeabout/>
-      
+      <Blog />
+      <HomeAbout />
     </div>
   );
 };
