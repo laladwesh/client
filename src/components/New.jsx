@@ -195,6 +195,8 @@ const ProductDisplay = ({isStore = false}) => {
         // --- Grid View ---
         !isStore ? (
           // Slider-style view (used on Home)
+          <>
+          <div className=" border-black mx-4 mb-4"></div>
           <div className="overflow-hidden flex-grow ">
             <div
               className="flex h-full transition-transform duration-500 ease-in-out"
@@ -238,8 +240,11 @@ const ProductDisplay = ({isStore = false}) => {
               ))}
             </div>
           </div>
+          </>
         ) : (
           // Store page grid: 3 items per row, non-scrollable
+          <>
+          <div className=" border-black mx-4 mb-4"></div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-2">
             {filteredProducts.map((product) => (
               <div key={product.id} className="flex flex-col bg-white">
@@ -270,12 +275,13 @@ const ProductDisplay = ({isStore = false}) => {
               </div>
             ))}
           </div>
+          </>
         )
       ) : (
         // --- List View ---
-        <div className="divide-y divide-gray-200 flex-grow">
+        <div className="divide-y divide-black border-t-2 border-black flex-grow mx-6">
           {filteredProducts.map((product) => (
-            <div key={product.id} className="flex justify-between items-stretch p-6 hover:bg-gray-50 transition-colors min-h-[40vh]">
+            <div key={product.id} className="flex justify-between items-stretch py-4 hover:bg-gray-50 transition-colors min-h-[40vh]">
               {/* Left: Title & Shop Now */}
               <div className="flex-1">
                 <div className="flex flex-col justify-between h-full">
