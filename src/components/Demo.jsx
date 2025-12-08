@@ -37,22 +37,24 @@ export default function ProductShowcase() {
   const NavItem = ({ number, name, id }) => {
     const isActive = activeTabId === id;
     return (
-      <button onClick={() => setActiveTabId(id)} className="w-full text-left">
-        <div
-          className={`text-base tracking-wide font-semibold font-bdogrotesk ${
-            isActive ? "text-black" : "text-gray-400"
-          }`}
-        >
-          {number}
-        </div>
-        <div
-          className={`pt-2 pb-4 border-b border-gray-300 text-center text-6xl leading-[1.05] font-semibold font-bdogrotesk ${
-            isActive ? "text-black" : "text-gray-400"
-          }`}
-        >
-          {name}
-        </div>
-      </button>
+      <div className={`w-full pb-4 ${isActive ? 'border-b-2 border-black' : 'border-b-2 border-gray-300'}`}>
+        <button onClick={() => setActiveTabId(id)} className="w-full text-left flex items-center gap-8">
+          <div
+            className={`text-base tracking-wide font-semibold font-bdogrotesk whitespace-nowrap ${
+              isActive ? "text-black" : "text-gray-400"
+            }`}
+          >
+            {number}
+          </div>
+          <div
+            className={`pt-8 text-6xl leading-[1.05] font-semibold font-bdogrotesk ${
+              isActive ? "text-black" : "text-gray-400"
+            }`}
+          >
+            {name}
+          </div>
+        </button>
+      </div>
     );
   };
 
