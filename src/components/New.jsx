@@ -195,6 +195,8 @@ const ProductDisplay = ({isStore = false}) => {
         // --- Grid View ---
         !isStore ? (
           // Slider-style view (used on Home)
+          <>
+          <div className="border-t-2 border-black mx-4 mb-4"></div>
           <div className="overflow-hidden flex-grow ">
             <div
               className="flex h-full transition-transform duration-500 ease-in-out"
@@ -214,22 +216,22 @@ const ProductDisplay = ({isStore = false}) => {
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <div className="product-info mt-6  pb-6">
-                    <h3 className="text-base font-medium mb-3 px-4">{product.name}</h3>
+                  <div className="product-info mt-2 pb-6">
+                    <h3 className="text-base font-medium mb-3 ml-1 px-0 font-bdogrotesk text-left">{product.name}</h3>
                     <button
                       type="button"
-                      className="group w-full bg-black text-white px-5 py-4 flex items-center justify-between text-[15px] font-semibold tracking-wide"
+                      className="group w-full bg-black text-white px-3 py-3 flex items-start justify-between text-base font-medium tracking-wide font-bdogrotesk"
                     >
-                      <div className="relative h-5 overflow-hidden">
+                      <div className="relative h-4 overflow-hidden">
                         <div className="relative flex flex-col transition-transform duration-300 ease-in-out group-hover:-translate-y-1/2">
-                          <span className="flex h-5 text-lg items-center">Shop now</span>
-                          <span className="flex h-5 text-lg items-center">Shop now</span>
+                          <span className="flex h-4 items-center">Shop now</span>
+                          <span className="flex h-4 items-center">Shop now</span>
                         </div>
                       </div>
-                      <div className="relative h-5 overflow-hidden">
+                      <div className="relative h-4 overflow-hidden">
                         <div className="relative flex flex-col transition-transform duration-300 ease-in-out group-hover:-translate-y-1/2">
-                          <span className="flex h-5 items-center text-lg text-white/90">{formatPrice(product.price)}</span>
-                          <span className="flex h-5 items-center text-lg text-white/90">{formatPrice(product.price)}</span>
+                          <span className="flex h-4 items-center text-white/90 text-base">{formatPrice(product.price)}</span>
+                          <span className="flex h-4 items-center text-white/90 text-base">{formatPrice(product.price)}</span>
                         </div>
                       </div>
                     </button>
@@ -238,31 +240,34 @@ const ProductDisplay = ({isStore = false}) => {
               ))}
             </div>
           </div>
+          </>
         ) : (
           // Store page grid: 3 items per row, non-scrollable
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 p-4">
+          <>
+          <div className="border-t-2 border-black mx-4 mb-4"></div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-2">
             {filteredProducts.map((product) => (
               <div key={product.id} className="flex flex-col bg-white">
                 <div className="w-full bg-gray-100 overflow-hidden">
                   <img src={product.imageUrl} alt={product.name} className="w-full h-56 md:h-72 lg:h-[75vh] object-cover" />
                 </div>
-                <div className="pb-5 pt-5 px-0 space-y-3">
-                  <h3 className="text-base font-medium px-4">{product.name}</h3>
+                <div className="pb-2 pt-2 px-0 space-y-3">
+                  <h3 className="text-base font-medium ml-1 px-0 font-bdogrotesk text-left">{product.name}</h3>
                   <button
                     type="button"
                     onClick={() => window.location.href = `/store/${product.id}`}
-                    className="group w-full bg-black text-white px-5 py-3 flex items-center justify-between text-[16px] font-semibold tracking-wide"
+                    className="group w-full bg-black text-white px-3 py-3 flex items-start justify-between text-base font-medium tracking-wide font-bdogrotesk"
                   >
-                    <div className="relative h-5 overflow-hidden">
+                    <div className="relative h-4 overflow-hidden">
                       <div className="relative flex flex-col transition-transform duration-300 ease-in-out group-hover:-translate-y-1/2">
-                        <span className="flex h-5 items-center">Shop now</span>
-                        <span className="flex h-5 items-center">Shop now</span>
+                        <span className="flex h-4 items-center">Shop now</span>
+                        <span className="flex h-4 items-center">Shop now</span>
                       </div>
                     </div>
-                    <div className="relative h-5 overflow-hidden">
+                    <div className="relative h-4 overflow-hidden">
                       <div className="relative flex flex-col transition-transform duration-300 ease-in-out group-hover:-translate-y-1/2">
-                        <span className="flex h-5 items-center text-white/90">{formatPrice(product.price)}</span>
-                        <span className="flex h-5 items-center text-white/90">{formatPrice(product.price)}</span>
+                        <span className="flex h-4 items-center text-white/90 text-base">{formatPrice(product.price)}</span>
+                        <span className="flex h-4 items-center text-white/90 text-base">{formatPrice(product.price)}</span>
                       </div>
                     </div>
                   </button>
@@ -270,12 +275,13 @@ const ProductDisplay = ({isStore = false}) => {
               </div>
             ))}
           </div>
+          </>
         )
       ) : (
         // --- List View ---
-        <div className="divide-y divide-gray-200 flex-grow">
+        <div className="divide-y divide-black border-t-2 border-black flex-grow mx-6">
           {filteredProducts.map((product) => (
-            <div key={product.id} className="flex justify-between items-stretch p-6 hover:bg-gray-50 transition-colors min-h-[40vh]">
+            <div key={product.id} className="flex justify-between items-stretch py-4 hover:bg-gray-50 transition-colors min-h-[40vh]">
               {/* Left: Title & Shop Now */}
               <div className="flex-1">
                 <div className="flex flex-col justify-between h-full">

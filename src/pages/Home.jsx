@@ -259,18 +259,18 @@ const Home = () => {
             We free culture of the shackles of nostalgia, and let it take its
             place in today's everyday - in your everyday.
           </h1>
-
-          <div className="mt-16 px-4 flex justify-start space-x-[57vh] md:px-8 lg:px-12">
-            <h3 className="text-lg font-bold mb-4 text-black uppercase tracking-wider">
+        </div>
+          {/* Vision section - heading flush-left, paragraph centered and vertically aligned */}
+          <div className="mt-16 relative flex items-center justify-center px-4 md:px-8 lg:px-12">
+            <h3 className="absolute left-4 md:left-8 lg:left-12 text-lg font-bold text-black uppercase tracking-wider">
               Vision
             </h3>
-            <p className="text-lg  leading-relaxed max-w-[70vh] text-black font-medium">
+            <p className="text-lg leading-relaxed text-black font-medium text-left w-[33.33vw] min-w-[300px]">
               Redefining minimalism through material authenticity and design
               order. Forma moves beyond simple forms to create considered
               designs that shape spaces.
             </p>
           </div>
-        </div>
       </div>
 
       {/* Horizontal Scroll Section - Material Driven */}
