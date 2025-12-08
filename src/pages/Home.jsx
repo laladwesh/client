@@ -254,7 +254,7 @@ const Home = () => {
       {/* Section 02 - Mission Statement */}
       <div ref={contentRef} className="bg-white py-12 overflow-hidden">
         <div className="w-screen">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-semibold leading-[1.1] text-black px-4 md:px-4 lg:px-4 pr-0">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bdogrotesk font-medium leading-[1.0] text-black px-4 md:px-4 lg:px-4 pr-0" style={{ letterSpacing: '-0.028em' }}>
             We make everyday clothes for people who like dressing up everyday.
             We free culture of the shackles of nostalgia, and let it take its
             place in today's everyday - in your everyday.
@@ -262,10 +262,10 @@ const Home = () => {
         </div>
           {/* Vision section - heading flush-left, paragraph centered and vertically aligned */}
           <div className="mt-16 relative flex items-center justify-center px-4 md:px-8 lg:px-12">
-            <h3 className="absolute left-2 md:left-4 lg:left-8 text-lg font-bold text-black uppercase tracking-wider">
+            <h3 className="absolute left-2 md:left-4 lg:left-8 text-lg font-bdogrotesk font-medium text-black uppercase tracking-tighter leading-[1.0]" style={{ letterSpacing: '-0.028em' }}>
               Vision
             </h3>
-            <p className="text-lg leading-relaxed text-black font-medium text-left w-[33.33vw] min-w-[300px]">
+            <p className="text-lg font-bdogrotesk font-medium text-black text-left w-[33.33vw] min-w-[300px] leading-[1.2]" style={{ letterSpacing: '-0.028em' }}>
               Redefining minimalism through material authenticity and design
               order. Forma moves beyond simple forms to create considered
               designs that shape spaces.
@@ -280,15 +280,15 @@ const Home = () => {
       >
         <div className="horizontal-scroll-container h-screen flex items-center justify-center relative ml-4 ">
           {/* Fixed Text on sides - BEHIND images */}
-          <div className="fixed left-8 top-1/2 -translate-y-1/2 text-sm font-medium z-0">
+          <div className="fixed left-8 top-1/2 -translate-y-1/2 text-sm font-bdogrotesk font-medium z-0 leading-[1.0]" style={{ letterSpacing: '-0.028em' }}>
             Material
           </div>
-          <div className="fixed right-8 top-1/2 -translate-y-1/2 text-sm font-medium z-0">
+          <div className="fixed right-8 top-1/2 -translate-y-1/2 text-sm font-bdogrotesk font-medium z-0 leading-[1.0]" style={{ letterSpacing: '-0.028em' }}>
             Driven
           </div>
 
           {/* Image Container - All 3 images stacked, will spread to full width */}
-          <div className="images-wrapper relative w-full h-full flex items-center justify-center">
+          <div className="images-wrapper font-bdogrotesk-medium relative w-full h-full flex items-center justify-center">
             {/* Left Image - Slides to left edge, fills 1/3 width */}
             <div
               className="left-image absolute left-1/2 -translate-x-1/2 w-[33.33vw]"
@@ -304,16 +304,16 @@ const Home = () => {
                 {/* --- NEW ANIMATED BUTTON --- */}
                 <button
                   type="button"
-                  className="group mt-2 w-full bg-black text-white px-5 py-4 flex items-center justify-between text-[15px] font-semibold tracking-wide"
+                  className="group mt-2 w-full bg-black text-white px-3 py-3 flex items-center justify-between text-[15px] font-semibold tracking-wide"
                 >
                   <div className="relative h-5 overflow-hidden">
-                    <div className="relative flex flex-col transition-transform duration-300 ease-in-out group-hover:-translate-y-1/2">
+                    <div className="relative flex flex-col font-medium text-base transition-transform duration-300 ease-in-out group-hover:-translate-y-1/2">
                       <span className="flex h-5 items-center">Shop now</span>
                       <span className="flex h-5 items-center">Shop now</span>
                     </div>
                   </div>
                   <div className="relative h-5 overflow-hidden">
-                    <div className="relative flex flex-col transition-transform duration-300 ease-in-out group-hover:-translate-y-1/2">
+                    <div className="relative flex flex-col font-medium text-base transition-transform duration-300 ease-in-out group-hover:-translate-y-1/2">
                       <span className="flex h-5 items-center text-white/90">
                         $ 4,200.00 USD
                       </span>
@@ -341,7 +341,7 @@ const Home = () => {
                 {/* --- NEW ANIMATED BUTTON --- */}
                 <button
                   type="button"
-                  className="group mt-2 w-full bg-black text-white px-5 py-4 flex items-center justify-between text-[15px] font-semibold tracking-wide"
+                  className="group mt-2 w-full font-medium text-base bg-black text-white px-3 py-3 flex items-center justify-between  tracking-wide"
                 >
                   <div className="relative h-5 overflow-hidden">
                     <div className="relative flex flex-col transition-transform duration-300 ease-in-out group-hover:-translate-y-1/2">
@@ -378,7 +378,7 @@ const Home = () => {
                 {/* --- NEW ANIMATED BUTTON --- */}
                 <button
                   type="button"
-                  className="group mt-2 w-full bg-black text-white px-5 py-4 flex items-center justify-between text-[15px] font-semibold tracking-wide"
+                  className="group mt-2 w-full bg-black text-white px-3 py-3 font-medium text-base flex items-center justify-between tracking-wide"
                 >
                   <div className="relative h-5 overflow-hidden">
                     <div className="relative flex flex-col transition-transform duration-300 ease-in-out group-hover:-translate-y-1/2">
