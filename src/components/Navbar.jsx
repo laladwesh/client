@@ -85,15 +85,20 @@ const Navbar = () => {
 
   return (
     <div 
-      className={`navbar-logo-center-home p-0 ${isHomePage && isSticky ? 'nav_bg fixed top-0 left-0 right-0 w-full z-[9999] bg-transparent transition-all duration-400 ease-in-out shadow-none' : ''} ${!isHomePage ? 'bg-white relative z-50' : ''}`}
+      className={`navbar-logo-center-home p-0 transition-all duration-500 ease-in-out ${isHomePage ? (isSticky ? 'fixed top-0 left-0 right-0 w-full z-[9999] bg-black' : 'absolute left-0 right-0 w-full z-[9999] bg-transparent top-12') : 'relative z-50 bg-white'}`}
+      style={isHomePage && !isSticky ? { backgroundColor: 'transparent', backgroundImage: 'none' } : {}}
     >
       <div 
-        className={`navbar-logo-center-container-home w-nav px-0 ${isHomePage && isSticky ? 'bg-transparent w-full' : ''} ${!isHomePage ? 'bg-white' : ''}`}
+        className={`navbar-logo-center-container-home w-nav px-0 transition-all duration-500 ease-in-out ${isHomePage ? (isSticky ? 'bg-black' : 'bg-transparent') : 'bg-white'}`}
+        style={isHomePage && !isSticky ? { backgroundColor: 'transparent', backgroundImage: 'none' } : {}}
       >
         <div 
-          className={`container-navbar-home px-0 max-w-full ${isHomePage && isSticky ? 'bg-transparent' : ''}`}
+          className={`container-navbar-home px-0 max-w-full transition-all duration-500 ease-in-out ${isHomePage ? (isSticky ? 'bg-black' : 'bg-transparent') : 'bg-white'}`}
+          style={isHomePage && !isSticky ? { backgroundColor: 'transparent', backgroundImage: 'none' } : {}}
         >
-          <div className="navbar-wrapper-home px-0 m-0">
+          <div className={`navbar-wrapper-home px-0 m-0 transition-all duration-500 ease-in-out ${isHomePage ? (isSticky ? 'bg-black' : 'bg-transparent') : 'bg-white'}`}
+            style={isHomePage && !isSticky ? { backgroundColor: 'transparent', backgroundImage: 'none' } : {}}
+          >
             <Link to="/" className={`navbar-logo-wrapper-home w-nav-brand ${isHomePage && !isSticky ? 'opacity-0' : 'opacity-100'}`}>
               <img width="122" loading="lazy" alt="Nufab Logo" src="/images/Logo--White.svg" />
             </Link>

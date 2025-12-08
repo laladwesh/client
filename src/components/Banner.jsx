@@ -6,7 +6,7 @@ const Banner = () => {
   if (!isVisible) return null;
 
   return (
-    <section className="uui-banner12_component">
+    <section className="uui-banner12_component ">
       <div className="uui-page-padding-3">
         <div className="uui-container-large-3">
           <div className="uui-banner12_wrapper">
