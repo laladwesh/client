@@ -262,7 +262,7 @@ const Home = () => {
         </div>
           {/* Vision section - heading flush-left, paragraph centered and vertically aligned */}
           <div className="mt-16 relative flex items-center justify-center px-4 md:px-8 lg:px-12">
-            <h3 className="absolute left-4 md:left-8 lg:left-12 text-lg font-bold text-black uppercase tracking-wider">
+            <h3 className="absolute left-2 md:left-4 lg:left-8 text-lg font-bold text-black uppercase tracking-wider">
               Vision
             </h3>
             <p className="text-lg leading-relaxed text-black font-medium text-left w-[33.33vw] min-w-[300px]">
