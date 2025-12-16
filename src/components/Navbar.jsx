@@ -11,6 +11,7 @@ const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const isHomePage = location.pathname === '/';
+  const logoSrc = isHomePage ? '/images/Logo--White.svg' : '/nufab_black.png';
 
   // Collections data - you can modify this array to change categories
   const collections = [
@@ -100,7 +101,7 @@ const Navbar = () => {
             style={isHomePage && !isSticky ? { backgroundColor: 'transparent', backgroundImage: 'none' } : {}}
           >
             <Link to="/" className={`navbar-logo-wrapper-home w-nav-brand ${isHomePage && !isSticky ? 'opacity-0' : 'opacity-100'}`}>
-              <img width="122" loading="lazy" alt="Nufab Logo" src="/images/Logo--White.svg" />
+              <img width="122" loading="lazy" alt="Nufab Logo" src={logoSrc} />
             </Link>
             
             <nav role="navigation" className={`nav-menu-wrapper-three-home w-nav-menu pl-0 ml-0 ${isMenuOpen ? 'w--open' : ''}`}>
@@ -140,12 +141,12 @@ const Navbar = () => {
                 <div>
                   <ul className="nav-menu-block-home-2 nav_blck_gap w-list-unstyled">
                     <li>
-                      <Link to="/cart" className="text-white font-semibold text-base hover:underline">
+                      <Link to="/cart" className={`${!isHomePage ? 'text-black' : 'text-white'} font-semibold text-base hover:underline`}>
                         Cart <span className="text-[0.9em]">0</span>
                       </Link>
                     </li>
                     <li>
-                      <Link to="/sign-up" className="text-white font-semibold text-base hover:underline">
+                      <Link to="/sign-up" className={`${!isHomePage ? 'text-black' : 'text-white'} font-semibold text-base hover:underline`}>
                         <div className="nav-icon_wrapper-home relative">
                           {user ? (
                             <>
