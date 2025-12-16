@@ -1,5 +1,6 @@
 // ProductShowcase.jsx
 import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 
 // ---------- Data ----------
 const productData = {
@@ -31,6 +32,7 @@ const productData = {
 };
 
 export default function ProductShowcase() {
+  const navigate = useNavigate();
   const [activeTabId, setActiveTabId] = useState("roz");
   const activeProduct = productData[activeTabId];
 
@@ -98,6 +100,7 @@ export default function ProductShowcase() {
           {/* Full-width black CTA bar with price on right */}
           <button
             type="button"
+            onClick={() => navigate('/product/1')}
             // The 'group' class here will trigger BOTH animations
             className="group mt-2 w-full bg-black text-white px-3 py-2 flex items-center justify-between text-base font-medium tracking-wide font-bdogrotesk"
           >
