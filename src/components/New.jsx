@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 // --- Product Data using your provided images ---
 const products = [
@@ -85,6 +85,7 @@ const ArrowRight = () => (
 
 // --- Main Component ---
 const ProductDisplay = ({isStore = false}) => {
+  const navigate = useNavigate();
   const [view, setView] = useState('grid'); // 'grid' or 'list'
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState('All'); // 'All', 'Roz Roz', 'Kuch Kuch'
@@ -220,6 +221,7 @@ const ProductDisplay = ({isStore = false}) => {
                     <h3 className="text-base font-medium mb-3 ml-1 px-0 font-bdogrotesk text-left">{product.name}</h3>
                     <button
                       type="button"
+                      onClick={() => navigate('/product/1')}
                       className="group w-full bg-black text-white px-3 py-3 flex items-start justify-between text-base font-medium tracking-wide font-bdogrotesk"
                     >
                       <div className="relative h-4 overflow-hidden">
@@ -255,7 +257,7 @@ const ProductDisplay = ({isStore = false}) => {
                   <h3 className="text-base font-medium ml-1 px-0 font-bdogrotesk text-left">{product.name}</h3>
                   <button
                     type="button"
-                    onClick={() => window.location.href = `/store/${product.id}`}
+                    onClick={() => navigate('/product/1')}
                     className="group w-full bg-black text-white px-3 py-3 flex items-start justify-between text-base font-medium tracking-wide font-bdogrotesk"
                   >
                     <div className="relative h-4 overflow-hidden">
