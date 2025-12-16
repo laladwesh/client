@@ -92,28 +92,25 @@ const ProductPage = () => {
 
   return (
     <div className="w-full mx-0 px-0 py-8 text-left font-bdogrotesk">
-      <div className="grid grid-cols-1 for image scroll ka haptic check out forma ki sitew-screen md:grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {/* Left: Images */}
         <div>
-          
-
           {/* Thumbnails below main image: fixed height box with vertical scroll */}
           <div className="mt-3 max-w-full h-[85vh] no-scrollbar overflow-y-auto">
             <div className="flex flex-col gap-3 px-1">
               {product.images.map((img, idx) => (
-                
-                  <img
-                    src={img}
-                    alt={`${product.title} ${idx + 1}`}
-                    className="w-full h-[85vh] object-cover"
-                  />
+                <img
+                  src={img}
+                  alt={`${product.title} ${idx + 1}`}
+                  className="w-full h-[85vh] object-cover"
+                />
               ))}
             </div>
           </div>
         </div>
 
         {/* Right: Details */}
-        <div>
+        <div className="pt-4">
           <div className="relative">
             <button
               aria-label={
@@ -141,7 +138,7 @@ const ProductPage = () => {
                 </svg>
               )}
             </button>
-            <p className="text-base text-black text-left w-full md:w-5/6">
+            <p className="text-base text-black font-medium text-left w-full md:w-5/6">
               {product.description}
             </p>
             <h1 className="text-5xl md:text-8xl text-black font-semibold leading-tight mt-4 text-left">
@@ -161,7 +158,15 @@ const ProductPage = () => {
                       : "border-gray-300 text-gray-600"
                   }`}
                 >
-                  <span className={selectedSize === s ? 'inline-block pb-3 border-b-2 border-black' : ''}>{s}</span>
+                  <span
+                    className={
+                      selectedSize === s
+                        ? "inline-block pb-3 border-b-2 border-black"
+                        : ""
+                    }
+                  >
+                    {s}
+                  </span>
                 </button>
               ))}
             </div>
@@ -239,6 +244,42 @@ const ProductPage = () => {
           </div>
         </div>
       </div>
+
+<div className="mt-8">
+  <div className="max-w-screen px-2 mx-auto space-y-6">
+    <section className="grid grid-cols-12 items-start gap-6 py-4">
+      <div className="col-span-1 text-sm text-black">001</div>
+      <h2 className="col-span-6 text-4xl md:text-6xl text-black font-bold leading-tight">Description</h2>
+      <div className="col-span-5 text-sm text-black">
+        Feel the luxurious blend embrace your silhouette while the timeless A-line cut flatters every figure. The rich emerald shade catches light beautifully, making you the center of attention without trying too hard.
+      </div>
+    </section>
+    <div className="border-t border-black" />
+
+    <section className="grid  grid-cols-12 items-start gap-6 py-4">
+      <div className="col-span-1 text-sm text-black">002</div>
+      <h2 className="col-span-6 text-4xl text-black md:text-6xl font-bold leading-tight">Dimensions</h2>
+      <div className="col-span-5 text-sm text-black">
+        72"h x 36"w x 12"d
+        <br />
+        Please refer to the size chart for garment measurement
+      </div>
+    </section>
+    <div className="border-t border-black" />
+
+    <section className="grid grid-cols-12 items-start gap-6 py-4">
+      <div className="col-span-1 text-sm text-black">003</div>
+      <h2 className="col-span-6 text-4xl text-black md:text-6xl font-bold leading-tight">Promises</h2>
+      <div className="col-span-5 text-sm text-black">
+        Material used: Cotton, Linenan
+        <br />
+        We assure you bla bla
+      </div>
+    </section>
+    <div className="border-t border-black" />
+  </div>
+</div>
+
     </div>
   );
 };
