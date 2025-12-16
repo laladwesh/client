@@ -92,18 +92,24 @@ const ProductPage = () => {
 
   return (
     <div className="w-full mx-0 px-0 py-8 text-left font-bdogrotesk">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 for image scroll ka haptic check out forma ki sitew-screen md:grid-cols-2 gap-3">
         {/* Left: Images */}
         <div>
-          <div className="bg-gray-100 p-0 flex items-center justify-center h-[85vh] w-full overflow-hidden">
-            <img
-              src={product.images[selectedImage]}
-              alt={product.title}
-              className="w-full h-full object-cover"
-            />
-          </div>
+          
 
-          {/* thumbnails removed from left column - rendered below price on the right column */}
+          {/* Thumbnails below main image: fixed height box with vertical scroll */}
+          <div className="mt-3 max-w-full h-[85vh] no-scrollbar overflow-y-auto">
+            <div className="flex flex-col gap-3 px-1">
+              {product.images.map((img, idx) => (
+                
+                  <img
+                    src={img}
+                    alt={`${product.title} ${idx + 1}`}
+                    className="w-full h-[85vh] object-cover"
+                  />
+              ))}
+            </div>
+          </div>
         </div>
 
         {/* Right: Details */}
@@ -191,24 +197,7 @@ const ProductPage = () => {
             </div>
           </div>
 
-          {/* Thumbnails moved below the price */}
-          <div className="mt-6 ml-0 max-w-xl grid grid-cols-3 gap-3">
-            {product.images.map((img, idx) => (
-              <button
-                key={img + idx}
-                onClick={() => setSelectedImage(idx)}
-                className={`h-24 bg-gray-100 flex items-center justify-center border ${
-                  selectedImage === idx ? "border-black" : "border-transparent"
-                }`}
-              >
-                <img
-                  src={img}
-                  alt={`${product.title} ${idx + 1}`}
-                  className="h-full object-contain"
-                />
-              </button>
-            ))}
-          </div>
+          {/* thumbnails removed from here — now rendered under the main image */}
 
           <div className="mt-4 flex flex-col gap-3 text-left">
             <button
