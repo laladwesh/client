@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Demo from "../components/Demo";
@@ -9,6 +9,7 @@ import HomeAbout from "../components/Homeabout";
 gsap.registerPlugin(ScrollTrigger);
 
 const Home = () => {
+  const navigate = useNavigate();
   const [scrollEnabled, setScrollEnabled] = useState(false);
   const logoRef = useRef(null);
   const heroRef = useRef(null);
@@ -304,6 +305,7 @@ const Home = () => {
                 {/* --- NEW ANIMATED BUTTON --- */}
                 <button
                   type="button"
+                  onClick={() => navigate('/product/1')}
                   className="group mt-2 w-full bg-black text-white px-3 py-3 flex items-center justify-between text-[15px] font-semibold tracking-wide"
                 >
                   <div className="relative h-5 overflow-hidden">
@@ -341,6 +343,7 @@ const Home = () => {
                 {/* --- NEW ANIMATED BUTTON --- */}
                 <button
                   type="button"
+                  onClick={() => navigate('/product/1')}
                   className="group mt-2 w-full font-medium text-base bg-black text-white px-3 py-3 flex items-center justify-between  tracking-wide"
                 >
                   <div className="relative h-5 overflow-hidden">
@@ -378,6 +381,7 @@ const Home = () => {
                 {/* --- NEW ANIMATED BUTTON --- */}
                 <button
                   type="button"
+                  onClick={() => navigate('/product/1')}
                   className="group mt-2 w-full bg-black text-white px-3 py-3 font-medium text-base flex items-center justify-between tracking-wide"
                 >
                   <div className="relative h-5 overflow-hidden">
