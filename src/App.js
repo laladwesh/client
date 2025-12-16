@@ -12,6 +12,7 @@ import FAQ from './pages/FAQ';
 import PhotoBooth from './pages/PhotoBooth';
 import SignUp from './pages/SignUp';
 import './App.css';
+import ProductPage from './pages/ProductPage';
 
 
 function App() {
@@ -25,6 +26,17 @@ function App() {
                 <Banner />
                 <Navbar />
                 <Home />
+              </div>
+
+              <Footer />
+            </>
+          } />
+          <Route path="/product/:productId" element={
+            <>
+              <div className="page-content">
+                <Banner />
+                <Navbar />
+                <ProductPage />
               </div>
 
               <Footer />
