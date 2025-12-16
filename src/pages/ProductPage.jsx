@@ -247,28 +247,22 @@ const ProductPage = () => {
         </div>
       </div>
 
-      <div className="mt-8">
+      <div className="mt-8 px-4">
+        <h3 className=" text-base py-5 px-2 font-medium">Details</h3>
         <div className="max-w-screen px-2 mx-auto space-y-6">
-          <section className="grid grid-cols-12 items-start gap-6 py-4">
-            <div className="col-span-1 text-sm text-black">001</div>
-            <h2 className="col-span-6 text-4xl md:text-6xl text-black font-bold leading-tight">
-              Description
-            </h2>
-            <div className="col-span-5 text-sm text-black">
-              Feel the luxurious blend embrace your silhouette while the
-              timeless A-line cut flatters every figure. The rich emerald shade
-              catches light beautifully, making you the center of attention
-              without trying too hard.
+          <section className="flex flex-col md:flex-row md:items-start gap-64 py-4">
+            <div className="flex-shrink-0 w-12 md:w-20 text-sm text-black">001</div>
+            <h2 className="flex-1 text-4xl md:text-6xl text-black font-semibold leading-tight md:-mr-2">Description</h2>
+            <div className="flex-shrink-0 md:w-1/3 text-sm text-black">
+              Feel the luxurious blend embrace your silhouette while the timeless A-line cut flatters every figure. The rich emerald shade catches light beautifully, making you the center of attention without trying too hard.
             </div>
           </section>
           <div className="border-t border-black" />
 
-          <section className="grid  grid-cols-12 items-start gap-6 py-4">
-            <div className="col-span-1 text-sm text-black">002</div>
-            <h2 className="col-span-6 text-4xl text-black md:text-6xl font-bold leading-tight">
-              Dimensions
-            </h2>
-            <div className="col-span-5 text-sm text-black">
+          <section className="flex flex-col md:flex-row md:items-start gap-64 py-4">
+            <div className="flex-shrink-0 w-12 md:w-20 text-sm text-black">002</div>
+            <h2 className="flex-1 text-4xl md:text-6xl text-black font-semibold leading-tight md:-mr-2">Dimensions</h2>
+            <div className="flex-shrink-0 md:w-1/3 text-sm text-black">
               72"h x 36"w x 12"d
               <br />
               Please refer to the size chart for garment measurement
@@ -276,12 +270,10 @@ const ProductPage = () => {
           </section>
           <div className="border-t border-black" />
 
-          <section className="grid grid-cols-12 items-start gap-6 py-4">
-            <div className="col-span-1 text-sm text-black">003</div>
-            <h2 className="col-span-6 text-4xl text-black md:text-6xl font-bold leading-tight">
-              Promises
-            </h2>
-            <div className="col-span-5 text-sm text-black">
+          <section className="flex flex-col md:flex-row md:items-start gap-64 py-4">
+            <div className="flex-shrink-0 w-12 md:w-20 text-sm text-black">003</div>
+            <h2 className="flex-1 text-4xl md:text-6xl text-black font-semibold leading-tight md:-mr-2">Promises</h2>
+            <div className="flex-shrink-0 md:w-1/3 text-sm text-black">
               Material used: Cotton, Linenan
               <br />
               We assure you bla bla
