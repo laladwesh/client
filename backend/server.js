@@ -19,6 +19,7 @@ connectDB();
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/products', require('./routes/products'));
 app.use('/api/orders', require('./routes/orders'));
+app.use('/api/blogs', require('./routes/blogs'));
 
 app.get('/', (req, res) => res.send('Backend API running'));
 
