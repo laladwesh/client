@@ -1,35 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { getBlogs } from '../services/blogService';
 
 const Blog = () => {
   const [currentBlogIndex, setCurrentBlogIndex] = useState(0);
+  const [blogs, setBlogs] = useState([]);
 
-  // Dummy blog data
-  const blogs = [
-    {
-      id: 1,
-      title: "We make everyday clothes for people who like dressing up everyday. We free culture of the shackles of nostalgia, and let it take its place in today's everyday – in your everyday."
-    },
-    {
-      id: 2,
-      title: "Fashion is not just about following trends, it's about creating your own identity. Every piece tells a story, and we help you write yours with authenticity and style."
-    },
-    {
-      id: 3,
-      title: "Sustainable fashion isn't a choice anymore, it's a necessity. We believe in creating timeless pieces that respect both people and planet, one thread at a time."
-    },
-    {
-      id: 4,
-      title: "The future of fashion lies in minimalism and quality. We craft pieces that transcend seasons, celebrating simplicity and elegance in every stitch."
-    },
-    {
-      id: 5,
-      title: "Cultural heritage meets contemporary design. Our collections bridge the gap between traditional craftsmanship and modern aesthetics, creating something truly unique."
-    }
-  ];
-
-  // Auto-scroll every 5-6 seconds
+  // Load blogs from API
   useEffect(() => {
+    let mounted = true;
+    getBlogs()
+      .then((data) => {
+        if (!mounted) return;
+        setBlogs((data || []).map((b) => ({ id: b._id, title: b.title })));
+      })
+      .catch((e) => console.error('Failed to load blog titles', e));
+    return () => { mounted = false; };
+  }, []);
+
+  // Auto-scroll every 5-6 seconds when blogs are available
+  useEffect(() => {
+    if (!blogs.length) return;
     const interval = setInterval(() => {
       setCurrentBlogIndex((prevIndex) => (prevIndex + 1) % blogs.length);
     }, 5500);
@@ -69,7 +60,7 @@ const Blog = () => {
             className="flex transition-transform duration-700 ease-in-out"
             style={{ transform: `translateX(-${currentBlogIndex * 100}%)` }}
           >
-            {blogs.map((blog) => (
+            {blogs.length ? blogs.map((blog) => (
               <div 
                 key={blog.id}
                 className="flex-shrink-0 w-full"
@@ -78,7 +69,11 @@ const Blog = () => {
                   {blog.title}
                 </h2>
               </div>
-            ))}
+            )) : (
+              <div className="flex-shrink-0 w-full">
+                <h2 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-semibold leading-[1.1] text-black pr-4">Loading blog titles…</h2>
+              </div>
+            )}
           </div>
         </div>
 
