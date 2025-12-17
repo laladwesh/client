@@ -1,0 +1,198 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Webflow CSS is imported via link tags in public/index.html */
+
+/* CRITICAL: Allow scrolling */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: auto;
+}
+
+/* CRITICAL: App container must allow content to flow */
+#root, .App {
+  width: 100%;
+  height: auto;
+  min-height: 100vh;
+  overflow: visible;
+}
+
+/* Hide scrollbars but keep functionality */
+body::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+html::-webkit-scrollbar {
+  display: none;
+}
+
+html {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  scroll-behavior: smooth;
+}
+
+.footer {
+  display: block !important;
+}
+
+/* Hero section full screen */
+.section_hero {
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Page Content Wrapper - Creates reveal space for footer */
+.page-content {
+  position: relative;
+  z-index: 20;
+  background-color: #fff;
+  margin-bottom: 0; /* allow footer to follow content in normal flow */
+  min-height: 100vh; /* Ensure content has minimum height */
+  width: 100%;
+}
+
+/* Sticky navbar styles */
+.navbar-logo-center-home {
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.navbar-logo-center-home.nav_bg {
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+  background-color: #000 !important;
+}
+
+/* Ensure all navbar child elements have black background when sticky */
+.navbar-logo-center-home.nav_bg * {
+  background-color: transparent;
+}
+
+.navbar-logo-center-home.nav_bg .navbar-logo-center-container-home,
+.navbar-logo-center-home.nav_bg .container-navbar-home,
+.navbar-logo-center-home.nav_bg .navbar-wrapper-home {
+  background-color: #000 !important;
+}
+
+/* Smooth appearance animation */
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.navbar-logo-center-home.nav_bg {
+  animation: slideDown 0.4s ease-in-out;
+}
+
+/* Page Content Wrapper - Creates reveal space for footer */
+.page-content {
+  position: relative;
+  z-index: 20;
+  background-color: #fff;
+  margin-bottom: 70vh; /* Matches Footer height to create reveal effect */
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* Fixed Footer Reveal Effect */
+.nufab-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: #000;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 3vw;
+  z-index: 10;
+  overflow: hidden;
+}
+
+/* Footer Content Layout */
+.footer-content {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+  padding-top: 5vh;
+}
+
+.footer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 1vw;
+}
+
+.footer-links a {
+  text-decoration: none;
+  color: #fff;
+  font-size: 2vw;
+  transition: opacity 0.3s ease;
+}
+
+.footer-links a:hover {
+  opacity: 0.7;
+}
+
+/* Large Footer Brand Text */
+.footer-brand {
+  font-size: 23vw;
+  font-weight: bold;
+  margin: 0;
+  line-height: 0.9;
+  text-align: center;
+  color: #fff;
+  position: relative;
+  z-index: 99;
+}
+
+/* Footer Bottom */
+.footer-bottom {
+  border-top: 1px solid #dadada;
+  padding-top: 2vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer-bottom p {
+  font-size: 1vw;
+  margin: 0;
+  color: #fff;
+}
+
+/* Hide scrollbar but keep scrolling */
+.no-scrollbar {
+  overflow: auto;                 /* required */
+  -ms-overflow-style: none;        /* IE 10+ */
+  scrollbar-width: none;           /* Firefox */
+  -webkit-overflow-scrolling: touch; /* iOS smooth scrolling */
+}
+
+/* Chrome, Edge, Safari (desktop & iOS) */
+.no-scrollbar::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
