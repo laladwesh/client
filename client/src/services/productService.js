@@ -1,8 +1,11 @@
 import api from './api';
 
-export const getProducts = async () => {
+export const getProducts = async (options = {}) => {
   try {
-    const response = await api.get('/products');
+    const params = {};
+    if (typeof options.shownInHome !== 'undefined') params.shownInHome = options.shownInHome;
+    if (options.extraParams) Object.assign(params, options.extraParams);
+    const response = await api.get('/products', { params });
     return response.data;
   } catch (error) {
     throw error.response?.data || error;
