@@ -13,6 +13,7 @@ import PhotoBooth from './pages/PhotoBooth';
 import SignUp from './pages/SignUp';
 import './App.css';
 import ProductPage from './pages/ProductPage';
+import BlogPage from './pages/BlogPage';
 
 
 function App() {
@@ -66,6 +67,16 @@ function App() {
                 <Banner />
                 <Navbar />
                 <Blogs />
+              </div>
+              <Footer />
+            </>
+          } />
+          <Route path="/blog/:blogId" element={
+            <>
+              <div className="page-content">
+                <Banner />
+                <Navbar />
+                <BlogPage />
               </div>
               <Footer />
             </>
