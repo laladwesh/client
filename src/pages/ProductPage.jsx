@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 const sharedImage =
   "https://cdn.prod.website-files.com/67a7721e638cc64a55110750/67ad9c39d7574971aad10695_9.webp";
@@ -18,6 +18,15 @@ const mockProducts = [
   },
   {
     id: "2",
+    title: "Classic White T-Shirt",
+    description: "A wardrobe essential — soft cotton, regular fit.",
+    price: 999,
+    originalPrice: 1299,
+    images: [sharedImage, sharedImage],
+    sizes: ["XS", "S", "M", "L"],
+  },
+  {
+    id: "3",
     title: "Classic White T-Shirt",
     description: "A wardrobe essential — soft cotton, regular fit.",
     price: 999,
@@ -79,6 +88,19 @@ const ProductPage = () => {
       const next = exists
         ? prev.filter((id) => id !== product.id)
         : [...prev, product.id];
+      try {
+        localStorage.setItem("wishlist", JSON.stringify(next));
+      } catch (e) {}
+      return next;
+    });
+  };
+
+  const navigate = useNavigate();
+
+  const toggleWishlistItem = (id) => {
+    setWishlist((prev) => {
+      const exists = prev.includes(id);
+      const next = exists ? prev.filter((i) => i !== id) : [...prev, id];
       try {
         localStorage.setItem("wishlist", JSON.stringify(next));
       } catch (e) {}
@@ -308,6 +330,48 @@ const ProductPage = () => {
             </div>
           </section>
           <div className="border-t border-black" />
+        </div>
+      </div>
+      <div className="mt-8 px-2 font-bdogrotesk">
+        <h3 className="text-base py-2 px-2 font-medium">Check these out</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-2">
+          {mockProducts.map((p) => {
+            const isInWishlist = wishlist.includes(p.id);
+            return (
+              <div key={p.id} className="group text-left space-y-4">
+                <div
+                  className="w-full bg-gray-200 aspect-[3/4] overflow-hidden relative cursor-pointer"
+                  onClick={() => toggleWishlistItem(p.id)}
+                >
+                  <img src={p.images[0]} alt={p.title} className="w-full h-full object-cover" />
+                  <div className="absolute bottom-2 right-2">
+                    {isInWishlist ? (
+                      <svg width="26" height="26" viewBox="0 0 19 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1.5 3H0.5V8H2V9.5H3.5V11H5V12.5H6.5V14H8V15.5H9V16.5H10V15.5H11V14H12.5V12.5H14V11H15.5V9.5H17V8H18.5V3H17V1.5H15.5V0.5H11.5V2H10V3H8.5V2H7V0.5H3V1.5H1.5V3Z" fill="#F31717" stroke="#F31717"/>
+                      </svg>
+                    ) : (
+                      <svg width="26" height="26" viewBox="0 0 19 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1.5 3H0.5V8H2V9.5H3.5V11H5V12.5H6.5V14H8V15.5H9V16.5H10V15.5H11V14H12.5V12.5H14V11H15.5V9.5H17V8H18.5V3H17V1.5H15.5V0.5H11.5V2H10V3H8.5V2H7V0.5H3V1.5H1.5V3Z" fill="white" stroke="black"/>
+                      </svg>
+                    )}
+                  </div>
+                </div>
+                <div className="mt-2 text-sm">{p.title}</div>
+                <button
+                  type="button"
+                  onClick={() => navigate(`/product/${p.id}`)}
+                  className="group mt-0 w-full bg-black text-white px-3 py-2 flex items-center justify-between text-[15px] font-semibold tracking-wide box-border"
+                >
+                  <div className="relative h-5 overflow-hidden">
+                    <div className="relative text-base flex flex-col transition-transform duration-300 ease-in-out group-hover:-translate-y-1/2">
+                      <span className="flex font-medium font-bdogrotesk h-5 items-center">Shop Now</span>
+                      <span className="flex font-bdogrotesk font-medium h-5 items-center">Shop Now</span>
+                    </div>
+                  </div>
+                </button>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
