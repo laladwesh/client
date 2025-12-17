@@ -1,65 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-// i want to replace this products with actuall product coming from api please can u do this for me also make 
-// --- Product Data using your provided images ---
-const products = [
-  {
-    id: 1,
-    name: 'Vera Shelf Dummy',
-    price: 3500.00,
-    category: 'Roz Roz',
-    imageUrl: 'https://cdn.prod.website-files.com/68558d427ad3bce190a51b77/68558d427ad3bce190a51b6e_8-2.webp',
-  },
-  {
-    id: 2,
-    name: 'Vera Stool Green',
-    price: 1200.00,
-    category: 'Roz Roz',
-    imageUrl: 'https://cdn.prod.website-files.com/68558d427ad3bce190a51b77/68558d427ad3bce190a51b6f_7-2.webp',
-  },
-  {
-    id: 3,
-    name: 'Arca Sofa Metal',
-    price: 7800.00,
-    category: 'Kuch Kuch',
-    imageUrl: 'https://cdn.prod.website-files.com/68558d427ad3bce190a51b77/68558d427ad3bce190a51b70_6-2.webp',
-  },
-  {
-    id: 4,
-    name: 'Luno Stool Blue',
-    price: 1300.00,
-    category: 'Kuch Kuch',
-    imageUrl: 'https://cdn.prod.website-files.com/67a7721e638cc64a55110750/67ad9b7fdaa7aa4b594f62f4_5.webp',
-  },
-  {
-    id: 5,
-    name: 'Luno Shelf Red',
-    price: 3600.00,
-    category: 'Roz Roz',
-    imageUrl: 'https://cdn.prod.website-files.com/67a7721e638cc64a55110750/67ad9b4f3bd234953e76f057_4.webp',
-  },
-  {
-    id: 6,
-    name: 'Luno Sofa Yellow',
-    price: 9200.00,
-    category: 'Kuch Kuch',
-    imageUrl: 'https://cdn.prod.website-files.com/67a7721e638cc64a55110750/67ad9afb0cd024e19c7378f8_3.webp',
-  },
-  {
-    id: 7,
-    name: 'Kux Stool White',
-    price: 1100.00,
-    category: 'Roz Roz',
-    imageUrl: 'https://cdn.prod.website-files.com/67a7721e638cc64a55110750/67ad96dcb08629ee808e5994_2.webp',
-  },
-  {
-    id: 8,
-    name: 'Rixo Shelf Black',
-    price: 4100.00,
-    category: 'Kuch Kuch',
-    imageUrl: 'https://cdn.prod.website-files.com/67a7721e638cc64a55110750/67ad96ab106d8fb7eb7c1eab_1.webp',
-  },
-];
+import { getProducts } from '../services/productService';
+// products will be loaded from the backend API
 
 // --- Price Formatting Helper ---
 const formatPrice = (price) => {
@@ -89,6 +31,29 @@ const ProductDisplay = ({isStore = false}) => {
   const [view, setView] = useState('grid'); // 'grid' or 'list'
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState('All'); // 'All', 'Roz Roz', 'Kuch Kuch'
+
+  // products loaded from backend
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    let mounted = true;
+    setLoading(true);
+    // when on home (isStore=false) request only homepage products
+    const shownInHome = !isStore; // true on home, false on store/other
+    getProducts({ shownInHome })
+      .then((data) => {
+        if (!mounted) return;
+        setProducts(Array.isArray(data) ? data : []);
+      })
+      .catch((err) => {
+        if (!mounted) return;
+        setError(err?.message || 'Failed to load products');
+      })
+      .finally(() => mounted && setLoading(false));
+    return () => { mounted = false; };
+  }, [isStore]);
 
   // Filter products based on selected category
   const filteredProducts = selectedCategory === 'All' 
@@ -205,23 +170,23 @@ const ProductDisplay = ({isStore = false}) => {
             >
               {filteredProducts.map((product) => (
                 <div
-                  key={product.id}
+                  key={product._id || product.id}
                   className="w-1/3 flex-shrink-0 ml-4  flex flex-col"
                   style={{ flexBasis: `${100 / itemsPerView}%` }}
                 >
                   {/* 1. Image */}
                   <div className="flex-grow w-full bg-gray-100 overflow-hidden flex items-center justify-center">
                     <img
-                      src={product.imageUrl}
-                      alt={product.name}
+                      src={(product.images && product.images[0]) || product.imageUrl || ''}
+                      alt={product.product || product.name}
                       className="w-full h-full object-cover"
                     />
                   </div>
                   <div className="product-info mt-2 pb-6">
-                    <h3 className="text-base font-medium mb-3 ml-1 px-0 font-bdogrotesk text-left">{product.name}</h3>
+                    <h3 className="text-base font-medium mb-3 ml-1 px-0 font-bdogrotesk text-left">{product.product || product.name}</h3>
                     <button
                       type="button"
-                      onClick={() => navigate('/product/1')}
+                      onClick={() => navigate(`/product/${product._id || product.id}`)}
                       className="group w-full bg-black text-white px-3 py-3 flex items-start justify-between text-base font-medium tracking-wide font-bdogrotesk"
                     >
                       <div className="relative h-4 overflow-hidden">
@@ -232,8 +197,8 @@ const ProductDisplay = ({isStore = false}) => {
                       </div>
                       <div className="relative h-4 overflow-hidden">
                         <div className="relative flex flex-col transition-transform duration-300 ease-in-out group-hover:-translate-y-1/2">
-                          <span className="flex h-4 items-center text-white/90 text-base">{formatPrice(product.price)}</span>
-                          <span className="flex h-4 items-center text-white/90 text-base">{formatPrice(product.price)}</span>
+                          <span className="flex h-4 items-center text-white/90 text-base">{formatPrice(product.discountedPrice ?? product.mrp ?? product.price ?? 0)}</span>
+                          <span className="flex h-4 items-center text-white/90 text-base">{formatPrice(product.discountedPrice ?? product.mrp ?? product.price ?? 0)}</span>
                         </div>
                       </div>
                     </button>
@@ -249,15 +214,15 @@ const ProductDisplay = ({isStore = false}) => {
           <div className="border-t-2 border-black mx-4 mb-4"></div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-2">
             {filteredProducts.map((product) => (
-              <div key={product.id} className="flex flex-col bg-white">
+              <div key={product._id || product.id} className="flex flex-col bg-white">
                 <div className="w-full bg-gray-100 overflow-hidden">
-                  <img src={product.imageUrl} alt={product.name} className="w-full h-56 md:h-72 lg:h-[75vh] object-cover" />
+                  <img src={(product.images && product.images[0]) || product.imageUrl || ''} alt={product.product || product.name} className="w-full h-56 md:h-72 lg:h-[75vh] object-cover" />
                 </div>
                 <div className="pb-2 pt-2 px-0 space-y-3">
-                  <h3 className="text-base font-medium ml-1 px-0 font-bdogrotesk text-left">{product.name}</h3>
+                  <h3 className="text-base font-medium ml-1 px-0 font-bdogrotesk text-left">{product.product || product.name}</h3>
                   <button
                     type="button"
-                    onClick={() => navigate('/product/1')}
+                    onClick={() => navigate(`/product/${product._id || product.id}`)}
                     className="group w-full bg-black text-white px-3 py-3 flex items-start justify-between text-base font-medium tracking-wide font-bdogrotesk"
                   >
                     <div className="relative h-4 overflow-hidden">
@@ -268,8 +233,8 @@ const ProductDisplay = ({isStore = false}) => {
                     </div>
                     <div className="relative h-4 overflow-hidden">
                       <div className="relative flex flex-col transition-transform duration-300 ease-in-out group-hover:-translate-y-1/2">
-                        <span className="flex h-4 items-center text-white/90 text-base">{formatPrice(product.price)}</span>
-                        <span className="flex h-4 items-center text-white/90 text-base">{formatPrice(product.price)}</span>
+                        <span className="flex h-4 items-center text-white/90 text-base">{formatPrice(product.discountedPrice ?? product.mrp ?? product.price ?? 0)}</span>
+                        <span className="flex h-4 items-center text-white/90 text-base">{formatPrice(product.discountedPrice ?? product.mrp ?? product.price ?? 0)}</span>
                       </div>
                     </div>
                   </button>
@@ -283,15 +248,15 @@ const ProductDisplay = ({isStore = false}) => {
         // --- List View ---
         <div className="divide-y divide-black border-t-2 border-black flex-grow mx-6">
           {filteredProducts.map((product) => (
-            <div key={product.id} className="flex justify-between items-stretch py-4 hover:bg-gray-50 transition-colors min-h-[40vh]">
+            <div key={product._id || product.id} className="flex justify-between items-stretch py-4 hover:bg-gray-50 transition-colors min-h-[40vh]">
               {/* Left: Title & Shop Now */}
               <div className="flex-1">
                 <div className="flex flex-col justify-between h-full">
                   <h2 className="text-5xl font-semibold w-1/2">
-                    {product.name}
+                    {product.product || product.name}
                   </h2>
                   <button 
-                    onClick={() => window.location.href = `/store/${product.id}`}
+                    onClick={() => window.location.href = `/store/${product._id || product.id}`}
                     className="text-base font-medium hover:text-gray-600 transition-colors bg-transparent border-none cursor-pointer p-0 self-start"
                   >
                     Shop now
@@ -302,15 +267,15 @@ const ProductDisplay = ({isStore = false}) => {
               {/* Middle: Image */}
               <div className="flex-1 flex justify-center ml-64 px-8">
                 <img
-                  src={product.imageUrl}
-                  alt={product.name}
+                  src={(product.images && product.images[0]) || product.imageUrl || ''}
+                  alt={product.product || product.name}
                   className="w-full h-[40vh] object-contain max-h-screen"
                 />
               </div>
 
               {/* Right: Price */}
               <div className="flex-1 text-center flex items-end font-medium justify-end">
-                <span className="text-sm hover:text-gray-600 transition-colors">{formatPrice(product.price)}</span>
+                <span className="text-sm hover:text-gray-600 transition-colors">{formatPrice(product.discountedPrice ?? product.mrp ?? product.price ?? 0)}</span>
               </div>
             </div>
           ))}
