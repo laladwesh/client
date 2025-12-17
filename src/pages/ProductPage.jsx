@@ -110,7 +110,7 @@ const ProductPage = () => {
         </div>
 
         {/* Right: Details */}
-        <div className="w-full md:w-1/2 pt-4 flex flex-col min-h-[85vh]">
+        <div className="w-full md:w-1/2 pt-2 flex flex-col min-h-[85vh]">
 
           <div className="relative">
             <button
@@ -123,20 +123,14 @@ const ProductPage = () => {
             >
               {/* Heart SVG - fills red when wishlisted */}
               {isWishlisted ? (
-                <img src="/wishlist.svg" alt="wishlishted icon" />
+                <svg width="26" height="26" viewBox="0 0 19 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M1.5 3H0.5V8H2V9.5H3.5V11H5V12.5H6.5V14H8V15.5H9V16.5H10V15.5H11V14H12.5V12.5H14V11H15.5V9.5H17V8H18.5V3H17V1.5H15.5V0.5H11.5V2H10V3H8.5V2H7V0.5H3V1.5H1.5V3Z" fill="#F31717" stroke="#F31717"/>
+</svg>
+
               ) : (
-                <svg
-                  width="32"
-                  height="28"
-                  viewBox="0 0 24 24"
-                  fill={isWishlisted ? "currentColor" : "none"}
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  className={isWishlisted ? "text-red-600" : "text-gray-700"}
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z" />
-                </svg>
+                <svg width="26" height="26" viewBox="0 0 19 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M1.5 3H0.5V8H2V9.5H3.5V11H5V12.5H6.5V14H8V15.5H9V16.5H10V15.5H11V14H12.5V12.5H14V11H15.5V9.5H17V8H18.5V3H17V1.5H15.5V0.5H11.5V2H10V3H8.5V2H7V0.5H3V1.5H1.5V3Z" fill="white" stroke="black"/>
+</svg>
               )}
             </button>
             <p className="text-base text-black font-medium text-left w-full md:w-5/6">
