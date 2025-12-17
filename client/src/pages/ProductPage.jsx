@@ -1,54 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { getProduct, getProducts } from "../services/productService";
 
-const sharedImage =
-  "https://cdn.prod.website-files.com/67a7721e638cc64a55110750/67ad9c39d7574971aad10695_9.webp";
-const sharedImage2 =
-  "https://cdn.prod.website-files.com/67a7721e638cc64a55110750/67b1d61e5c80ce0e3e4394c1_3-2-p-500.webp";
-const sharedImage3 =
-  "https://cdn.prod.website-files.com/67a7721e638cc64a55110750/67b1d5e3f8cc3c55108a97b8_7-2.webp";
-const mockProducts = [
-  {
-    id: "1",
-    title: "Flared Pantzo In Thar",
-    description:
-      "Somewhere between flared pants and a pallazo, we found the most flattering silhouette for all body types. Makes you look like a goddess within the comfort of pyjamas.",
-    price: 800,
-    originalPrice: 1200,
-    images: [sharedImage, sharedImage2, sharedImage3],
-    sizes: ["XS", "S", "M", "L", "XL", "Custom"],
-  },
-  {
-    id: "2",
-    title: "Classic White T-Shirt",
-    description: "A wardrobe essential — soft cotton, regular fit.",
-    price: 999,
-    originalPrice: 1299,
-    images: [sharedImage2, sharedImage, sharedImage3],
-    sizes: ["XS", "S", "M", "L"],
-  },
-  {
-    id: "3",
-    title: "Classic White T-Shirt",
-    description: "A wardrobe essential — soft cotton, regular fit.",
-    price: 999,
-    originalPrice: 1299,
-    images: [sharedImage3, sharedImage, sharedImage2],
-    sizes: ["XS", "S", "M", "L"],
-  },
-];
+// default sizes if product doesn't include sizes
+const DEFAULT_SIZES = ["S", "M", "L", "XL"];
 
 const rupee = (n) => `₹${n}`;
 
 const ProductPage = () => {
   const { productId } = useParams();
-  const product =
-    mockProducts.find((p) => p.id === productId) || mockProducts[0];
+
+  const [rawProduct, setRawProduct] = useState(null);
+  const [product, setProduct] = useState(null); // normalized UI product
+  const [suggestions, setSuggestions] = useState([]);
 
   const [selectedImage, setSelectedImage] = useState(0);
-  const [selectedSize, setSelectedSize] = useState(
-    product.sizes[1] || product.sizes[0]
-  );
+  const [selectedSize, setSelectedSize] = useState(null);
   const [qty, setQty] = useState(1);
   const [wishlist, setWishlist] = useState(() => {
     try {
@@ -57,7 +24,7 @@ const ProductPage = () => {
       return [];
     }
   });
-  const isWishlisted = wishlist.includes(product.id);
+  const isWishlisted = product ? wishlist.includes(product.id) : false;
 
   const addToCart = () => {
     try {
@@ -110,9 +77,77 @@ const ProductPage = () => {
     });
   };
 
-  const percentOff = Math.round(
-    ((product.originalPrice - product.price) / product.originalPrice) * 100
-  );
+  const percentOff = product
+    ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+    : 0;
+
+  // fetch product and suggestions
+  useEffect(() => {
+    let mounted = true;
+    setRawProduct(null);
+    setProduct(null);
+    setSuggestions([]);
+
+    // fetch main product
+    getProduct(productId)
+      .then((data) => {
+        if (!mounted) return;
+        // support two possible shapes: { product, suggestions } or plain product
+        const payload = data.product ? data : { product: data, suggestions: [] };
+        setRawProduct(payload.product);
+        const d = payload.product;
+        const ui = {
+          id: d._id,
+          title: d.product || d.title || 'Product',
+          description: d.productDescription || d.description || '',
+          price: d.discountedPrice ?? d.mrp ?? 0,
+          originalPrice: d.mrp ?? d.price ?? 0,
+          images: Array.isArray(d.images) && d.images.length ? d.images : [''],
+          sizes: Array.isArray(d.sizes) && d.sizes.length ? d.sizes : (d.sizes || DEFAULT_SIZES),
+        };
+        setProduct(ui);
+        setSelectedSize(ui.sizes[0] || DEFAULT_SIZES[0]);
+
+        // suggestions from API response if present
+        if (Array.isArray(payload.suggestions) && payload.suggestions.length) {
+          const mapped = payload.suggestions.map((s) => ({
+            id: s._id,
+            title: s.product || s.title || '',
+            images: Array.isArray(s.images) && s.images.length ? s.images : [''],
+          }));
+          setSuggestions(mapped);
+        } else {
+          // fallback: fetch other products
+          getProducts()
+            .then((list) => {
+              if (!mounted || !Array.isArray(list)) return;
+              const others = list
+                .filter((p) => String(p._id) !== String(productId))
+                .slice(0, 6)
+                .map((d) => ({
+                  id: d._id,
+                  title: d.product || d.title || '',
+                  images: Array.isArray(d.images) && d.images.length ? d.images : [''],
+                }));
+              setSuggestions(others);
+            })
+            .catch((e) => console.error('suggestions error', e));
+        }
+      })
+      .catch((err) => {
+        console.error('Failed to load product', err);
+      });
+
+    // fetch suggestions: prefer suggestions returned with product API
+    // if not present, fall back to fetching products list
+    // handled after getProduct resolves (see below)
+
+    return () => { mounted = false; };
+  }, [productId]);
+
+  if (!product) {
+    return <div className="w-full py-32 text-center">Loading...</div>;
+  }
 
   return (
     <div className="w-full mx-0 px-0 py-8 text-left font-bdogrotesk">
@@ -337,7 +372,7 @@ const ProductPage = () => {
       <div className="mt-8 px-2 font-bdogrotesk">
         <h3 className="text-base py-2 px-2 font-medium">Check these out</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-2">
-          {mockProducts.map((p) => {
+          {suggestions.map((p) => {
             const isInWishlist = wishlist.includes(p.id);
             return (
               <div key={p.id} className="group text-left space-y-4">
