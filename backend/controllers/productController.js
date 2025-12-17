@@ -1,0 +1,61 @@
+const asyncHandler = require('express-async-handler');
+const Product = require('../models/Product');
+
+// GET /api/products
+const getProducts = asyncHandler(async (req, res) => {
+  const products = await Product.find({}).sort({ createdAt: -1 });
+  res.json(products);
+});
+
+// GET /api/products/:id
+const getProduct = asyncHandler(async (req, res) => {
+  const product = await Product.findById(req.params.id);
+  if (!product) {
+    res.status(404);
+    throw new Error('Product not found');
+  }
+  res.json(product);
+});
+
+// POST /api/products (admin)
+const createProduct = asyncHandler(async (req, res) => {
+  const data = req.body;
+  // require product and mrp
+  if (!data.product || !data.mrp) {
+    res.status(400);
+    throw new Error('Product name and MRP are required');
+  }
+  // generate slug if not provided
+  if (!data.slug) {
+    const slugBase = `${data.product}-${data.print || ''}-${data.color || ''}`.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    data.slug = slugBase;
+  }
+
+  const product = await Product.create(data);
+  res.status(201).json(product);
+});
+
+// PUT /api/products/:id (admin)
+const updateProduct = asyncHandler(async (req, res) => {
+  const product = await Product.findById(req.params.id);
+  if (!product) {
+    res.status(404);
+    throw new Error('Product not found');
+  }
+  Object.assign(product, req.body, { updatedAt: Date.now() });
+  await product.save();
+  res.json(product);
+});
+
+// DELETE /api/products/:id (admin)
+const deleteProduct = asyncHandler(async (req, res) => {
+  const product = await Product.findById(req.params.id);
+  if (!product) {
+    res.status(404);
+    throw new Error('Product not found');
+  }
+  await product.remove();
+  res.json({ message: 'Product removed' });
+});
+
+module.exports = { getProducts, getProduct, createProduct, updateProduct, deleteProduct };
