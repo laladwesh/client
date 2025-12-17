@@ -2,8 +2,16 @@ const asyncHandler = require('express-async-handler');
 const Product = require('../models/Product');
 
 // GET /api/products
+// Optional query: ?shownInHome=true
+// Behavior: if shownInHome=true -> return only products with isShownInHomepage=true
+// Otherwise return all products (store/other pages should not pass shownInHome=false to filter)
 const getProducts = asyncHandler(async (req, res) => {
-  const products = await Product.find({}).sort({ createdAt: -1 });
+  const { shownInHome } = req.query;
+  const filter = {};
+  if (String(shownInHome) === 'true') {
+    filter.isShownInHomepage = true;
+  }
+  const products = await Product.find(filter).sort({ createdAt: -1 });
   res.json(products);
 });
 
@@ -14,7 +22,14 @@ const getProduct = asyncHandler(async (req, res) => {
     res.status(404);
     throw new Error('Product not found');
   }
-  res.json(product);
+  // pick 3 random other products as suggestions
+  const suggestions = await Product.aggregate([
+    { $match: { _id: { $ne: product._id } } },
+    { $sample: { size: 3 } },
+    { $project: { _id: 1, product: 1, productDescription: 1, images: 1, mrp: 1, discountedPrice: 1, slug: 1 } }
+  ]);
+
+  res.json({ product, suggestions });
 });
 
 // POST /api/products (admin)
