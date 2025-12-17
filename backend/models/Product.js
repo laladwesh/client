@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema({
   // Core identification
-  collection: { type: String },
+  category: { type: String },
   product: { type: String, required: true },
   print: { type: String },
   color: { type: String },
@@ -21,10 +21,10 @@ const productSchema = new mongoose.Schema({
   
   // Descriptions
   productDescription: { type: String },
-  sizeAndFit: { type: String },
+  
   // New fields requested: features (list), sizeNfit (alternate field) and material
   features: [{ type: String }],
-  sizeNfit: { type: String },
+  sizeAndFit: { type: String },
   material: { type: String },
   
   // Pricing
@@ -41,6 +41,7 @@ const productSchema = new mongoose.Schema({
   // Additional fields
   slug: { type: String, index: true, unique: true },
   images: [{ type: String }],
+  isShownInHomepage: { type: Boolean, default: false },
   
   // Timestamps
   createdAt: { type: Date, default: Date.now },
