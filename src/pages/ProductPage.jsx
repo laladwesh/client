@@ -99,11 +99,13 @@ const ProductPage = () => {
           <div className="mt-3 max-w-full h-[85vh] no-scrollbar overflow-y-auto">
             <div className="flex flex-col gap-3 px-1">
               {product.images.map((img, idx) => (
-                <img
-                  src={img}
-                  alt={`${product.title} ${idx + 1}`}
-                  className="w-full h-[85vh] object-cover"
-                />
+                <div key={idx} className="w-full aspect-[3/4] overflow-hidden">
+                  <img
+                    src={img}
+                    alt={`${product.title} ${idx + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
               ))}
             </div>
           </div>
@@ -111,7 +113,6 @@ const ProductPage = () => {
 
         {/* Right: Details */}
         <div className="w-full md:w-1/2 pt-2 flex flex-col min-h-[85vh]">
-
           <div className="relative">
             <button
               aria-label={
@@ -123,14 +124,33 @@ const ProductPage = () => {
             >
               {/* Heart SVG - fills red when wishlisted */}
               {isWishlisted ? (
-                <svg width="26" height="26" viewBox="0 0 19 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M1.5 3H0.5V8H2V9.5H3.5V11H5V12.5H6.5V14H8V15.5H9V16.5H10V15.5H11V14H12.5V12.5H14V11H15.5V9.5H17V8H18.5V3H17V1.5H15.5V0.5H11.5V2H10V3H8.5V2H7V0.5H3V1.5H1.5V3Z" fill="#F31717" stroke="#F31717"/>
-</svg>
-
+                <svg
+                  width="26"
+                  height="26"
+                  viewBox="0 0 19 17"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M1.5 3H0.5V8H2V9.5H3.5V11H5V12.5H6.5V14H8V15.5H9V16.5H10V15.5H11V14H12.5V12.5H14V11H15.5V9.5H17V8H18.5V3H17V1.5H15.5V0.5H11.5V2H10V3H8.5V2H7V0.5H3V1.5H1.5V3Z"
+                    fill="#F31717"
+                    stroke="#F31717"
+                  />
+                </svg>
               ) : (
-                <svg width="26" height="26" viewBox="0 0 19 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M1.5 3H0.5V8H2V9.5H3.5V11H5V12.5H6.5V14H8V15.5H9V16.5H10V15.5H11V14H12.5V12.5H14V11H15.5V9.5H17V8H18.5V3H17V1.5H15.5V0.5H11.5V2H10V3H8.5V2H7V0.5H3V1.5H1.5V3Z" fill="white" stroke="black"/>
-</svg>
+                <svg
+                  width="26"
+                  height="26"
+                  viewBox="0 0 19 17"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M1.5 3H0.5V8H2V9.5H3.5V11H5V12.5H6.5V14H8V15.5H9V16.5H10V15.5H11V14H12.5V12.5H14V11H15.5V9.5H17V8H18.5V3H17V1.5H15.5V0.5H11.5V2H10V3H8.5V2H7V0.5H3V1.5H1.5V3Z"
+                    fill="white"
+                    stroke="black"
+                  />
+                </svg>
               )}
             </button>
             <p className="text-base text-black font-medium text-left w-full md:w-5/6">
@@ -199,8 +219,7 @@ const ProductPage = () => {
 
           {/* thumbnails removed from here — now rendered under the main image */}
 
-          <div className="mt-auto sticky bottom-0 bg-white pt-4 pb-2 flex flex-col gap-3 text-left z-10">
-
+          <div className="mt-auto bg-white pt-4 pb-2 flex flex-col gap-3 text-left z-10">
             <button
               type="button"
               onClick={addToCart}
@@ -241,21 +260,32 @@ const ProductPage = () => {
         </div>
       </div>
 
-      <div className="mt-8 px-4">
+      <div className="mt-8 px-2">
         <h3 className=" text-base py-5 px-2 font-medium">Details</h3>
         <div className="max-w-screen px-2 mx-auto space-y-6">
           <section className="flex flex-col md:flex-row md:items-start gap-64 py-4">
-            <div className="flex-shrink-0 w-12 md:w-20 text-sm text-black">001</div>
-            <h2 className="flex-1 text-4xl md:text-6xl text-black font-semibold leading-tight md:-mr-2">Description</h2>
+            <div className="flex-shrink-0 w-12 md:w-20 text-sm text-black">
+              001
+            </div>
+            <h2 className="flex-1 text-4xl md:text-6xl text-black font-semibold leading-tight md:-mr-2">
+              Description
+            </h2>
             <div className="flex-shrink-0 md:w-1/3 text-sm text-black">
-              Feel the luxurious blend embrace your silhouette while the timeless A-line cut flatters every figure. The rich emerald shade catches light beautifully, making you the center of attention without trying too hard.
+              Feel the luxurious blend embrace your silhouette while the
+              timeless A-line cut flatters every figure. The rich emerald shade
+              catches light beautifully, making you the center of attention
+              without trying too hard.
             </div>
           </section>
           <div className="border-t border-black" />
 
           <section className="flex flex-col md:flex-row md:items-start gap-64 py-4">
-            <div className="flex-shrink-0 w-12 md:w-20 text-sm text-black">002</div>
-            <h2 className="flex-1 text-4xl md:text-6xl text-black font-semibold leading-tight md:-mr-2">Dimensions</h2>
+            <div className="flex-shrink-0 w-12 md:w-20 text-sm text-black">
+              002
+            </div>
+            <h2 className="flex-1 text-4xl md:text-6xl text-black font-semibold leading-tight md:-mr-2">
+              Dimensions
+            </h2>
             <div className="flex-shrink-0 md:w-1/3 text-sm text-black">
               72"h x 36"w x 12"d
               <br />
@@ -265,8 +295,12 @@ const ProductPage = () => {
           <div className="border-t border-black" />
 
           <section className="flex flex-col md:flex-row md:items-start gap-64 py-4">
-            <div className="flex-shrink-0 w-12 md:w-20 text-sm text-black">003</div>
-            <h2 className="flex-1 text-4xl md:text-6xl text-black font-semibold leading-tight md:-mr-2">Promises</h2>
+            <div className="flex-shrink-0 w-12 md:w-20 text-sm text-black">
+              003
+            </div>
+            <h2 className="flex-1 text-4xl md:text-6xl text-black font-semibold leading-tight md:-mr-2">
+              Promises
+            </h2>
             <div className="flex-shrink-0 md:w-1/3 text-sm text-black">
               Material used: Cotton, Linenan
               <br />
