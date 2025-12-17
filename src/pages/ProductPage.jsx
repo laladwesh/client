@@ -5,6 +5,8 @@ const sharedImage =
   "https://cdn.prod.website-files.com/67a7721e638cc64a55110750/67ad9c39d7574971aad10695_9.webp";
 const sharedImage2 =
   "https://cdn.prod.website-files.com/67a7721e638cc64a55110750/67b1d61e5c80ce0e3e4394c1_3-2-p-500.webp";
+const sharedImage3 =
+  "https://cdn.prod.website-files.com/67a7721e638cc64a55110750/67b1d5e3f8cc3c55108a97b8_7-2.webp";
 const mockProducts = [
   {
     id: "1",
@@ -13,7 +15,7 @@ const mockProducts = [
       "Somewhere between flared pants and a pallazo, we found the most flattering silhouette for all body types. Makes you look like a goddess within the comfort of pyjamas.",
     price: 800,
     originalPrice: 1200,
-    images: [sharedImage, sharedImage2, sharedImage],
+    images: [sharedImage, sharedImage2, sharedImage3],
     sizes: ["XS", "S", "M", "L", "XL", "Custom"],
   },
   {
@@ -22,7 +24,7 @@ const mockProducts = [
     description: "A wardrobe essential — soft cotton, regular fit.",
     price: 999,
     originalPrice: 1299,
-    images: [sharedImage, sharedImage],
+    images: [sharedImage2, sharedImage, sharedImage3],
     sizes: ["XS", "S", "M", "L"],
   },
   {
@@ -31,7 +33,7 @@ const mockProducts = [
     description: "A wardrobe essential — soft cotton, regular fit.",
     price: 999,
     originalPrice: 1299,
-    images: [sharedImage, sharedImage],
+    images: [sharedImage3, sharedImage, sharedImage2],
     sizes: ["XS", "S", "M", "L"],
   },
 ];
@@ -343,15 +345,39 @@ const ProductPage = () => {
                   className="w-full bg-gray-200 aspect-[3/4] overflow-hidden relative cursor-pointer"
                   onClick={() => toggleWishlistItem(p.id)}
                 >
-                  <img src={p.images[0]} alt={p.title} className="w-full h-full object-cover" />
+                  <img
+                    src={p.images[0]}
+                    alt={p.title}
+                    className="w-full h-full object-cover"
+                  />
                   <div className="absolute bottom-2 right-2">
                     {isInWishlist ? (
-                      <svg width="26" height="26" viewBox="0 0 19 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M1.5 3H0.5V8H2V9.5H3.5V11H5V12.5H6.5V14H8V15.5H9V16.5H10V15.5H11V14H12.5V12.5H14V11H15.5V9.5H17V8H18.5V3H17V1.5H15.5V0.5H11.5V2H10V3H8.5V2H7V0.5H3V1.5H1.5V3Z" fill="#F31717" stroke="#F31717"/>
+                      <svg
+                        width="26"
+                        height="26"
+                        viewBox="0 0 19 17"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M1.5 3H0.5V8H2V9.5H3.5V11H5V12.5H6.5V14H8V15.5H9V16.5H10V15.5H11V14H12.5V12.5H14V11H15.5V9.5H17V8H18.5V3H17V1.5H15.5V0.5H11.5V2H10V3H8.5V2H7V0.5H3V1.5H1.5V3Z"
+                          fill="#F31717"
+                          stroke="#F31717"
+                        />
                       </svg>
                     ) : (
-                      <svg width="26" height="26" viewBox="0 0 19 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M1.5 3H0.5V8H2V9.5H3.5V11H5V12.5H6.5V14H8V15.5H9V16.5H10V15.5H11V14H12.5V12.5H14V11H15.5V9.5H17V8H18.5V3H17V1.5H15.5V0.5H11.5V2H10V3H8.5V2H7V0.5H3V1.5H1.5V3Z" fill="white" stroke="black"/>
+                      <svg
+                        width="26"
+                        height="26"
+                        viewBox="0 0 19 17"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M1.5 3H0.5V8H2V9.5H3.5V11H5V12.5H6.5V14H8V15.5H9V16.5H10V15.5H11V14H12.5V12.5H14V11H15.5V9.5H17V8H18.5V3H17V1.5H15.5V0.5H11.5V2H10V3H8.5V2H7V0.5H3V1.5H1.5V3Z"
+                          fill="white"
+                          stroke="black"
+                        />
                       </svg>
                     )}
                   </div>
@@ -364,8 +390,12 @@ const ProductPage = () => {
                 >
                   <div className="relative h-5 overflow-hidden">
                     <div className="relative text-base flex flex-col transition-transform duration-300 ease-in-out group-hover:-translate-y-1/2">
-                      <span className="flex font-medium font-bdogrotesk h-5 items-center">Shop Now</span>
-                      <span className="flex font-bdogrotesk font-medium h-5 items-center">Shop Now</span>
+                      <span className="flex font-medium font-bdogrotesk h-5 items-center">
+                        Shop Now
+                      </span>
+                      <span className="flex font-bdogrotesk font-medium h-5 items-center">
+                        Shop Now
+                      </span>
                     </div>
                   </div>
                 </button>
