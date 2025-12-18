@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const productSchema = new mongoose.Schema({
   // Core identification
@@ -58,4 +58,4 @@ productSchema.virtual('stock').get(function() {
   return this.sizeSQuantity + this.sizeMQuantity + this.sizeLQuantity + this.sizeXLQuantity;
 });
 
-module.exports = mongoose.model('Product', productSchema);
+export default mongoose.model('Product', productSchema);
