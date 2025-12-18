@@ -1,5 +1,5 @@
-const asyncHandler = require('express-async-handler');
-const Product = require('../models/Product');
+import asyncHandler from 'express-async-handler';
+import Product from '../models/Product.js';
 
 // GET /api/products
 // Optional query: ?shownInHome=true
@@ -73,4 +73,4 @@ const deleteProduct = asyncHandler(async (req, res) => {
   res.json({ message: 'Product removed' });
 });
 
-module.exports = { getProducts, getProduct, createProduct, updateProduct, deleteProduct };
+export { getProducts, getProduct, createProduct, updateProduct, deleteProduct };
