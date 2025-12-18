@@ -1,8 +1,9 @@
-require('dotenv').config();
-const connectDB = require('../config/db');
-const User = require('../models/User');
+import dotenv from 'dotenv';
+dotenv.config();
+import connectDB from '../config/db.js';
+import User from '../models/User.js';
 
-(async () => {
+const run = async () => {
   try {
     await connectDB();
     const adminEmail = process.env.ADMIN_EMAIL;
@@ -24,4 +25,6 @@ const User = require('../models/User');
     console.error(err);
     process.exit(1);
   }
-})();
+};
+
+run();
