@@ -1,7 +1,8 @@
-require('dotenv').config();
-const connectDB = require('../config/db');
-const Product = require('../models/Product');
-const https = require('https');
+import dotenv from 'dotenv';
+dotenv.config();
+import connectDB from '../config/db.js';
+import Product from '../models/Product.js';
+import https from 'https';
 
 // ---------- config ----------
 const TARGET_NEW_IMAGES = 5;
