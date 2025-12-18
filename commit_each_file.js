@@ -37,11 +37,41 @@ console.log("--------------------------------");
 
 let committed = 0;
 
+
+//function to return random commit messages
+function getRandomCommitMessage() {
+  const messages = [
+    "Update code",
+    "Refactor code",
+    "Fix bugs",
+    "Improve performance",
+    "Add new features",
+    "Enhance functionality",
+    "Optimize codebase",
+    "Clean up code",
+    "Update dependencies",
+    "Improve documentation",
+    "Code improvements",
+    "Minor fixes",
+    "Code cleanup",
+    "Enhance user experience",
+    "Improve stability",
+    "Refine code structure",
+    "Boost performance",
+    "Fix issues",
+    "Add enhancements",
+    "Update modules",
+  ];
+  return messages[Math.floor(Math.random() * messages.length)];
+}
+
+
 for (const file of files) {
   if (fs.existsSync(file)) {
     try {
       run(`git add "${file}"`);
-      run(`git commit -m "Commit ${file}"`);
+      const commitMessage = getRandomCommitMessage();
+      run(`git commit -m " ${commitMessage} : ${file} "`);
       committed++;
       console.log(`Committed (${committed}/${count}): ${file}`);
     } catch (err) {
