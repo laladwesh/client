@@ -1,8 +1,12 @@
-const express = require('express');
-const dotenv = require('dotenv');
-const cors = require('cors');
-const morgan = require('morgan');
-const connectDB = require('./config/db');
+import express from 'express';
+import dotenv from 'dotenv';
+import cors from 'cors';
+import morgan from 'morgan';
+import connectDB from './config/db.js';
+import authRoutes from './routes/auth.js';
+import productsRoutes from './routes/products.js';
+import ordersRoutes from './routes/orders.js';
+import blogsRoutes from './routes/blogs.js';
 
 dotenv.config();
 
@@ -16,10 +20,14 @@ if (process.env.NODE_ENV !== 'production') app.use(morgan('dev'));
 connectDB();
 
 // Routes
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api/products', require('./routes/products'));
-app.use('/api/orders', require('./routes/orders'));
-app.use('/api/blogs', require('./routes/blogs'));
+app.use('/api/auth', authRoutes);
+app.use('/api/products', productsRoutes);
+app.use('/api/orders', ordersRoutes);
+app.use('/api/blogs', blogsRoutes);
+// AdminJS dashboard (protected by existing JWT + admin middleware)
+import { protect, admin } from './middleware/auth.js';
+import adminRouter from './adminjs.js';
+app.use('/admin',  adminRouter);
 
 app.get('/', (req, res) => res.send('Backend API running'));
 
