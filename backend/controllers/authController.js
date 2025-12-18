@@ -1,7 +1,7 @@
-const { OAuth2Client } = require('google-auth-library');
-const asyncHandler = require('express-async-handler');
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+import { OAuth2Client } from 'google-auth-library';
+import asyncHandler from 'express-async-handler';
+import jwt from 'jsonwebtoken';
+import User from '../models/User.js';
 
 const client = new OAuth2Client(
   process.env.GOOGLE_CLIENT_ID,
@@ -151,4 +151,4 @@ const googleAuth = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { googleAuth, googleRedirect, googleCallback };
+export { googleAuth, googleRedirect, googleCallback };
