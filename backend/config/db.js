@@ -1,9 +1,10 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const connectDB = async () => {
   const uri = process.env.MONGO_URI || 'mongodb://localhost:27017/nufab';
   try {
     await mongoose.connect(uri, {
+      // mongoose v7 no longer needs these options, but keep for compatibility
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
@@ -14,4 +15,4 @@ const connectDB = async () => {
   }
 };
 
-module.exports = connectDB;
+export default connectDB;
