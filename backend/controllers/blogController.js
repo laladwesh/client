@@ -1,5 +1,5 @@
-const asyncHandler = require('express-async-handler');
-const Blog = require('../models/Blog');
+import asyncHandler from 'express-async-handler';
+import Blog from '../models/Blog.js';
 
 // GET /api/blogs
 const getBlogs = asyncHandler(async (req, res) => {
@@ -54,4 +54,4 @@ const deleteBlog = asyncHandler(async (req, res) => {
   res.json({ message: 'Blog removed' });
 });
 
-module.exports = { getBlogs, getBlog, createBlog, updateBlog, deleteBlog };
+export { getBlogs, getBlog, createBlog, updateBlog, deleteBlog };
