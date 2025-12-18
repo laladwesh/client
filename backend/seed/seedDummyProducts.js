@@ -1,6 +1,7 @@
-require('dotenv').config();
-const connectDB = require('../config/db');
-const Product = require('../models/Product');
+import dotenv from 'dotenv';
+dotenv.config();
+import connectDB from '../config/db.js';
+import Product from '../models/Product.js';
 
 // ---------- helpers ----------
 const pick = arr => arr[Math.floor(Math.random() * arr.length)];
