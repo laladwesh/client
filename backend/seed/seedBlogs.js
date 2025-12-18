@@ -1,6 +1,7 @@
-require('dotenv').config();
-const connectDB = require('../config/db');
-const Blog = require('../models/Blog');
+import dotenv from 'dotenv';
+dotenv.config();
+import connectDB from '../config/db.js';
+import Blog from '../models/Blog.js';
 
 const sampleBlogs = [
   {
@@ -41,7 +42,7 @@ const sampleBlogs = [
   }
 ];
 
-(async () => {
+const run = async () => {
   try {
     await connectDB();
     for (const b of sampleBlogs) {
@@ -59,4 +60,6 @@ const sampleBlogs = [
     console.error('Seed error', err);
     process.exit(1);
   }
-})();
+};
+
+run();
