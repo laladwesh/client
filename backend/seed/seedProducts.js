@@ -1,8 +1,12 @@
-require('dotenv').config();
-const fs = require('fs');
-const path = require('path');
-const connectDB = require('../config/db');
-const Product = require('../models/Product');
+import dotenv from 'dotenv';
+dotenv.config();
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import connectDB from '../config/db.js';
+import Product from '../models/Product.js';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Parse CSV helper
 function parseCSV(filePath) {
@@ -99,7 +103,7 @@ function mapProductData(csvRow) {
   };
 }
 
-(async () => {
+const run = async () => {
   try {
     console.log('Connecting to database...');
     await connectDB();
@@ -150,4 +154,6 @@ function mapProductData(csvRow) {
     console.error('Error:', err);
     process.exit(1);
   }
-})();
+};
+
+run();
