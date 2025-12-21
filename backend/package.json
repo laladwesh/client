@@ -27,7 +27,8 @@
     "google-auth-library": "^8.7.0",
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^8.14.0",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "multer": "^2.0.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.22"
