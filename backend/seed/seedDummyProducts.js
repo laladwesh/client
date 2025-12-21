@@ -121,6 +121,8 @@ function generateProduct(index) {
     images: [
       image(slug, 1),
       image(slug, 2),
+      image(slug, 3),
+      image(slug, 4)
     ],
   };
 }
@@ -131,7 +133,7 @@ function generateProduct(index) {
     console.log('Connecting to database...');
     await connectDB();
 
-    const COUNT = 400; // 👈 change this number anytime
+    const COUNT = 420; // 👈 change this number anytime
     const products = [];
 
     for (let i = 0; i < COUNT; i++) {
