@@ -22,3 +22,35 @@ body {
   padding: 0;
   overflow-x: hidden;
 }
+
+/* Toast slide from right animation */
+@keyframes toast-slide-in-right {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+.toast-slide-right {
+  animation: toast-slide-in-right 360ms cubic-bezier(.2,.8,.2,1);
+}
+
+/* Drawer slide-in from right for sidebars */
+@keyframes drawer-slide-in-right {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+.drawer-slide-in {
+  animation: drawer-slide-in-right 320ms cubic-bezier(.2,.8,.2,1) both;
+}
+
+/* Panel helper for perspective */
+.drawer-panel {
+  transform-origin: right center;
+}
+
+/* Drawer slide-out to right */
+@keyframes drawer-slide-out-right {
+  from { transform: translateX(0); opacity: 1; }
+  to { transform: translateX(100%); opacity: 0; }
+}
+.drawer-slide-out {
+  animation: drawer-slide-out-right 260ms cubic-bezier(.2,.8,.2,1) both;
+}
