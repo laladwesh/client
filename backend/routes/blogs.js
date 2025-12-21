@@ -6,13 +6,15 @@ import {
   updateBlog,
   deleteBlog,
 } from '../controllers/blogController.js';
+import { protect, admin } from '../middleware/auth.js';
 
 const router = express.Router();
 
 router.get('/', getBlogs);
 router.get('/:id', getBlog);
-router.post('/', createBlog);
-router.put('/:id', updateBlog);
-router.delete('/:id', deleteBlog);
+// admin only
+router.post('/', protect, admin, createBlog);
+router.put('/:id', protect, admin, updateBlog);
+router.delete('/:id', protect, admin, deleteBlog);
 
 export default router;
