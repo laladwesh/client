@@ -2,11 +2,12 @@ import { OAuth2Client } from 'google-auth-library';
 import asyncHandler from 'express-async-handler';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
-
+import dotenv from 'dotenv';
+dotenv.config();
 const client = new OAuth2Client(
   process.env.GOOGLE_CLIENT_ID,
-  process.env.GOOGLE_CLIENT_SECRET || "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",
-  'http://localhost:5000/api/auth/google/callback'
+  process.env.GOOGLE_CLIENT_SECRET,
+  process.env.GOOGLE_REDIRECT_URI || 'http://localhost:5000/api/auth/google/callback'
 );
 
 // GET /api/auth/google - Redirect to Google OAuth
