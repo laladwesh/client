@@ -6,6 +6,7 @@ const SignUp = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  
 
   useEffect(() => {
     // Check if returning from Google OAuth
@@ -23,7 +24,7 @@ const SignUp = () => {
       localStorage.setItem('token', token);
       localStorage.setItem('user', JSON.stringify(userData));
       setUser(userData);
-      
+      // session stored in localStorage (no context)
       // Redirect based on role
       if (userData.role === 'admin') {
         navigate('/admin');
@@ -61,6 +62,7 @@ const SignUp = () => {
       localStorage.setItem('token', demoToken);
       localStorage.setItem('user', JSON.stringify(demoUser));
       setUser(demoUser);
+      // session stored in localStorage (no context)
       navigate('/store');
     } catch (err) {
       setError('Demo login failed');
@@ -73,6 +75,7 @@ const SignUp = () => {
     setUser(null);
     navigate('/');
   };
+  
 
   if (user) {
     return (
