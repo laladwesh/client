@@ -28,10 +28,12 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // Unauthorized - clear token and redirect to login
+      // Unauthorized - clear token and open login sidebar
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      window.location.href = '/sign-up';
+      try {
+        window.dispatchEvent(new CustomEvent('signup:toggle', { detail: { open: true } }));
+      } catch (e) {}
     }
     return Promise.reject(error);
   }
