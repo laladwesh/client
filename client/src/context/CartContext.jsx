@@ -1,4 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
+import { createOrder } from '../services/orderService';
+import toast from 'react-hot-toast';
 
 const CartContext = createContext();
 
@@ -14,6 +16,7 @@ export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
   const [cartCount, setCartCount] = useState(0);
   const [cartTotal, setCartTotal] = useState(0);
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
   useEffect(() => {
     // Load cart from localStorage
@@ -27,13 +30,24 @@ export const CartProvider = ({ children }) => {
 
   useEffect(() => {
     // Save cart to localStorage
-    localStorage.setItem('cart', JSON.stringify(cartItems));
+    try { localStorage.setItem('cart', JSON.stringify(cartItems)); } catch (e) {}
     updateCartTotals(cartItems);
+    // notify other tabs
+    window.dispatchEvent(new Event('cart:updated'));
   }, [cartItems]);
 
+  useEffect(() => {
+    const onStorage = () => {
+      try { const items = JSON.parse(localStorage.getItem('cart') || '[]'); setCartItems(items); updateCartTotals(items); } catch (e) {}
+    };
+    window.addEventListener('storage', onStorage);
+    window.addEventListener('cart:updated', onStorage);
+    return () => { window.removeEventListener('storage', onStorage); window.removeEventListener('cart:updated', onStorage); };
+  }, []);
+
   const updateCartTotals = (items) => {
-    const count = items.reduce((sum, item) => sum + item.quantity, 0);
-    const total = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const count = items.reduce((sum, item) => sum + (item.quantity || item.qty || 0), 0);
+    const total = items.reduce((sum, item) => sum + ((item.price || 0) * (item.quantity || item.qty || 0)), 0);
     setCartCount(count);
     setCartTotal(total);
   };
@@ -54,22 +68,24 @@ export const CartProvider = ({ children }) => {
 
       return [...prevItems, {
         productId: product._id,
-        product: product.product,
+        product: product.product || product.title || '',
         print: product.print,
         color: product.color,
         size,
         quantity,
-        price: product.discountedPrice || product.mrp,
+        price: product.discountedPrice || product.mrp || product.price || 0,
         image: product.images?.[0] || '',
         stock: getStockForSize(product, size)
       }];
     });
+    toast.success('Added to cart');
   };
 
   const removeFromCart = (productId, size) => {
     setCartItems(prevItems => 
       prevItems.filter(item => !(item.productId === productId && item.size === size))
     );
+    toast.success('Removed from cart');
   };
 
   const updateQuantity = (productId, size, quantity) => {
@@ -101,6 +117,26 @@ export const CartProvider = ({ children }) => {
     return sizeMap[size] || 0;
   };
 
+  const placeOrder = async (extra = {}) => {
+    // build order payload
+    const orderItems = cartItems.map(i => ({ product: i.productId, qty: i.quantity, price: i.price, size: i.size }));
+    const payload = {
+      items: orderItems,
+      totalPrice: cartTotal,
+      ...extra
+    };
+    try {
+      const res = await createOrder(payload);
+      toast.success('Order placed successfully');
+      clearCart();
+      setIsCartOpen(false);
+      return res;
+    } catch (err) {
+      toast.error('Could not place order');
+      throw err;
+    }
+  };
+
   const value = {
     cartItems,
     cartCount,
@@ -108,7 +144,10 @@ export const CartProvider = ({ children }) => {
     addToCart,
     removeFromCart,
     updateQuantity,
-    clearCart
+    clearCart,
+    isCartOpen,
+    setIsCartOpen,
+    placeOrder
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
