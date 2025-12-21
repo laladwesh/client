@@ -1,7 +1,9 @@
 import mongoose from 'mongoose';
-
+import dotenv from 'dotenv';
+dotenv.config();
 const connectDB = async () => {
-  const uri = process.env.MONGO_URI || 'mongodb://localhost:27017/nufab';
+  const uri = process.env.MONGO_URI;
+  console.log('MongoDB URI:', uri);
   try {
     await mongoose.connect(uri, {
       // mongoose v7 no longer needs these options, but keep for compatibility
