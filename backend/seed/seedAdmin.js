@@ -2,11 +2,16 @@ import dotenv from 'dotenv';
 dotenv.config();
 import connectDB from '../config/db.js';
 import User from '../models/User.js';
+import mongoose from 'mongoose';
 
 const run = async () => {
   try {
-    await connectDB();
-    const adminEmail = process.env.ADMIN_EMAIL;
+    // await connectDB();
+    mongoose.connect(process.env.MONGO_URI || "mongodb+srv://testgupta85_db_user:ihHPU0cMvhMOPe9Z@iitgplacement.kfx3vn1.mongodb.net/adminjs-cloud?retryWrites=true&w=majority", {
+          useNewUrlParser: true,
+          useUnifiedTopology: true,
+        });
+    const adminEmail = process.env.ADMIN_EMAIL || 'guptaavinash302@gmail.com';
     if (!adminEmail) {
       console.error('Please set ADMIN_EMAIL in .env');
       process.exit(1);
