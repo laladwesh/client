@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getProduct, getProducts } from "../services/productService";
+import toast from 'react-hot-toast';
+import { updateCart as apiUpdateCart } from '../services/cartService';
 
 // default sizes if product doesn't include sizes
 const DEFAULT_SIZES = ["S", "M", "L", "XL"];
@@ -26,28 +28,43 @@ const ProductPage = () => {
   });
   const isWishlisted = product ? wishlist.includes(product.id) : false;
 
-  const addToCart = () => {
+  const addToCart = async () => {
     try {
-      const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-      const existingIndex = cart.findIndex(
-        (i) => i.id === product.id && i.size === selectedSize
-      );
+      // read localStorage cart
+      const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+      const existingIndex = cart.findIndex(i => String(i.productId || i.id || i.product) === String(rawProduct._id) && (i.size === selectedSize));
       if (existingIndex > -1) {
-        cart[existingIndex].qty += qty;
+        cart[existingIndex].quantity = (cart[existingIndex].quantity || cart[existingIndex].qty || 0) + qty;
       } else {
-        cart.push({
-          id: product.id,
-          title: product.title,
-          price: product.price,
-          size: selectedSize,
-          qty,
-        });
+        cart.push({ productId: rawProduct._id, product: rawProduct.product || rawProduct.title, image: rawProduct.images?.[0] || '', size: selectedSize, quantity: qty, price: rawProduct.discountedPrice || rawProduct.mrp || rawProduct.price || 0 });
       }
-      localStorage.setItem("cart", JSON.stringify(cart));
-      alert("Added to cart");
+      localStorage.setItem('cart', JSON.stringify(cart));
+      // notify other components and open sidebar
+      window.dispatchEvent(new Event('cart:updated'));
+
+      // if user logged in, sync to backend
+      const user = localStorage.getItem('user');
+      const token = localStorage.getItem('token');
+      if (user && token) {
+        try { await apiUpdateCart(cart); } catch (e) { console.error('cart sync failed', e); }
+      }
+
+      // show sliding toast coming from right
+      toast.custom((t) => (
+        <div className={`toast-slide-right ${t.visible ? '': ''}`} style={{
+          background: '#111', color: '#fff', padding: '12px 16px', borderRadius: 8, boxShadow: '0 6px 20px rgba(0,0,0,0.12)'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <div style={{ fontWeight: 600 }}>{rawProduct.product || rawProduct.title}</div>
+            <div style={{ marginLeft: 'auto' }}>
+              <button onClick={() => toast.dismiss(t.id)} style={{ background: 'transparent', border: 'none', color: '#fff', opacity: 0.85 }}>Close</button>
+            </div>
+          </div>
+        </div>
+      ));
     } catch (err) {
       console.error(err);
-      alert("Could not add to cart");
+      toast.error("Could not add to cart");
     }
   };
 
@@ -136,6 +153,7 @@ const ProductPage = () => {
       })
       .catch((err) => {
         console.error('Failed to load product', err);
+        toast.error('Failed to load product');
       });
 
     // fetch suggestions: prefer suggestions returned with product API
