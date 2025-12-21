@@ -53,7 +53,7 @@ const googleCallback = asyncHandler(async (req, res) => {
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '30d' });
 
     // Redirect to frontend with token
-    res.redirect(`http://localhost:3000/sign-up?token=${token}&user=${encodeURIComponent(JSON.stringify({
+    res.redirect(`https://client-seven-rouge.vercel.app/sign-up?token=${token}&user=${encodeURIComponent(JSON.stringify({
       _id: user._id,
       name: user.name,
       email: user.email,
@@ -62,7 +62,7 @@ const googleCallback = asyncHandler(async (req, res) => {
     }))}`);
   } catch (error) {
     console.error('Google callback error:', error);
-    res.redirect('http://localhost:3000/sign-up?error=auth_failed');
+    res.redirect('https://client-seven-rouge.vercel.app/sign-up?error=auth_failed');
   }
 });
 
