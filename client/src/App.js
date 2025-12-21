@@ -11,6 +11,8 @@ import Contact from './pages/Contact';
 import FAQ from './pages/FAQ';
 import PhotoBooth from './pages/PhotoBooth';
 import SignUp from './pages/SignUp';
+import Admin from './pages/Admin';
+import AdminRoute from './components/AdminRoute';
 import './App.css';
 import ProductPage from './pages/ProductPage';
 import BlogPage from './pages/BlogPage';
@@ -119,6 +121,15 @@ function App() {
                 <SignUp />
               </div>
               <Footer />
+            </>
+          } />
+          <Route path="/admin" element={
+            <>
+              <div className="">
+                <AdminRoute>
+                  <Admin />
+                </AdminRoute>
+              </div>
             </>
           } />
         </Routes>
