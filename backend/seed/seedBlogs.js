@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 import connectDB from '../config/db.js';
 import Blog from '../models/Blog.js';
+import mongoose, { mongo } from 'mongoose';
 
 const sampleBlogs = [
   {
@@ -44,7 +45,14 @@ const sampleBlogs = [
 
 const run = async () => {
   try {
-    await connectDB();
+    console.log(process.env.MONGO_URI);
+    // connectDB();
+    // function to connect mongodb
+    mongoose.connect(process.env.MONGO_URI || "mongodb+srv://testgupta85_db_user:ihHPU0cMvhMOPe9Z@iitgplacement.kfx3vn1.mongodb.net/adminjs-cloud?retryWrites=true&w=majority", {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log('MongoDB connected for seeding blogs');
     for (const b of sampleBlogs) {
       const existing = await Blog.findOne({ slug: b.slug });
       if (existing) {
