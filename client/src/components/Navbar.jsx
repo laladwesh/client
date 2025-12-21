@@ -62,6 +62,21 @@ const Navbar = () => {
     }
   }, [location]);
 
+  // read cart count from localStorage and update on events
+  const getCartCount = () => {
+    try {
+      const c = JSON.parse(localStorage.getItem('cart') || '[]');
+      return c.reduce((s, i) => s + (i.quantity || i.qty || 0), 0);
+    } catch (e) { return 0; }
+  };
+  const [cartCount, setCartCount] = useState(getCartCount());
+  useEffect(() => {
+    const onUpdated = () => setCartCount(getCartCount());
+    window.addEventListener('cart:updated', onUpdated);
+    window.addEventListener('storage', onUpdated);
+    return () => { window.removeEventListener('cart:updated', onUpdated); window.removeEventListener('storage', onUpdated); };
+  }, []);
+
   useEffect(() => {
     if (!isHomePage) return;
 
@@ -140,13 +155,13 @@ const Navbar = () => {
                 </ul>
                 <div>
                   <ul className="nav-menu-block-home-2 nav_blck_gap w-list-unstyled">
+                      <li>
+                        <button onClick={() => window.dispatchEvent(new CustomEvent('cart:toggle', { detail: { open: true } }))} className={`${!isHomePage ? 'text-black' : 'text-white'} font-semibold text-base hover:underline flex items-center gap-2`}>
+                          Cart <span className="text-[0.9em]">{cartCount || 0}</span>
+                        </button>
+                      </li>
                     <li>
-                      <Link to="/cart" className={`${!isHomePage ? 'text-black' : 'text-white'} font-semibold text-base hover:underline`}>
-                        Cart <span className="text-[0.9em]">0</span>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="/sign-up" className={`${!isHomePage ? 'text-black' : 'text-white'} font-semibold text-base hover:underline`}>
+                      <button onClick={() => window.dispatchEvent(new CustomEvent('signup:toggle', { detail: { open: true } }))} className={`${!isHomePage ? 'text-black' : 'text-white'} font-semibold text-base hover:underline`}>
                         <div className="nav-icon_wrapper-home relative">
                           {user ? (
                             <>
@@ -166,7 +181,7 @@ const Navbar = () => {
                             <img loading="lazy" src="/images/user-circle.svg" alt="User" className="nav-icon" />
                           )}
                         </div>
-                      </Link>
+                      </button>
                     </li>
                   </ul>
                 </div>
