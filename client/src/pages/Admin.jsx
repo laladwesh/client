@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
+import ConfirmModal from '../components/ConfirmModal';
 import { useNavigate } from 'react-router-dom';
 import {
   fetchProducts, createProduct, updateProduct, uploadProductImage, deleteProductImage, deleteProduct,
   fetchBlogs, createBlog, updateBlog, deleteBlog,
   fetchUsers, updateUser, deleteUser,
   // Assuming these exist or will be created
-  // uploadBlogImage, deleteBlogImage 
+  // uploadBlogImage, deleteBlogImage
 } from '../services/adminService';
+import { getAllOrders, updateOrderStatus } from '../services/orderService';
 
 // --- Icons (SVG Components) ---
 const Icons = {
@@ -65,10 +68,11 @@ export default function Admin() {
       if (activeTab === 'products') res = await fetchProducts(token);
       else if (activeTab === 'blogs') res = await fetchBlogs(token);
       else if (activeTab === 'users') res = await fetchUsers(token);
-      else if (activeTab === 'orders') res = []; // Mock
+      else if (activeTab === 'orders') res = await getAllOrders();
       setData(res);
     } catch (err) {
       console.error("Failed to fetch data", err);
+      toast.error('Failed to fetch data');
     } finally {
       setLoading(false);
     }
@@ -77,7 +81,7 @@ export default function Admin() {
   // --- Handlers ---
   const handleOpenModal = (item = null) => {
     setFileMap(null);
-    setProductFormTab('basic');
+        setProductFormTab('basic'); 
     if (item) {
       setModalMode('edit');
       const prep = { ...item };
@@ -102,13 +106,34 @@ export default function Admin() {
     const newRole = user.role === 'admin' ? 'user' : 'admin';
     const action = newRole === 'admin' ? 'promote to Admin' : 'demote to User';
     
-    if (window.confirm(`Are you sure you want to ${action} for ${user.name}?`)) {
-      try {
-        await updateUser(user._id, { role: newRole }, token);
-        fetchData();
-      } catch (err) {
-        alert("Failed to update role: " + err.message);
-      }
+    setConfirm({
+      open: true,
+      title: `Confirm ${action}`,
+      description: `Are you sure you want to ${action} for ${user.name}?`,
+      onConfirm: async () => {
+        try {
+          await updateUser(user._id, { role: newRole }, token);
+          fetchData();
+          toast.success('Role updated');
+        } catch (err) {
+          toast.error('Failed to update role: ' + (err.message || ''));
+        } finally { setConfirm(c => ({ ...c, open: false })); }
+      },
+      onCancel: () => setConfirm(c => ({ ...c, open: false }))
+    });
+  };
+
+  const handleChangeOrderStatus = async (orderId, newStatus) => {
+    setLoading(true);
+    try {
+      await updateOrderStatus(orderId, newStatus);
+      fetchData();
+      toast.success('Order status updated');
+    } catch (err) {
+      console.error('Failed to update order status', err);
+      toast.error('Failed to update order status: ' + (err.message || ''));
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -136,31 +161,46 @@ export default function Admin() {
 
         // Assuming logic for blog image upload is similar or reused
         if (fileMap && result._id) {
-           // If you have a specific uploadBlogImage function, use it here. 
-           // Otherwise, we reuse product image upload or skip if backend doesn't support it yet.
            try { await uploadProductImage(result._id, fileMap, token); } catch(e){ console.log("Blog image upload not implemented yet"); }
+        }
+      } else if (activeTab === 'orders') {
+        // Save order changes (status)
+        try {
+          await updateOrderStatus(payload._id, payload.status);
+          toast.success('Order updated');
+        } catch (err) {
+          throw err;
         }
       }
 
       setIsModalOpen(false);
       fetchData();
     } catch (err) {
-      alert("Error saving: " + err.message);
+      toast.error("Error saving: " + (err.message || ''));
     } finally {
       setLoading(false);
     }
   };
 
+  const [confirm, setConfirm] = useState({ open: false });
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this? This cannot be undone.")) return;
-    try {
-      if (activeTab === 'products') await deleteProduct(id, token);
-      else if (activeTab === 'blogs') await deleteBlog(id, token);
-      else if (activeTab === 'users') await deleteUser(id, token);
-      fetchData();
-    } catch (err) {
-      alert("Error deleting");
-    }
+    setConfirm({
+      open: true,
+      title: 'Confirm Delete',
+      description: 'Are you sure you want to delete this? This cannot be undone.',
+      onConfirm: async () => {
+        try {
+          if (activeTab === 'products') await deleteProduct(id, token);
+          else if (activeTab === 'blogs') await deleteBlog(id, token);
+          else if (activeTab === 'users') await deleteUser(id, token);
+          fetchData();
+          toast.success('Deleted successfully');
+        } catch (err) {
+          toast.error('Error deleting: ' + (err.message || ''));
+        } finally { setConfirm(c => ({ ...c, open: false })); }
+      },
+      onCancel: () => setConfirm(c => ({ ...c, open: false }))
+    });
   };
 
   // --- Filter Logic ---
@@ -224,11 +264,22 @@ export default function Admin() {
               <img src={img} alt="preview" className="w-full h-full object-cover rounded-lg shadow-sm border border-gray-200" />
               <button
                 type="button"
-                onClick={async () => { if(window.confirm('Delete image?')) { 
-                    if(activeTab === 'products') await deleteProductImage(formData._id, img, token);
-                    // if(activeTab === 'blogs') await deleteBlogImage... 
-                    handleOpenModal({...formData, images: formData.images.filter(x => x !== img)}); 
-                }}}
+                onClick={async () => { 
+                    setConfirm({
+                      open: true,
+                      title: 'Delete image?',
+                      description: 'Are you sure you want to delete this image?',
+                      onConfirm: async () => {
+                        try {
+                          if(activeTab === 'products') await deleteProductImage(formData._id, img, token);
+                          handleOpenModal({...formData, images: formData.images.filter(x => x !== img)});
+                          toast.success('Image deleted');
+                        } catch (e) { toast.error('Could not delete image'); }
+                        finally { setConfirm(c => ({ ...c, open: false })); }
+                      },
+                      onCancel: () => setConfirm(c => ({ ...c, open: false }))
+                    });
+                }}
                 className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 shadow-md hover:bg-red-600 opacity-0 group-hover:opacity-100 transition-all transform scale-90 group-hover:scale-100"
               >
                 <Icons.X />
@@ -342,35 +393,36 @@ export default function Admin() {
                 <thead className="bg-gray-50/50">
                   <tr>
                     {activeTab === 'products' && (
-                      <>
+                      <React.Fragment>
                         <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Product</th>
                         <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Details</th>
                         <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Inventory</th>
                         <th className="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Actions</th>
-                      </>
+                      </React.Fragment>
                     )}
                     {activeTab === 'users' && (
-                       <>
+                       <React.Fragment>
                         <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">User</th>
                         <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Email</th>
                         <th className="px-6 py-4 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">Role Access</th>
                         <th className="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Actions</th>
-                      </>
+                      </React.Fragment>
                     )}
                     {activeTab === 'blogs' && (
-                      <>
+                      <React.Fragment>
                         <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Article</th>
                         <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Slug</th>
                         <th className="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Actions</th>
-                      </>
+                      </React.Fragment>
                     )}
-                     {activeTab === 'orders' && (
-                      <>
+                    {activeTab === 'orders' && (
+                      <React.Fragment>
                         <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Order ID</th>
                         <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Customer</th>
                         <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Total</th>
                         <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Status</th>
-                      </>
+                        <th className="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Actions</th>
+                      </React.Fragment>
                     )}
                   </tr>
                 </thead>
@@ -383,7 +435,7 @@ export default function Admin() {
                       
                       {/* --- Product Rows --- */}
                       {activeTab === 'products' && (
-                        <>
+                        <React.Fragment>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="flex items-center">
                               <div className="flex-shrink-0 h-12 w-12 bg-gray-100 rounded-lg overflow-hidden border border-gray-200">
@@ -409,12 +461,12 @@ export default function Admin() {
                               </span>
                             </div>
                           </td>
-                        </>
+                        </React.Fragment>
                       )}
 
                       {/* --- User Rows --- */}
                       {activeTab === 'users' && (
-                        <>
+                        <React.Fragment>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="text-sm font-bold text-gray-900">{item.name}</div>
                             <div className="text-xs text-gray-400">ID: {item._id.slice(-6)}</div>
@@ -433,12 +485,12 @@ export default function Admin() {
                               {item.role}
                             </span>
                           </td>
-                        </>
+                        </React.Fragment>
                       )}
 
                       {/* --- Blog Rows --- */}
                       {activeTab === 'blogs' && (
-                         <>
+                         <React.Fragment>
                           <td className="px-6 py-4">
                              <div className="flex items-center gap-3">
                                 {item.images && item.images[0] && (
@@ -451,12 +503,12 @@ export default function Admin() {
                              </div>
                           </td>
                           <td className="px-6 py-4 text-xs font-mono text-gray-500 bg-gray-50 rounded p-1 w-fit">{item.slug}</td>
-                        </>
+                        </React.Fragment>
                       )}
 
                       {/* --- Order Rows --- */}
-                      {activeTab === 'orders' && (
-                         <>
+                       {activeTab === 'orders' && (
+                         <React.Fragment>
                           <td className="px-6 py-4 text-sm font-mono text-gray-600">{item._id.substring(0,10)}...</td>
                           <td className="px-6 py-4 text-sm font-medium text-gray-900">{item.user?.name || 'Guest'}</td>
                           <td className="px-6 py-4 text-sm font-bold text-gray-900">₹{item.totalPrice}</td>
@@ -466,8 +518,29 @@ export default function Admin() {
                               {item.status}
                             </span>
                           </td>
-                        </>
-                      )}
+                          <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex items-center justify-end gap-2">
+                            <button
+                              onClick={() => handleOpenModal(item)}
+                              className="text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 p-2 rounded-lg transition-colors"
+                              title="View"
+                            >
+                              View
+                            </button>
+                            <select
+                              value={item.status}
+                              onChange={(e) => handleChangeOrderStatus(item._id, e.target.value)}
+                              className="px-2 py-1 rounded-lg border text-sm"
+                              title="Change status"
+                            >
+                              <option value="pending">pending</option>
+                              <option value="paid">paid</option>
+                              <option value="shipped">shipped</option>
+                              <option value="delivered">delivered</option>
+                              <option value="cancelled">cancelled</option>
+                            </select>
+                            </td>
+                          </React.Fragment>
+                        )}
 
                       {/* --- Common Actions --- */}
                       {activeTab !== 'orders' && (
@@ -548,17 +621,17 @@ export default function Admin() {
 
                     <div className="grid grid-cols-2 gap-6">
                       {productFormTab === 'basic' && (
-                        <>
+                        <React.Fragment>
                           <InputGroup label="Product Name" name="product" />
                           <InputGroup label="Category" name="category" />
                           <InputGroup label="Slug (URL)" name="slug" />
                           <InputGroup label="Product Type" name="productType" />
                           <InputGroup label="Description" name="productDescription" type="textarea" colSpan={2} />
                           <InputGroup label="Show on Homepage" name="isShownInHomepage" type="checkbox" colSpan={2} />
-                        </>
+                        </React.Fragment>
                       )}
                       {productFormTab === 'fabric' && (
-                        <>
+                         <React.Fragment>
                           <InputGroup label="Print / Pattern" name="print" />
                           <InputGroup label="Color" name="color" />
                           <InputGroup label="Fabric Type" name="fabricType" />
@@ -572,10 +645,10 @@ export default function Admin() {
                           </div>
                           <InputGroup label="Features (comma separated)" name="features" colSpan={2} placeholder="e.g. Breathable, Lightweight, Cotton" />
                           <InputGroup label="Size & Fit Info" name="sizeAndFit" type="textarea" colSpan={2} />
-                        </>
+                        </React.Fragment>
                       )}
                       {productFormTab === 'pricing' && (
-                        <>
+                        <React.Fragment>
                           <div className="bg-blue-50 p-4 rounded-xl col-span-2 grid grid-cols-2 gap-4 border border-blue-100">
                              <InputGroup label="MRP (₹)" name="mrp" type="number" />
                              <InputGroup label="Selling Price (₹)" name="discountedPrice" type="number" />
@@ -588,7 +661,7 @@ export default function Admin() {
                           <div className="col-span-2 text-xs text-gray-400 bg-gray-50 p-2 rounded">
                             Total Quantity will be calculated automatically based on sizes.
                           </div>
-                        </>
+                        </React.Fragment>
                       )}
                       {productFormTab === 'media' && <ImageUploadSection />}
                     </div>
@@ -611,6 +684,76 @@ export default function Admin() {
                      </div>
 
                      <InputGroup label="Main Content" name="content" type="textarea" rows={8} placeholder="Write your blog post here..." />
+                  </div>
+                )}
+                {activeTab === 'orders' && (
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <div className="text-sm text-gray-500">Order ID</div>
+                        <div className="font-mono text-sm text-gray-900">{formData._id}</div>
+                      </div>
+                      <div>
+                        <div className="text-sm text-gray-500">Status</div>
+                        <select
+                          value={formData.status || 'pending'}
+                          onChange={(e) => setFormData(f => ({ ...f, status: e.target.value }))}
+                          className="px-3 py-1 rounded-md border"
+                        >
+                          <option value="pending">pending</option>
+                          <option value="paid">paid</option>
+                          <option value="shipped">shipped</option>
+                          <option value="delivered">delivered</option>
+                          <option value="cancelled">cancelled</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div>
+                      <h4 className="font-bold">Customer</h4>
+                      <div className="text-sm text-gray-700">{formData.user?.name} <span className="text-xs text-gray-500">{formData.user?.email}</span></div>
+                    </div>
+
+                    <div>
+                      <h4 className="font-bold">Shipping Address</h4>
+                      <div className="text-sm text-gray-700">
+                        {formData.shippingAddress ? (
+                          <div>
+                            <div>{formData.shippingAddress.name} {formData.shippingAddress.label ? `(${formData.shippingAddress.label})` : ''}</div>
+                            <div>{formData.shippingAddress.line1}{formData.shippingAddress.line2 ? `, ${formData.shippingAddress.line2}` : ''}</div>
+                            <div>{formData.shippingAddress.city}, {formData.shippingAddress.state} — {formData.shippingAddress.postalCode}</div>
+                            <div>{formData.shippingAddress.country}</div>
+                            <div className="text-xs text-gray-500">Phone: {formData.shippingAddress.phone}</div>
+                          </div>
+                        ) : <div className="text-gray-500">No shipping address</div>}
+                      </div>
+                    </div>
+
+                    <div>
+                      <h4 className="font-bold">Items</h4>
+                      <div className="space-y-2">
+                        {Array.isArray(formData.items) && formData.items.map((it, idx) => (
+                          <div key={idx} className="flex justify-between items-center text-sm">
+                            <div className="flex items-center gap-3">
+                              {it.image && <img src={it.image} alt="" className="w-10 h-10 object-cover rounded" />}
+                              <div>
+                                <div className="font-medium">{it.productName || it.product}</div>
+                                <div className="text-xs text-gray-500">{it.color} • {it.size}</div>
+                              </div>
+                            </div>
+                            <div className="text-sm">Qty: {it.quantity} • ₹{it.price}</div>
+                          </div>
+                        ))}
+                        {(!Array.isArray(formData.items) || formData.items.length === 0) && (
+                          <div className="text-gray-500">No items in this order.</div>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="flex justify-between items-center pt-3 border-t">
+                      <div className="text-sm text-gray-500">Payment</div>
+                      <div className="font-bold">₹{formData.totalPrice} • {formData.paymentMethod}</div>
+                    </div>
                   </div>
                 )}
               </form>
@@ -638,6 +781,7 @@ export default function Admin() {
           </div>
         </div>
       )}
+      <ConfirmModal open={confirm.open} title={confirm.title} description={confirm.description} onConfirm={confirm.onConfirm} onCancel={confirm.onCancel} />
     </div>
   );
 }
