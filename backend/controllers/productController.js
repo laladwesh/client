@@ -1,5 +1,14 @@
 import asyncHandler from 'express-async-handler';
 import Product from '../models/Product.js';
+import { v2 as cloudinary } from 'cloudinary';
+import dotenv from 'dotenv';
+dotenv.config();
+// configure cloudinary from env or CLOUDINARY_URL
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 // GET /api/products
 // Optional query: ?shownInHome=true
@@ -74,3 +83,55 @@ const deleteProduct = asyncHandler(async (req, res) => {
 });
 
 export { getProducts, getProduct, createProduct, updateProduct, deleteProduct };
+
+// POST /api/products/:id/images (admin)
+const uploadProductImage = asyncHandler(async (req, res) => {
+  const product = await Product.findById(req.params.id);
+  if (!product) {
+    res.status(404);
+    throw new Error('Product not found');
+  }
+
+  if (!req.file || !req.file.buffer) {
+    res.status(400);
+    throw new Error('Image file is required');
+  }
+
+  // Convert buffer to base64 data URI
+  const b64 = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
+
+  const result = await cloudinary.uploader.upload(b64, { folder: 'products' });
+
+  // Save cloudinary url to product images array
+  product.images = product.images || [];
+  product.images.push(result.secure_url);
+  product.updatedAt = Date.now();
+  await product.save();
+
+  res.json({ imageUrl: result.secure_url, product });
+});
+
+export { uploadProductImage };
+
+// DELETE /api/products/:id/images (admin)
+const removeProductImage = asyncHandler(async (req, res) => {
+  const product = await Product.findById(req.params.id);
+  if (!product) {
+    res.status(404);
+    throw new Error('Product not found');
+  }
+
+  const imageUrl = req.body.imageUrl || req.query.imageUrl;
+  if (!imageUrl) {
+    res.status(400);
+    throw new Error('imageUrl is required');
+  }
+
+  product.images = (product.images || []).filter(img => img !== imageUrl);
+  product.updatedAt = Date.now();
+  await product.save();
+
+  res.json({ message: 'Image removed', product });
+});
+
+export { removeProductImage };
