@@ -29,11 +29,11 @@ const About = () => {
                   </ul>
                   <ul className="nav-menu-block-2 nav_blck_gap w-list-unstyled">
                     <li>
-                      <Link to="/sign-up" className="nav-link w-inline-block">
+                      <a href="#" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent('signup:toggle', { detail: { open: true } })); }} className="nav-link w-inline-block">
                         <div className="nav-icon_wrapper">
                           <img loading="lazy" src="/images/user-circle_black.svg" alt="User" className="nav-icon" />
                         </div>
-                      </Link>
+                      </a>
                     </li>
                   </ul>
                 </div>
