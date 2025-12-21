@@ -7,7 +7,13 @@ export default function AdminRoute({ children }) {
   const isAuthenticated = !!storedToken;
   const isAdmin = storedUser && storedUser.role === 'admin';
 
-  if (!isAuthenticated) return <Navigate to="/sign-up" replace />;
-  if (!isAdmin) return <Navigate to="/" replace />;
+  if (!isAuthenticated) {
+    window.dispatchEvent(new CustomEvent('signup:toggle', { detail: { open: true } }));
+    return <Navigate to="/" replace />;
+  }
+  if (!isAdmin) {
+    window.dispatchEvent(new CustomEvent('signup:toggle', { detail: { open: true } }));
+    return <Navigate to="/" replace />;
+  }
   return children;
 }
