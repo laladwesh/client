@@ -35,7 +35,7 @@ const emptyProduct = {
   slug: '', images: [], isShownInHomepage: false
 };
 
-const emptyBlog = { title: '', slug: '', excerpt: '', content: '', images: [], tags: [] };
+const emptyBlog = { title: '', subtitle: '', slug: '', excerpt: '', content: '', images: [], tags: [] };
 
 // --- STABLE EXTERNAL COMPONENTS (Prevents focus loss) ---
 
@@ -695,6 +695,7 @@ export default function Admin() {
                   <div className="grid grid-cols-1 gap-6">
                       <div className="grid grid-cols-2 gap-4">
                         <InputGroup label="Article Title" name="title" formData={formData} onChange={handleInputChange} />
+                        <InputGroup label="Subtitle" name="subtitle" formData={formData} onChange={handleInputChange} />
                         <InputGroup label="URL Slug" name="slug" formData={formData} onChange={handleInputChange} />
                       </div>
                       <InputGroup label="Short Excerpt" name="excerpt" type="textarea" placeholder="A short summary for the card view..." formData={formData} onChange={handleInputChange} />
