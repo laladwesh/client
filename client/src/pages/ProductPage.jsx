@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 import { updateCart as apiUpdateCart } from '../services/cartService';
 
 // default sizes if product doesn't include sizes
-const DEFAULT_SIZES = ["S", "M", "L", "XL"];
+const DEFAULT_SIZES = ["XXS", "XS", "S", "M", "L", "XL", "XXL"];
 
 const rupee = (n) => `₹${n}`;
 

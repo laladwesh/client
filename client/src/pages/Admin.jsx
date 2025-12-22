@@ -7,8 +7,6 @@ import {
   fetchBlogs, createBlog, updateBlog, deleteBlog,
   uploadBlogImage, deleteBlogImage,
   fetchUsers, updateUser, deleteUser,
-  // Assuming these exist or will be created
-  // uploadBlogImage, deleteBlogImage
 } from '../services/adminService';
 import { getAllOrders, updateOrderStatus } from '../services/orderService';
 
@@ -31,11 +29,100 @@ const emptyProduct = {
   category: '', product: '', print: '', color: '', fabricType: '', fabricPattern: '', 
   fabricDescription: '', productType: '', length: '', lengthInInches: 0, sleeves: '', 
   closure: '', productDescription: '', features: [], sizeAndFit: '', material: '', 
-  mrp: 0, discountedPrice: 0, totalQuantity: 0, sizeSQuantity: 0, sizeMQuantity: 0, 
-  sizeLQuantity: 0, sizeXLQuantity: 0, slug: '', images: [], isShownInHomepage: false
+  mrp: 0, discountedPrice: 0, totalQuantity: 0,
+  sizeXXSQuantity: 0, sizeXSQuantity: 0, sizeSQuantity: 0, sizeMQuantity: 0, 
+  sizeLQuantity: 0, sizeXLQuantity: 0, sizeXXLQuantity: 0,
+  slug: '', images: [], isShownInHomepage: false
 };
 
 const emptyBlog = { title: '', slug: '', excerpt: '', content: '', images: [], tags: [] };
+
+// --- STABLE EXTERNAL COMPONENTS (Prevents focus loss) ---
+
+const InputGroup = ({ label, name, type = "text", placeholder, colSpan = 1, formData, onChange, rows }) => {
+  const value = formData && formData[name] !== undefined && formData[name] !== null ? formData[name] : '';
+  const checked = Boolean(formData && formData[name]);
+  return (
+    <div className={colSpan === 2 ? "col-span-2" : ""}>
+      <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">{label}</label>
+      {type === 'textarea' ? (
+        <textarea
+          name={name} value={value} onChange={onChange} placeholder={placeholder} rows={rows || 3}
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-shadow"
+        />
+      ) : type === 'checkbox' ? (
+        <label className="flex items-center mt-2 cursor-pointer">
+          <input
+            type="checkbox" name={name} checked={checked} onChange={onChange}
+            className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+          />
+          <span className="ml-3 text-sm font-medium text-gray-700">{placeholder || label}</span>
+        </label>
+      ) : (
+        <input
+          type={type} name={name} value={value} onChange={onChange} placeholder={placeholder}
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-shadow"
+        />
+      )}
+    </div>
+  );
+};
+
+const TabButton = ({ id, label, icon, activeTab, setActiveTab, setSearchQuery }) => (
+  <button
+    onClick={() => { setActiveTab(id); setSearchQuery(''); }}
+    className={`w-full flex items-center space-x-3 px-6 py-3.5 transition-all duration-200 border-r-4
+      ${activeTab === id 
+        ? 'bg-indigo-50 border-indigo-600 text-indigo-700' 
+        : 'border-transparent text-gray-500 hover:bg-gray-50 hover:text-gray-900'}`}
+  >
+    {icon}
+    <span className="font-medium tracking-wide text-sm">{label}</span>
+  </button>
+);
+
+const ImageUploadSection = ({ images, fileMap, setFileMap, onDeleteImage }) => (
+  <div className="col-span-2 space-y-4">
+    <div>
+      <label className="block text-sm font-medium text-gray-700">Gallery</label>
+      <div className="flex flex-wrap gap-4 mt-3">
+        {images?.map((img, i) => (
+          <div key={i} className="relative group w-24 h-24">
+            <img src={img} alt="preview" className="w-full h-full object-cover rounded-lg shadow-sm border border-gray-200" />
+            <button
+              type="button"
+              onClick={() => onDeleteImage(img)}
+              className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 shadow-md hover:bg-black opacity-0 group-hover:opacity-100 transition-all transform scale-90 group-hover:scale-100"
+            >
+              <Icons.X />
+            </button>
+          </div>
+        ))}
+        {(!images || images.length === 0) && (
+          <div className="w-24 h-24 bg-gray-50 rounded-lg border border-dashed border-gray-300 flex items-center justify-center text-xs text-gray-400">
+            No Images
+          </div>
+        )}
+      </div>
+    </div>
+    <div className="border-t border-gray-100 pt-4">
+      <label className="block text-sm font-medium text-gray-700 mb-2">Upload New</label>
+      <label className="flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer hover:bg-gray-50 transition-colors group">
+        <div className="space-y-1 text-center">
+          <div className="text-gray-400 group-hover:text-black transition-colors"><Icons.Upload /></div>
+          <div className="flex text-sm text-gray-600">
+            <span className="font-medium text-indigo-600 group-hover:text-black">Click to upload</span>
+            <p className="pl-1">or drag and drop</p>
+          </div>
+          <p className="text-xs text-gray-500">{fileMap ? fileMap.name : "PNG, JPG up to 5MB"}</p>
+        </div>
+        <input type="file" className="sr-only" onChange={(e) => setFileMap(e.target.files[0])} />
+      </label>
+    </div>
+  </div>
+);
+
+// --- MAIN COMPONENT ---
 
 export default function Admin() {
   const navigate = useNavigate();
@@ -54,13 +141,17 @@ export default function Admin() {
   const [modalMode, setModalMode] = useState('create'); 
   const [formData, setFormData] = useState({});
   const [fileMap, setFileMap] = useState(null); 
-  const [productFormTab, setProductFormTab] = useState('basic'); // 'basic', 'fabric', 'pricing', 'media'
+  const [productFormTab, setProductFormTab] = useState('basic'); 
+
+  // Confirm Modal State - MOVED TO TOP to avoid Reference Errors
+  const [confirm, setConfirm] = useState({ open: false, title: '', description: '', onConfirm: () => {}, onCancel: () => {} });
 
   // --- Effects ---
   useEffect(() => {
     if (!token || !isAdmin) navigate('/');
     else fetchData();
-  }, [activeTab]); // eslint-disable-line
+    // eslint-disable-next-line
+  }, [activeTab]);
 
   const fetchData = async () => {
     setLoading(true);
@@ -69,7 +160,7 @@ export default function Admin() {
       if (activeTab === 'products') res = await fetchProducts(token);
       else if (activeTab === 'blogs') res = await fetchBlogs(token);
       else if (activeTab === 'users') res = await fetchUsers(token);
-      else if (activeTab === 'orders') res = await getAllOrders();
+      else if (activeTab === 'orders') res = await getAllOrders(token);
       setData(res);
     } catch (err) {
       console.error("Failed to fetch data", err);
@@ -82,7 +173,7 @@ export default function Admin() {
   // --- Handlers ---
   const handleOpenModal = (item = null) => {
     setFileMap(null);
-        setProductFormTab('basic'); 
+    setProductFormTab('basic'); 
     if (item) {
       setModalMode('edit');
       const prep = { ...item };
@@ -101,6 +192,25 @@ export default function Admin() {
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
+  };
+
+  const handleDeleteImage = async (imgUrl) => {
+    setConfirm({
+      open: true,
+      title: 'Delete image?',
+      description: 'Are you sure you want to delete this image?',
+      onConfirm: async () => {
+        try {
+          if (activeTab === 'products') await deleteProductImage(formData._id, imgUrl, token);
+          else if (activeTab === 'blogs') await deleteBlogImage(formData._id, imgUrl, token);
+          
+          setFormData(prev => ({ ...prev, images: (prev.images || []).filter(x => x !== imgUrl) }));
+          toast.success('Image deleted');
+        } catch (e) { toast.error('Could not delete image'); }
+        finally { setConfirm(c => ({ ...c, open: false })); }
+      },
+      onCancel: () => setConfirm(c => ({ ...c, open: false }))
+    });
   };
 
   const handleUserRoleToggle = async (user) => {
@@ -160,12 +270,10 @@ export default function Admin() {
         if (modalMode === 'edit') result = await updateBlog(payload._id, payload, token);
         else result = await createBlog(payload, token);
 
-        // Upload blog image if provided
         if (fileMap && result._id) {
           try { await uploadBlogImage(result._id, fileMap, token); } catch (e) { console.error('Blog image upload failed', e); }
         }
       } else if (activeTab === 'orders') {
-        // Save order changes (status)
         try {
           await updateOrderStatus(payload._id, payload.status);
           toast.success('Order updated');
@@ -183,7 +291,6 @@ export default function Admin() {
     }
   };
 
-  const [confirm, setConfirm] = useState({ open: false });
   const handleDelete = async (id) => {
     setConfirm({
       open: true,
@@ -215,105 +322,8 @@ export default function Admin() {
     return true;
   });
 
-  // --- Sub-Components ---
-  const TabButton = ({ id, label, icon }) => (
-    <button
-      onClick={() => { setActiveTab(id); setSearchQuery(''); }}
-      className={`w-full flex items-center space-x-3 px-6 py-3.5 transition-all duration-200 border-r-4
-        ${activeTab === id 
-          ? 'bg-indigo-50 border-indigo-600 text-indigo-700' 
-          : 'border-transparent text-gray-500 hover:bg-gray-50 hover:text-gray-900'}`}
-    >
-      {icon}
-      <span className="font-medium tracking-wide text-sm">{label}</span>
-    </button>
-  );
-
-  const InputGroup = ({ label, name, type = "text", placeholder, colSpan = 1 }) => (
-    <div className={colSpan === 2 ? "col-span-2" : ""}>
-      <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">{label}</label>
-      {type === 'textarea' ? (
-        <textarea
-          name={name} value={formData[name] || ''} onChange={handleInputChange} placeholder={placeholder} rows={3}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-shadow"
-        />
-      ) : type === 'checkbox' ? (
-        <label className="flex items-center mt-2 cursor-pointer">
-          <input
-            type="checkbox" name={name} checked={!!formData[name]} onChange={handleInputChange}
-            className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-          />
-          <span className="ml-3 text-sm font-medium text-gray-700">{placeholder || label}</span>
-        </label>
-      ) : (
-        <input
-          type={type} name={name} value={formData[name] || ''} onChange={handleInputChange} placeholder={placeholder}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-shadow"
-        />
-      )}
-    </div>
-  );
-
-  // --- Image Upload Section (Reusable) ---
-  const ImageUploadSection = () => (
-    <div className="col-span-2 space-y-4">
-      <div>
-        <label className="block text-sm font-medium text-gray-700">Gallery</label>
-        <div className="flex flex-wrap gap-4 mt-3">
-          {formData.images?.map((img, i) => (
-            <div key={i} className="relative group w-24 h-24">
-              <img src={img} alt="preview" className="w-full h-full object-cover rounded-lg shadow-sm border border-gray-200" />
-              <button
-                type="button"
-                onClick={async () => { 
-                    setConfirm({
-                      open: true,
-                      title: 'Delete image?',
-                      description: 'Are you sure you want to delete this image?',
-                      onConfirm: async () => {
-                        try {
-                          if (activeTab === 'products') await deleteProductImage(formData._id, img, token);
-                          else if (activeTab === 'blogs') await deleteBlogImage(formData._id, img, token);
-                          handleOpenModal({ ...formData, images: (formData.images || []).filter(x => x !== img) });
-                          toast.success('Image deleted');
-                        } catch (e) { toast.error('Could not delete image'); }
-                        finally { setConfirm(c => ({ ...c, open: false })); }
-                      },
-                      onCancel: () => setConfirm(c => ({ ...c, open: false }))
-                    });
-                }}
-                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 shadow-md hover:bg-black opacity-0 group-hover:opacity-100 transition-all transform scale-90 group-hover:scale-100"
-              >
-                <Icons.X />
-              </button>
-            </div>
-          ))}
-          {(!formData.images || formData.images.length === 0) && (
-            <div className="w-24 h-24 bg-gray-50 rounded-lg border border-dashed border-gray-300 flex items-center justify-center text-xs text-gray-400">
-              No Images
-            </div>
-          )}
-        </div>
-      </div>
-      <div className="border-t border-gray-100 pt-4">
-        <label className="block text-sm font-medium text-gray-700 mb-2">Upload New</label>
-        <label className="flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer hover:bg-gray-50 transition-colors group">
-            <div className="space-y-1 text-center">
-            <div className="text-gray-400 group-hover:text-black transition-colors"><Icons.Upload /></div>
-            <div className="flex text-sm text-gray-600">
-              <span className="font-medium text-indigo-600 group-hover:text-black">Click to upload</span>
-              <p className="pl-1">or drag and drop</p>
-            </div>
-            <p className="text-xs text-gray-500">{fileMap ? fileMap.name : "PNG, JPG up to 5MB"}</p>
-          </div>
-          <input type="file" className="sr-only" onChange={(e) => setFileMap(e.target.files[0])} />
-        </label>
-      </div>
-    </div>
-  );
-
   return (
-    <div className="flex h-screen  font-bdogrotesk text-gray-800">
+    <div className="flex h-screen font-bdogrotesk text-gray-800">
       
       {/* --- Sidebar --- */}
       <aside className="hidden md:flex flex-col w-72 bg-white border-r border-gray-200 shadow-[2px_0_10px_rgba(0,0,0,0.02)] z-20">
@@ -323,10 +333,10 @@ export default function Admin() {
           </h1>
         </div>
         <nav className="flex-1 overflow-y-auto py-6 space-y-1">
-          <TabButton id="products" label="Products" icon={<Icons.Box />} />
-          <TabButton id="orders" label="Orders" icon={<Icons.ShoppingBag />} />
-          <TabButton id="blogs" label="Blogs" icon={<Icons.FileText />} />
-          <TabButton id="users" label="Users" icon={<Icons.Users />} />
+          <TabButton id="products" label="Products" icon={<Icons.Box />} activeTab={activeTab} setActiveTab={setActiveTab} setSearchQuery={setSearchQuery} />
+          <TabButton id="orders" label="Orders" icon={<Icons.ShoppingBag />} activeTab={activeTab} setActiveTab={setActiveTab} setSearchQuery={setSearchQuery} />
+          <TabButton id="blogs" label="Blogs" icon={<Icons.FileText />} activeTab={activeTab} setActiveTab={setActiveTab} setSearchQuery={setSearchQuery} />
+          <TabButton id="users" label="Users" icon={<Icons.Users />} activeTab={activeTab} setActiveTab={setActiveTab} setSearchQuery={setSearchQuery} />
         </nav>
         <div className="p-6 border-t border-gray-100">
             <div className="flex items-center gap-3 mb-6 bg-gray-50 p-3 rounded-xl border border-gray-100">
@@ -459,7 +469,7 @@ export default function Admin() {
                             <div className="text-sm font-semibold text-gray-900">₹{item.discountedPrice || item.mrp}</div>
                             <div className="text-xs text-gray-500">
                               Stock: <span className={item.totalQuantity < 10 ? "text-red-500 font-bold" : "text-green-600"}>
-                                {item.totalQuantity || ((item.sizeSQuantity||0)+(item.sizeMQuantity||0)+(item.sizeLQuantity||0)+(item.sizeXLQuantity||0))}
+                                {item.totalQuantity || ((item.sizeXXSQuantity||0)+(item.sizeXSQuantity||0)+(item.sizeSQuantity||0)+(item.sizeMQuantity||0)+(item.sizeLQuantity||0)+(item.sizeXLQuantity||0)+(item.sizeXXLQuantity||0))}
                               </span>
                             </div>
                           </td>
@@ -492,7 +502,7 @@ export default function Admin() {
 
                       {/* --- Blog Rows --- */}
                       {activeTab === 'blogs' && (
-                         <React.Fragment>
+                          <React.Fragment>
                           <td className="px-6 py-4">
                              <div className="flex items-center gap-3">
                                 {item.images && item.images[0] && (
@@ -510,7 +520,7 @@ export default function Admin() {
 
                       {/* --- Order Rows --- */}
                        {activeTab === 'orders' && (
-                         <React.Fragment>
+                          <React.Fragment>
                           <td className="px-6 py-4 text-sm font-mono text-gray-600">{item._id.substring(0,10)}...</td>
                           <td className="px-6 py-4 text-sm font-medium text-gray-900">{item.user?.name || 'Guest'}</td>
                           <td className="px-6 py-4 text-sm font-bold text-gray-900">₹{item.totalPrice}</td>
@@ -624,48 +634,58 @@ export default function Admin() {
                     <div className="grid grid-cols-2 gap-6">
                       {productFormTab === 'basic' && (
                         <React.Fragment>
-                          <InputGroup label="Product Name" name="product" />
-                          <InputGroup label="Category" name="category" />
-                          <InputGroup label="Slug (URL)" name="slug" />
-                          <InputGroup label="Product Type" name="productType" />
-                          <InputGroup label="Description" name="productDescription" type="textarea" colSpan={2} />
-                          <InputGroup label="Show on Homepage" name="isShownInHomepage" type="checkbox" colSpan={2} />
+                          <InputGroup label="Product Name" name="product" formData={formData} onChange={handleInputChange} />
+                          <InputGroup label="Category" name="category" formData={formData} onChange={handleInputChange} />
+                          <InputGroup label="Slug (URL)" name="slug" formData={formData} onChange={handleInputChange} />
+                          <InputGroup label="Product Type" name="productType" formData={formData} onChange={handleInputChange} />
+                          <InputGroup label="Description" name="productDescription" type="textarea" colSpan={2} formData={formData} onChange={handleInputChange} />
+                          <InputGroup label="Show on Homepage" name="isShownInHomepage" type="checkbox" colSpan={2} formData={formData} onChange={handleInputChange} />
                         </React.Fragment>
                       )}
                       {productFormTab === 'fabric' && (
-                         <React.Fragment>
-                          <InputGroup label="Print / Pattern" name="print" />
-                          <InputGroup label="Color" name="color" />
-                          <InputGroup label="Fabric Type" name="fabricType" />
-                          <InputGroup label="Fabric Pattern" name="fabricPattern" />
-                          <InputGroup label="Material Composition" name="material" />
-                          <InputGroup label="Sleeves Style" name="sleeves" />
-                          <InputGroup label="Closure Type" name="closure" />
+                          <React.Fragment>
+                          <InputGroup label="Print / Pattern" name="print" formData={formData} onChange={handleInputChange} />
+                          <InputGroup label="Color" name="color" formData={formData} onChange={handleInputChange} />
+                          <InputGroup label="Fabric Type" name="fabricType" formData={formData} onChange={handleInputChange} />
+                          <InputGroup label="Fabric Pattern" name="fabricPattern" formData={formData} onChange={handleInputChange} />
+                          <InputGroup label="Material Composition" name="material" formData={formData} onChange={handleInputChange} />
+                          <InputGroup label="Sleeves Style" name="sleeves" formData={formData} onChange={handleInputChange} />
+                          <InputGroup label="Closure Type" name="closure" formData={formData} onChange={handleInputChange} />
                           <div className="grid grid-cols-2 gap-2">
-                             <InputGroup label="Length" name="length" />
-                             <InputGroup label="Length (Inch)" name="lengthInInches" type="number" />
+                             <InputGroup label="Length" name="length" formData={formData} onChange={handleInputChange} />
+                             <InputGroup label="Length (Inch)" name="lengthInInches" type="number" formData={formData} onChange={handleInputChange} />
                           </div>
-                          <InputGroup label="Features (comma separated)" name="features" colSpan={2} placeholder="e.g. Breathable, Lightweight, Cotton" />
-                          <InputGroup label="Size & Fit Info" name="sizeAndFit" type="textarea" colSpan={2} />
+                          <InputGroup label="Features (comma separated)" name="features" colSpan={2} placeholder="e.g. Breathable, Lightweight, Cotton" formData={formData} onChange={handleInputChange} />
+                          <InputGroup label="Size & Fit Info" name="sizeAndFit" type="textarea" colSpan={2} formData={formData} onChange={handleInputChange} />
                         </React.Fragment>
                       )}
                       {productFormTab === 'pricing' && (
                         <React.Fragment>
                           <div className="bg-blue-50 p-4 rounded-xl col-span-2 grid grid-cols-2 gap-4 border border-blue-100">
-                             <InputGroup label="MRP (₹)" name="mrp" type="number" />
-                             <InputGroup label="Selling Price (₹)" name="discountedPrice" type="number" />
+                             <InputGroup label="MRP (₹)" name="mrp" type="number" formData={formData} onChange={handleInputChange} />
+                             <InputGroup label="Selling Price (₹)" name="discountedPrice" type="number" formData={formData} onChange={handleInputChange} />
                           </div>
                           <div className="col-span-2"><h4 className="font-bold text-gray-800">Inventory Management</h4></div>
-                          <InputGroup label="Small Qty" name="sizeSQuantity" type="number" />
-                          <InputGroup label="Medium Qty" name="sizeMQuantity" type="number" />
-                          <InputGroup label="Large Qty" name="sizeLQuantity" type="number" />
-                          <InputGroup label="XL Qty" name="sizeXLQuantity" type="number" />
+                          <InputGroup label="XXS Qty" name="sizeXXSQuantity" type="number" formData={formData} onChange={handleInputChange} />
+                          <InputGroup label="XS Qty" name="sizeXSQuantity" type="number" formData={formData} onChange={handleInputChange} />
+                          <InputGroup label="Small Qty" name="sizeSQuantity" type="number" formData={formData} onChange={handleInputChange} />
+                          <InputGroup label="Medium Qty" name="sizeMQuantity" type="number" formData={formData} onChange={handleInputChange} />
+                          <InputGroup label="Large Qty" name="sizeLQuantity" type="number" formData={formData} onChange={handleInputChange} />
+                          <InputGroup label="XL Qty" name="sizeXLQuantity" type="number" formData={formData} onChange={handleInputChange} />
+                          <InputGroup label="XXL Qty" name="sizeXXLQuantity" type="number" formData={formData} onChange={handleInputChange} />
                           <div className="col-span-2 text-xs text-gray-400 bg-gray-50 p-2 rounded">
                             Total Quantity will be calculated automatically based on sizes.
                           </div>
                         </React.Fragment>
                       )}
-                      {productFormTab === 'media' && <ImageUploadSection />}
+                      {productFormTab === 'media' && (
+                        <ImageUploadSection 
+                          images={formData.images} 
+                          fileMap={fileMap} 
+                          setFileMap={setFileMap} 
+                          onDeleteImage={handleDeleteImage} 
+                        />
+                      )}
                     </div>
                   </div>
                 )}
@@ -673,21 +693,28 @@ export default function Admin() {
                 {/* --- Blog Form (Now with Image Support) --- */}
                 {activeTab === 'blogs' && (
                   <div className="grid grid-cols-1 gap-6">
-                     <div className="grid grid-cols-2 gap-4">
-                        <InputGroup label="Article Title" name="title" />
-                        <InputGroup label="URL Slug" name="slug" />
-                     </div>
-                     <InputGroup label="Short Excerpt" name="excerpt" type="textarea" placeholder="A short summary for the card view..." />
-                     
-                     {/* Added Image Section for Blogs */}
-                     <div className="border rounded-xl p-4 bg-gray-50">
+                      <div className="grid grid-cols-2 gap-4">
+                        <InputGroup label="Article Title" name="title" formData={formData} onChange={handleInputChange} />
+                        <InputGroup label="URL Slug" name="slug" formData={formData} onChange={handleInputChange} />
+                      </div>
+                      <InputGroup label="Short Excerpt" name="excerpt" type="textarea" placeholder="A short summary for the card view..." formData={formData} onChange={handleInputChange} />
+                      
+                      {/* Added Image Section for Blogs */}
+                      <div className="border rounded-xl p-4 bg-gray-50">
                         <h4 className="text-sm font-bold text-gray-700 mb-3">Cover Image</h4>
-                        <ImageUploadSection />
-                     </div>
+                        <ImageUploadSection 
+                          images={formData.images} 
+                          fileMap={fileMap} 
+                          setFileMap={setFileMap} 
+                          onDeleteImage={handleDeleteImage} 
+                        />
+                      </div>
 
-                     <InputGroup label="Main Content" name="content" type="textarea" rows={8} placeholder="Write your blog post here..." />
+                      <InputGroup label="Main Content" name="content" type="textarea" rows={8} placeholder="Write your blog post here..." formData={formData} onChange={handleInputChange} />
                   </div>
                 )}
+
+                {/* --- Order Form (View Details) --- */}
                 {activeTab === 'orders' && (
                   <div className="space-y-4">
                     <div className="flex justify-between items-start">
