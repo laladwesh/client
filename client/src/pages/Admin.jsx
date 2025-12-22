@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   fetchProducts, createProduct, updateProduct, uploadProductImage, deleteProductImage, deleteProduct,
   fetchBlogs, createBlog, updateBlog, deleteBlog,
+  uploadBlogImage, deleteBlogImage,
   fetchUsers, updateUser, deleteUser,
   // Assuming these exist or will be created
   // uploadBlogImage, deleteBlogImage
@@ -159,9 +160,9 @@ export default function Admin() {
         if (modalMode === 'edit') result = await updateBlog(payload._id, payload, token);
         else result = await createBlog(payload, token);
 
-        // Assuming logic for blog image upload is similar or reused
+        // Upload blog image if provided
         if (fileMap && result._id) {
-           try { await uploadProductImage(result._id, fileMap, token); } catch(e){ console.log("Blog image upload not implemented yet"); }
+          try { await uploadBlogImage(result._id, fileMap, token); } catch (e) { console.error('Blog image upload failed', e); }
         }
       } else if (activeTab === 'orders') {
         // Save order changes (status)
@@ -271,8 +272,9 @@ export default function Admin() {
                       description: 'Are you sure you want to delete this image?',
                       onConfirm: async () => {
                         try {
-                          if(activeTab === 'products') await deleteProductImage(formData._id, img, token);
-                          handleOpenModal({...formData, images: formData.images.filter(x => x !== img)});
+                          if (activeTab === 'products') await deleteProductImage(formData._id, img, token);
+                          else if (activeTab === 'blogs') await deleteBlogImage(formData._id, img, token);
+                          handleOpenModal({ ...formData, images: (formData.images || []).filter(x => x !== img) });
                           toast.success('Image deleted');
                         } catch (e) { toast.error('Could not delete image'); }
                         finally { setConfirm(c => ({ ...c, open: false })); }
