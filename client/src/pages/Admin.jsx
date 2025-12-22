@@ -282,7 +282,7 @@ export default function Admin() {
                       onCancel: () => setConfirm(c => ({ ...c, open: false }))
                     });
                 }}
-                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 shadow-md hover:bg-red-600 opacity-0 group-hover:opacity-100 transition-all transform scale-90 group-hover:scale-100"
+                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 shadow-md hover:bg-black opacity-0 group-hover:opacity-100 transition-all transform scale-90 group-hover:scale-100"
               >
                 <Icons.X />
               </button>
@@ -298,10 +298,10 @@ export default function Admin() {
       <div className="border-t border-gray-100 pt-4">
         <label className="block text-sm font-medium text-gray-700 mb-2">Upload New</label>
         <label className="flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer hover:bg-gray-50 transition-colors group">
-          <div className="space-y-1 text-center">
-            <div className="text-gray-400 group-hover:text-indigo-500 transition-colors"><Icons.Upload /></div>
+            <div className="space-y-1 text-center">
+            <div className="text-gray-400 group-hover:text-black transition-colors"><Icons.Upload /></div>
             <div className="flex text-sm text-gray-600">
-              <span className="font-medium text-indigo-600 group-hover:text-indigo-500">Click to upload</span>
+              <span className="font-medium text-indigo-600 group-hover:text-black">Click to upload</span>
               <p className="pl-1">or drag and drop</p>
             </div>
             <p className="text-xs text-gray-500">{fileMap ? fileMap.name : "PNG, JPG up to 5MB"}</p>
@@ -313,13 +313,13 @@ export default function Admin() {
   );
 
   return (
-    <div className="flex h-screen bg-gray-50 font-sans text-gray-800">
+    <div className="flex h-screen  font-bdogrotesk text-gray-800">
       
       {/* --- Sidebar --- */}
       <aside className="hidden md:flex flex-col w-72 bg-white border-r border-gray-200 shadow-[2px_0_10px_rgba(0,0,0,0.02)] z-20">
         <div className="flex items-center justify-center h-20 border-b border-gray-100">
-          <h1 className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 tracking-tighter">
-            NUFAB<span className="text-gray-400 font-light text-lg ml-1">ADMIN</span>
+          <h1 className="text-2xl text-black font-medium font-bdogrotesk">
+            NUFAB ADMIN
           </h1>
         </div>
         <nav className="flex-1 overflow-y-auto py-6 space-y-1">
@@ -329,8 +329,8 @@ export default function Admin() {
           <TabButton id="users" label="Users" icon={<Icons.Users />} />
         </nav>
         <div className="p-6 border-t border-gray-100">
-          <div className="flex items-center gap-3 mb-6 bg-gray-50 p-3 rounded-xl border border-gray-100">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold text-lg shadow-md">
+            <div className="flex items-center gap-3 mb-6 bg-gray-50 p-3 rounded-xl border border-gray-100">
+            <div className="w-10 h-10 rounded-full bg-black flex items-center justify-center text-white font-bold text-lg shadow-md">
               {storedUser?.name?.[0] || 'A'}
             </div>
             <div className="overflow-hidden">
@@ -340,7 +340,7 @@ export default function Admin() {
           </div>
           <button 
             onClick={() => { localStorage.clear(); navigate('/'); }}
-            className="w-full flex items-center justify-center space-x-2 px-4 py-2 text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors"
+            className="w-full flex items-center justify-center space-x-2 px-4 py-2 text-sm font-medium text-red-600 bg-red-50 hover:bg-black rounded-lg transition-colors"
           >
             <Icons.Logout />
             <span>Sign Out</span>
@@ -373,7 +373,7 @@ export default function Admin() {
             {activeTab !== 'orders' && (
               <button
                 onClick={() => handleOpenModal()}
-                className="flex items-center px-5 py-2.5 bg-gray-900 text-white rounded-xl hover:bg-indigo-600 shadow-lg shadow-indigo-200 hover:shadow-indigo-300 transition-all active:scale-95 font-medium"
+                className="flex items-center px-5 py-2.5 bg-gray-900 text-white rounded-xl hover:bg-black shadow-lg hover:shadow-lg transition-all active:scale-95 font-medium"
               >
                 <Icons.Plus />
                 <span className="ml-2">Add New</span>
@@ -523,7 +523,7 @@ export default function Admin() {
                           <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex items-center justify-end gap-2">
                             <button
                               onClick={() => handleOpenModal(item)}
-                              className="text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 p-2 rounded-lg transition-colors"
+                              className="text-indigo-600 hover:text-black bg-indigo-50 hover:bg-black p-2 rounded-lg transition-colors"
                               title="View"
                             >
                               View
@@ -549,14 +549,14 @@ export default function Admin() {
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                           <button 
                             onClick={() => handleOpenModal(item)} 
-                            className="text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 p-2 rounded-lg mr-2 transition-colors"
+                            className="text-indigo-600 hover:text-black bg-indigo-50 hover:bg-black p-2 rounded-lg mr-2 transition-colors"
                             title="Edit"
                           >
                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
                           </button>
                           <button 
                             onClick={() => handleDelete(item._id)} 
-                            className="text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100 p-2 rounded-lg transition-colors"
+                            className="text-red-600 hover:text-black bg-red-50 hover:bg-black p-2 rounded-lg transition-colors"
                             title="Delete"
                           >
                              <Icons.Trash />
@@ -774,7 +774,7 @@ export default function Admin() {
                 type="submit"
                 form="admin-form"
                 disabled={loading}
-                className="px-6 py-2.5 rounded-xl bg-gray-900 text-white font-medium hover:bg-indigo-600 shadow-lg shadow-indigo-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all disabled:opacity-50"
+                className="px-6 py-2.5 rounded-xl bg-gray-900 text-white font-medium hover:bg-black shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all disabled:opacity-50"
               >
                 {loading ? 'Saving...' : 'Save Changes'}
               </button>
