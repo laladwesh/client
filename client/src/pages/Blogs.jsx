@@ -46,6 +46,7 @@ const Blogs = () => {
             <div key={b._id} className="grid grid-cols-12 gap-6 items-start">
               <div className="col-span-7">
                 <h2 className="text-4xl md:text-6xl font-bold leading-tight text-black">{b.title}</h2>
+                {b.subtitle && <div className="text-base text-gray-700 mt-2">{b.subtitle}</div>}
                 <div className="text-sm text-gray-500 mt-2">{b.excerpt}</div>
                 <div className="mt-4">
                   <button
@@ -90,10 +91,11 @@ const Blogs = () => {
           {blogs.map((b) => (
             <div key={b._id} className="mb-6 w-full sm:w-1/2 lg:w-1/3">
               <div className="p-2">
-         <div className="w-full h-[50vh] overflow-hidden ">
+         <div className="w-full h-[60vh] overflow-hidden ">
                   {b.images && b.images[0] && <img src={b.images[0]} alt={b.title} className="w-full h-full object-cover" />}
                 </div>
                 <h3 className="text-xl font-medium mt-3 text-black leading-tight">{b.title}</h3>
+                {b.subtitle && <div className="text-sm text-gray-700 mt-1">{b.subtitle}</div>}
                 <p className="text-sm text-gray-500 mt-2 line-clamp-2"> <span className='text-black'>{fmtDate(b.createdAt)}</span>: {b.excerpt}</p>
               
                 <div className="mt-4">
