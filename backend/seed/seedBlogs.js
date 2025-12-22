@@ -7,6 +7,7 @@ import mongoose, { mongo } from 'mongoose';
 const sampleBlogs = [
   {
     title: "We make everyday clothes for people who like dressing up everyday. We free culture of the shackles of nostalgia, and let it take its place in today's everyday – in your everyday.",
+    subtitle: 'Everyday dressing, reimagined',
     slug: 'style-summer-outfits',
     excerpt: 'Easy tips to keep your summer wardrobe fresh and cool.',
     content: 'Full blog content about styling summer outfits...',
@@ -16,6 +17,7 @@ const sampleBlogs = [
   },
   {
     title: "Sustainable fashion isn't a choice anymore, it's a necessity. We believe in creating timeless pieces that respect both people and planet, one thread at a time.",
+    subtitle: 'Timeless pieces that respect people & planet',
     slug: 'sustainable-fabrics-101',
     excerpt: 'An introduction to sustainable and eco-friendly fabrics.',
     content: 'Full blog content about sustainable fabrics...',
@@ -25,6 +27,7 @@ const sampleBlogs = [
   },
   {
     title: "Care Guide: Handwashing delicates and small-batch garments — step-by-step methods to prolong life and preserve shape without losing softness.",
+    subtitle: 'Gentle care for delicate garments',
     slug: 'care-guide-handwashing-delicates',
     excerpt: 'Step-by-step care instructions for delicate garments.',
     content: 'Full blog content about handwashing delicates...',
@@ -34,6 +37,7 @@ const sampleBlogs = [
   },
   {
     title: "Behind the scenes: our design process from moodboard to finished garment — how material choices, sampling and small-batch production shape each collection.",
+    subtitle: 'From moodboard to finished garment',
     slug: 'behind-the-scenes-design-process',
     excerpt: 'A peek into how our designs come to life.',
     content: 'Full blog content about design process...',
