@@ -19,9 +19,27 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     // Load user and token from localStorage on mount
-    const storedToken = localStorage.getItem('token');
-    const storedUser = localStorage.getItem('user');
-    
+    let storedToken = localStorage.getItem('token');
+    let storedUser = localStorage.getItem('user');
+
+    // Migration: if adminToken/userRole exist (from AdminJS) but standard keys are missing,
+    // copy them so the SPA recognizes admin sessions regardless of login path.
+    if (!storedToken && localStorage.getItem('adminToken')) {
+      storedToken = localStorage.getItem('adminToken');
+      localStorage.setItem('token', storedToken);
+    }
+    if (!storedUser && localStorage.getItem('userRole')) {
+      try {
+        const role = localStorage.getItem('userRole');
+        const name = localStorage.getItem('spirit:user') ? JSON.parse(localStorage.getItem('spirit:user')).name : 'Admin';
+        const migrated = { name, role };
+        localStorage.setItem('user', JSON.stringify(migrated));
+        storedUser = localStorage.getItem('user');
+      } catch (e) {
+        // ignore migration errors
+      }
+    }
+
     if (storedToken && storedUser) {
       setToken(storedToken);
       const userData = JSON.parse(storedUser);
