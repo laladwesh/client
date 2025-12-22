@@ -68,6 +68,7 @@ function getRandomCommitMessage() {
 
 for (const file of files) {
   if (fs.existsSync(file)) {
+    console.log(`Committing: ${file}`);
     try {
       run(`git add "${file}"`);
       const commitMessage = getRandomCommitMessage();
