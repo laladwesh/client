@@ -428,38 +428,40 @@ export default function SignUpSidebar() {
           )}
         </div>
 
-        {/* Footer controls: placed outside scrollable content so they remain at bottom */}
-        <div className="p-4 bg-white pt-4 pb-2 flex flex-col gap-3 text-left z-10">
-          <button
-            type="button"
-            onClick={otpSent ? verifyOtpRequest : sendOtpRequest}
-            disabled={sendingOtp || verifyingOtp}
-            className="group mt-0 w-full bg-black text-white px-3 py-3 flex items-center justify-between text-[15px] font-semibold tracking-wide box-border"
-          >
-            <div className="relative h-5 overflow-hidden">
-              <div className="relative flex flex-col transition-transform duration-300 ease-in-out group-hover:-translate-y-1/2">
-                <span className="flex font-bdogrotesk h-5 font-medium items-center">
-                  {sendingOtp ? 'Sending...' : verifyingOtp ? 'Verifying...' : (otpSent ? 'Submit OTP' : 'Send OTP')}
-                </span>
-                <span className="flex h-5 font-medium items-center">{otpSent ? 'Submit OTP' : 'Send OTP'}</span>
+        {/* Footer controls: shown only when not signed in and not in "needsName" flow */}
+        {(!user && !needsName) && (
+          <div className="p-4 bg-white pt-4 pb-2 flex flex-col gap-3 text-left z-10">
+            <button
+              type="button"
+              onClick={otpSent ? verifyOtpRequest : sendOtpRequest}
+              disabled={sendingOtp || verifyingOtp}
+              className="group mt-0 w-full bg-black text-white px-3 py-3 flex items-center justify-between text-[15px] font-semibold tracking-wide box-border"
+            >
+              <div className="relative h-5 overflow-hidden">
+                <div className="relative flex flex-col transition-transform duration-300 ease-in-out group-hover:-translate-y-1/2">
+                  <span className="flex font-bdogrotesk h-5 font-medium items-center">
+                    {sendingOtp ? 'Sending...' : verifyingOtp ? 'Verifying...' : (otpSent ? 'Submit OTP' : 'Send OTP')}
+                  </span>
+                  <span className="flex h-5 font-medium items-center">{otpSent ? 'Submit OTP' : 'Send OTP'}</span>
+                </div>
               </div>
-            </div>
-          </button>
+            </button>
 
-          <button
-            type="button"
-            onClick={handleGoogleLogin}
-            style={{ border: '1px solid #000', boxSizing: 'border-box', backgroundColor: '#fff' }}
-            className="group mt-0 w-full text-black bg-white px-3 py-3 flex items-center justify-between text-[15px] font-semibold tracking-wide"
-          >
-            <div className="relative h-5 overflow-hidden">
-              <div className="relative flex flex-col transition-transform duration-300 ease-in-out group-hover:-translate-y-1/2">
-                <span className="flex h-5 font-medium items-center">Sign in with Google</span>
-                <span className="flex h-5 font-medium items-center">Sign in with Google</span>
+            <button
+              type="button"
+              onClick={handleGoogleLogin}
+              style={{ border: '1px solid #000', boxSizing: 'border-box', backgroundColor: '#fff' }}
+              className="group mt-0 w-full text-black bg-white px-3 py-3 flex items-center justify-between text-[15px] font-semibold tracking-wide"
+            >
+              <div className="relative h-5 overflow-hidden">
+                <div className="relative flex flex-col transition-transform duration-300 ease-in-out group-hover:-translate-y-1/2">
+                  <span className="flex h-5 font-medium items-center">Sign in with Google</span>
+                  <span className="flex h-5 font-medium items-center">Sign in with Google</span>
+                </div>
               </div>
-            </div>
-          </button>
-        </div>
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
