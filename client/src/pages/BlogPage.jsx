@@ -32,6 +32,7 @@ const BlogPage = () => {
         <img src={blog.images[0]} alt={blog.title} className="w-full h-80 object-cover mb-6 rounded" />
       )}
       <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold leading-tight mb-4">{blog.title}</h1>
+        {blog.subtitle && <h2 className="text-xl md:text-2xl text-gray-700 mb-4">{blog.subtitle}</h2>}
       <div className="text-sm text-gray-600 mb-4">By {blog.author || 'Admin'} • {new Date(blog.createdAt).toLocaleDateString()}</div>
       <div className="prose max-w-none text-lg" style={{ whiteSpace: 'pre-line' }}>{blog.content}</div>
       {blog.tags && blog.tags.length > 0 && (
