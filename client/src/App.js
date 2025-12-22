@@ -26,7 +26,51 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <Toaster position="top-right" containerStyle={{ zIndex: 13000 }} />
+        <Toaster
+          position="top-right"
+          containerStyle={{ zIndex: 13000 }}
+          toastOptions={{
+            // Default options for all toasts
+            duration: 4000,
+            style: {
+              background: '#111',
+              color: '#fff',
+              borderRadius: 10,
+              padding: '12px 14px',
+              boxShadow: '0 6px 20px rgba(0,0,0,0.2)'
+            },
+            // subtle monochrome icon for all toasts
+            icon: (
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ color: '#fff' }}>
+                <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.5" />
+              </svg>
+            ),
+            // Default icon styles can be overridden here
+            success: {
+              // use neutral monochrome icon
+              icon: (
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ color: '#fff' }}>
+                  <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.5" />
+                </svg>
+              ),
+              style: {
+                background: '#111',
+                color: '#fff'
+              }
+            },
+            error: {
+              icon: (
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ color: '#fff' }}>
+                  <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.5" />
+                </svg>
+              ),
+              style: {
+                background: '#111',
+                color: '#fff'
+              }
+            }
+          }}
+        />
         <CartSidebar />
         <SignUpSidebar />
         <Routes>
