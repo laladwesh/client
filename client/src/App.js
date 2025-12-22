@@ -26,7 +26,7 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <Toaster position="top-right" />
+        <Toaster position="top-right" containerStyle={{ zIndex: 13000 }} />
         <CartSidebar />
         <SignUpSidebar />
         <Routes>
