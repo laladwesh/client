@@ -39,7 +39,7 @@ const emptyBlog = { title: '', slug: '', excerpt: '', content: '', images: [], t
 
 export default function Admin() {
   const navigate = useNavigate();
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('token') || localStorage.getItem('adminToken');
   const storedUser = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
   const isAdmin = !!(storedUser && storedUser.role === 'admin');
 
@@ -318,7 +318,7 @@ export default function Admin() {
       {/* --- Sidebar --- */}
       <aside className="hidden md:flex flex-col w-72 bg-white border-r border-gray-200 shadow-[2px_0_10px_rgba(0,0,0,0.02)] z-20">
         <div className="flex items-center justify-center h-20 border-b border-gray-100">
-          <h1 className="text-2xl text-black font-medium font-bdogrotesk">
+          <h1 onClick={()=>navigate('/')} className="cursor-pointer text-2xl text-black font-medium font-bdogrotesk">
             NUFAB ADMIN
           </h1>
         </div>
