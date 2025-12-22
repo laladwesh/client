@@ -217,7 +217,7 @@ export default function SignUpSidebar() {
         }}
       />
       <div
-        className={`fixed top-0 right-0 bottom-0 w-full max-w-md bg-white z-[11001] shadow-2xl flex flex-col drawer-panel ${
+        className={`fixed top-0 right-0 bottom-0 w-full max-w-lg bg-white z-[11001] shadow-2xl flex flex-col drawer-panel ${
           closing ? "drawer-slide-out" : "drawer-slide-in"
         }`}
       >
