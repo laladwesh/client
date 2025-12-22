@@ -106,6 +106,18 @@ export async function uploadProductImage(productId, file, token) {
   return res.json();
 }
 
+export async function uploadBlogImage(blogId, file, token) {
+  const fd = new FormData();
+  fd.append('image', file);
+  const res = await fetch(`${API}/blogs/${blogId}/images`, {
+    method: 'POST',
+    headers: { ...authHeader(token) },
+    body: fd,
+  });
+  if (!res.ok) throw new Error('Blog image upload failed');
+  return res.json();
+}
+
 export async function deleteProduct(productId, token) {
   const res = await fetch(`${API}/products/${productId}`, {
     method: 'DELETE',
@@ -122,6 +134,16 @@ export async function deleteProductImage(productId, imageUrl, token) {
     body: JSON.stringify({ imageUrl }),
   });
   if (!res.ok) throw new Error('Delete image failed');
+  return res.json();
+}
+
+export async function deleteBlogImage(blogId, imageUrl, token) {
+  const res = await fetch(`${API}/blogs/${blogId}/images`, {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json', ...authHeader(token) },
+    body: JSON.stringify({ imageUrl }),
+  });
+  if (!res.ok) throw new Error('Delete blog image failed');
   return res.json();
 }
 
