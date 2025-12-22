@@ -36,12 +36,13 @@ const sendOtp = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error('Email is required');
   }
+  const emailNorm = String(email).trim().toLowerCase();
 
   const code = generateOtp();
   const expiresAt = new Date(Date.now() + (5 * 60 * 1000)); // 5 minutes
   // upsert OTP in DB
   await Otp.findOneAndUpdate(
-    { email },
+    { email: emailNorm },
     { code, expiresAt },
     { upsert: true, new: true }
   );
@@ -51,7 +52,7 @@ const sendOtp = asyncHandler(async (req, res) => {
     const transporter = createTransporter();
     const info = await transporter.sendMail({
       from: process.env.SMTP_FROM || process.env.SMTP_USER,
-      to: email,
+      to: emailNorm,
       subject: 'Your OTP Code',
       text: `Your OTP code is: ${code}. It expires in 5 minutes.`,
       html: `<p>Your OTP code is: <strong>${code}</strong></p><p>It expires in 5 minutes.</p>`
@@ -74,7 +75,8 @@ const verifyOtp = asyncHandler(async (req, res) => {
     throw new Error('Email and code are required');
   }
   // find OTP in DB
-  const entry = await Otp.findOne({ email, code });
+  const emailNorm = String(email).trim().toLowerCase();
+  const entry = await Otp.findOne({ email: emailNorm, code });
   if (!entry) {
     res.status(400);
     throw new Error('No OTP requested for this email or invalid code');
@@ -87,7 +89,7 @@ const verifyOtp = asyncHandler(async (req, res) => {
   }
 
   // valid OTP -> check if user exists
-  let user = await User.findOne({ email });
+  let user = await User.findOne({ email: emailNorm });
   if (user) {
     // existing user - issue regular token
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '30d' });
@@ -99,7 +101,7 @@ const verifyOtp = asyncHandler(async (req, res) => {
   // new user - do NOT create yet. issue a short-lived temp token so frontend can collect name and create account.
   // delete OTP so it can't be reused
   await Otp.deleteOne({ _id: entry._id });
-  const tempToken = jwt.sign({ email, temp: true }, process.env.JWT_SECRET, { expiresIn: '5m' });
+  const tempToken = jwt.sign({ email: emailNorm, temp: true }, process.env.JWT_SECRET, { expiresIn: '5m' });
   return res.json({ needsName: true, tempToken });
 });
 
@@ -129,7 +131,7 @@ const createUserFromTemp = asyncHandler(async (req, res) => {
     throw new Error('Name is required');
   }
 
-  const email = payload.email;
+  const email = String(payload.email).trim().toLowerCase();
   // Ensure user doesn't exist (race)
   let user = await User.findOne({ email });
   if (user) {
