@@ -39,15 +39,24 @@ const googleCallback = asyncHandler(async (req, res) => {
     const payload = ticket.getPayload();
     const { sub: googleId, email, name, picture } = payload;
 
+    // try find by googleId first
     let user = await User.findOne({ googleId });
-    
+    // if not found by googleId, try by email (user may have signed up via OTP or other method)
     if (!user) {
-      user = await User.create({ 
-        googleId, 
-        name, 
-        email, 
-        avatar: picture 
-      });
+      user = await User.findOne({ email });
+      if (user) {
+        // attach googleId to the existing account to link identities
+        user.googleId = googleId;
+        if (!user.avatar && picture) user.avatar = picture;
+        await user.save();
+      } else {
+        user = await User.create({ 
+          googleId, 
+          name, 
+          email, 
+          avatar: picture 
+        });
+      }
     }
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '30d' });
@@ -74,18 +83,26 @@ const googleAuth = asyncHandler(async (req, res) => {
   if (googleId && email && name) {
     console.log('Direct user info received:', { googleId, email, name });
     
+    // try find by googleId first, then email to link accounts
     let user = await User.findOne({ googleId });
-    
     if (!user) {
-      user = await User.create({ 
-        googleId, 
-        name, 
-        email, 
-        avatar 
-      });
-      console.log('New user created:', user);
+      user = await User.findOne({ email });
+      if (user) {
+        user.googleId = googleId;
+        if (!user.avatar && avatar) user.avatar = avatar;
+        await user.save();
+        console.log('Existing user linked by email:', user.email);
+      } else {
+        user = await User.create({ 
+          googleId, 
+          name, 
+          email, 
+          avatar 
+        });
+        console.log('New user created:', user.email);
+      }
     } else {
-      console.log('Existing user found:', user);
+      console.log('Existing user found:', user.email);
     }
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '30d' });
