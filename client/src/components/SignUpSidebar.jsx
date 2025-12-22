@@ -442,7 +442,7 @@ export default function SignUpSidebar() {
                   <span className="flex font-bdogrotesk h-5 font-medium items-center">
                     {sendingOtp ? 'Sending...' : verifyingOtp ? 'Verifying...' : (otpSent ? 'Submit OTP' : 'Send OTP')}
                   </span>
-                  <span className="flex h-5 font-medium items-center">{otpSent ? 'Submit OTP' : 'Send OTP'}</span>
+                  <span className="flex h-5 font-medium items-center">{sendingOtp ? 'Sending...' : verifyingOtp ? 'Verifying...' : (otpSent ? 'Submit OTP' : 'Send OTP')}</span>
                 </div>
               </div>
             </button>
