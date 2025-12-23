@@ -221,7 +221,7 @@ export default function SignUpSidebar() {
           closing ? "drawer-slide-out" : "drawer-slide-in"
         }`}
       >
-        <div className="p-2 border-b">
+        <div className="p-2 ">
           <div className="flex items-center justify-between">
             <div className="text-sm text-black font-bdogrotesk">
               {user ? user.name : "Hello Human!"}
@@ -241,113 +241,48 @@ export default function SignUpSidebar() {
 
         <div className="p-4 flex-1 overflow-y-auto">
           {user ? (
-            <div className="text-center">
-              <img
-                src={user.avatar}
-                alt={user.name}
-                className="w-20 h-20 rounded-full mx-auto mb-4"
-              />
-              <h4 className="font-semibold">Welcome, {user.name}</h4>
-              <p className="text-sm text-gray-500 mb-4">{user.email}</p>
-              <div className="flex flex-col gap-4 mt-4">
-                <div className="flex gap-2 justify-center">
-                  {user.role === "admin" && (
-                    <button
-                      onClick={() => {
-                        setClosing(true);
-                        setIsOpen(false);
-                        setTimeout(() => setMounted(false), 300);
-                        window.location.href = "/admin";
-                      }}
-                      className="px-4 py-2 bg-black text-white rounded"
-                    >
-                      Admin Panel
-                    </button>
-                  )}
-                  <button
-                    onClick={() => {
-                      setClosing(true);
-                      setIsOpen(false);
-                      setTimeout(() => setMounted(false), 300);
-                      window.location.href = "/store";
-                    }}
-                    className="px-4 py-2 bg-black text-white rounded"
-                  >
-                    Browse Store
-                  </button>
-                </div>
+            <div className="">
+              <nav className="flex flex-col">
+                <button
+                  onClick={() => {
+                    setClosing(true);
+                    setIsOpen(false);
+                    setTimeout(() => setMounted(false), 300);
+                    navigate("/orders");
+                  }}
+                  className="text-left text-7xl font-bdogrotesk font-medium text-black "
+                >
+                  Orders
+                </button>
 
-                <div className="p-3 bg-gray-50 rounded">
-                  <h5 className="text-sm font-semibold mb-2">
-                    Your Recent Orders
-                  </h5>
-                  {loadingOrders ? (
-                    <div className="text-sm text-gray-500">
-                      Loading orders...
-                    </div>
-                  ) : orders.length === 0 ? (
-                    <div className="text-sm text-gray-500">
-                      No previous orders found
-                    </div>
-                  ) : (
-                    <ul className="space-y-2 max-h-48 overflow-auto">
-                      {orders.slice(0, 5).map((o) => (
-                        <li
-                          key={o._id}
-                          className="flex items-center justify-between bg-white border border-gray-100 p-2 rounded"
-                        >
-                          <div className="text-sm truncate">
-                            <div className="font-medium">
-                              Order{" "}
-                              <span className="text-gray-500">
-                                #{o._id?.slice(0, 8)}
-                              </span>
-                            </div>
-                            <div className="text-xs text-gray-500">
-                              ₹{o.totalPrice} •{" "}
-                              {new Date(
-                                o.createdAt || o.updatedAt || Date.now()
-                              ).toLocaleDateString()}
-                            </div>
-                          </div>
-                          <div>
-                            <span
-                              className={`px-2 py-1 text-xs font-semibold rounded ${
-                                o.status === "paid"
-                                  ? "bg-green-50 text-green-700"
-                                  : o.status === "shipped"
-                                  ? "bg-yellow-50 text-yellow-700"
-                                  : "bg-gray-100 text-gray-700"
-                              }`}
-                            >
-                              {o.status}
-                            </span>
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                  <div className="mt-3 flex gap-2">
-                    <button
-                      onClick={() => {
-                        setClosing(true);
-                        setIsOpen(false);
-                        setTimeout(() => setMounted(false), 300);
-                        navigate("/orders");
-                      }}
-                      className="flex-1 px-3 py-2 bg-black text-white rounded text-sm"
-                    >
-                      View All Orders
-                    </button>
-                    <button
-                      onClick={handleLogout}
-                      className="px-3 py-2 bg-red-600 text-white rounded text-sm"
-                    >
-                      Logout
-                    </button>
-                  </div>
-                </div>
-              </div>
+                <button
+                  onClick={() => {
+                    setClosing(true);
+                    setIsOpen(false);
+                    setTimeout(() => setMounted(false), 300);
+                    if (user && user.role === "admin") {
+                      navigate("/admin");
+                    } else {
+                      navigate("/addresses");
+                    }
+                  }}
+                  className="text-left text-7xl font-bdogrotesk font-medium text-black "
+                >
+                  {user && user.role === "admin" ? "Admin" : "Addresses"}
+                </button>
+
+                <button
+                  onClick={() => {
+                    setClosing(true);
+                    setIsOpen(false);
+                    setTimeout(() => setMounted(false), 300);
+                    navigate("/about");
+                  }}
+                  className="text-left text-7xl font-bdogrotesk font-medium text-black "
+                >
+                  Contact Us
+                </button>
+              </nav>
             </div>
           ) : (
             <div>
@@ -429,7 +364,7 @@ export default function SignUpSidebar() {
         </div>
 
         {/* Footer controls: shown only when not signed in and not in "needsName" flow */}
-        {(!user && !needsName) && (
+        {!user && !needsName && (
           <div className="p-4 bg-white pt-4 pb-2 flex flex-col gap-3 text-left z-10">
             <button
               type="button"
@@ -440,9 +375,23 @@ export default function SignUpSidebar() {
               <div className="relative h-5 overflow-hidden">
                 <div className="relative flex flex-col transition-transform duration-300 ease-in-out group-hover:-translate-y-1/2">
                   <span className="flex font-bdogrotesk h-5 font-medium items-center">
-                    {sendingOtp ? 'Sending...' : verifyingOtp ? 'Verifying...' : (otpSent ? 'Submit OTP' : 'Send OTP')}
+                    {sendingOtp
+                      ? "Sending..."
+                      : verifyingOtp
+                      ? "Verifying..."
+                      : otpSent
+                      ? "Submit OTP"
+                      : "Send OTP"}
                   </span>
-                  <span className="flex h-5 font-medium items-center">{sendingOtp ? 'Sending...' : verifyingOtp ? 'Verifying...' : (otpSent ? 'Submit OTP' : 'Send OTP')}</span>
+                  <span className="flex h-5 font-medium items-center">
+                    {sendingOtp
+                      ? "Sending..."
+                      : verifyingOtp
+                      ? "Verifying..."
+                      : otpSent
+                      ? "Submit OTP"
+                      : "Send OTP"}
+                  </span>
                 </div>
               </div>
             </button>
@@ -450,13 +399,48 @@ export default function SignUpSidebar() {
             <button
               type="button"
               onClick={handleGoogleLogin}
-              style={{ border: '1px solid #000', boxSizing: 'border-box', backgroundColor: '#fff' }}
+              style={{
+                border: "1px solid #000",
+                boxSizing: "border-box",
+                backgroundColor: "#fff",
+              }}
               className="group mt-0 w-full text-black bg-white px-3 py-3 flex items-center justify-between text-[15px] font-semibold tracking-wide"
             >
               <div className="relative h-5 overflow-hidden">
                 <div className="relative flex flex-col transition-transform duration-300 ease-in-out group-hover:-translate-y-1/2">
-                  <span className="flex h-5 font-medium items-center">Sign in with Google</span>
-                  <span className="flex h-5 font-medium items-center">Sign in with Google</span>
+                  <span className="flex h-5 font-medium items-center">
+                    Sign in with Google
+                  </span>
+                  <span className="flex h-5 font-medium items-center">
+                    Sign in with Google
+                  </span>
+                </div>
+              </div>
+            </button>
+          </div>
+        )}
+
+        {/* Sign Out button pinned to bottom for signed-in users (matches wishlist button style) */}
+        {user && (
+          <div className="p-4 bg-white pt-4 pb-2 flex flex-col gap-3 text-left z-10">
+            <button
+              type="button"
+              onClick={handleLogout}
+              style={{
+                border: "1px solid #000",
+                boxSizing: "border-box",
+                backgroundColor: "#fff",
+              }}
+              className="group mt-0 w-full text-black bg-white px-2 py-2 flex items-center justify-between text-[15px] font-semibold tracking-wide"
+            >
+              <div className="relative h-5 overflow-hidden">
+                <div className="relative font-bdogrotesk text-base flex flex-col transition-transform duration-300 ease-in-out group-hover:-translate-y-1/2">
+                  <span className="flex h-5 text-lg items-center">
+                    Sign Out
+                  </span>
+                  <span className="flex h-5 text-lg items-center">
+                    Sign Out
+                  </span>
                 </div>
               </div>
             </button>
