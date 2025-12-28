@@ -65,7 +65,7 @@ const Blogs = () => {
       {view === "list" ? (
         <div className="space-y-10">
           {blogs.map((b) => (
-            <div key={b._id} className="relative flex flex-col lg:flex-row items-start gap-6 lg:pr-40">
+            <div key={b._id} className="relative border-b pb-10 border-black flex flex-col lg:flex-row items-start gap-6 lg:pr-40">
               <div className="w-full lg:w-7/12 flex flex-col justify-between">
                 <h2 className="text-4xl md:text-6xl font-bold leading-tight text-black">
                   {b.title}
