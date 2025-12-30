@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getProducts } from '../services/productService';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 // products will be loaded from the backend API
 
 // --- Price Formatting Helper ---
@@ -28,7 +29,7 @@ const ArrowRight = () => (
 // --- Main Component ---
 const ProductDisplay = ({isStore = false}) => {
   const navigate = useNavigate();
-  const [view, setView] = useState('list'); // 'grid' or 'list'
+  const [view, setView] = useState('grid'); // 'grid' or 'list'
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState('All'); // 'All', 'Roz Roz', 'Kuch Kuch'
 
@@ -76,6 +77,16 @@ const ProductDisplay = ({isStore = false}) => {
     setSelectedCategory(category);
     setCurrentIndex(0);
   };
+
+  // Refresh ScrollTrigger when view changes to recalculate positions
+  useEffect(() => {
+    // Wait for DOM to update after view change
+    const timer = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 100);
+    
+    return () => clearTimeout(timer);
+  }, [view]);
 
   return (
     <div className="w-full bg-white text-black font-sans min-h-screen flex flex-col">
