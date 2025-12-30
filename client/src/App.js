@@ -20,6 +20,7 @@ import './App.css';
 import ProductPage from './pages/ProductPage';
 import BlogPage from './pages/BlogPage';
 import SignUp from './pages/SignUp';
+import FaqsPage from './pages/FaqsPage';
 
 
 function App() {
@@ -110,6 +111,17 @@ function App() {
                 <Banner />
                 <Navbar />
                 <Store />
+              </div>
+              <Footer />
+            </>
+          } />
+
+          <Route path="/faqs" element={
+            <>
+              <div className="page-content">
+                <Banner />
+                <Navbar />
+                  <FaqsPage />
               </div>
               <Footer />
             </>
