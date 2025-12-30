@@ -466,69 +466,6 @@ const Home = () => {
         <Demo />
       </div>
       <New />
-      {/* Section 05 - Product List */}
-      {/* <div className="home-section-05">
-        <div className="product-list-wrap">
-          <div className="product-category-wrap-home">
-            <div className="product-category-list-wrap-home">
-              <div className="body-regular">Sort By +</div>
-              <Link to="/store" className="body-regular--home view-link">
-                All
-              </Link>
-            </div>
-          </div>
-
-          <div className="product-view-home w-tabs">
-            <div className="product-view-tab-menu-home w-tab-menu">
-              <button
-                onClick={() => setActiveView("image")}
-                className={`product-view-tab-link-home w-inline-block w-tab-link ${
-                  activeView === "image" ? "w--current" : ""
-                }`}
-              >
-                <div className="body-regular">Image</div>
-              </button>
-              <button
-                onClick={() => setActiveView("list")}
-                className={`product-view-tab-link-home w-inline-block w-tab-link ${
-                  activeView === "list" ? "w--current" : ""
-                }`}
-              >
-                <div className="body-regular">List</div>
-              </button>
-            </div>
-
-            <div className="w-tab-content">
-              {activeView === "image" && (
-                <div className="w-tab-pane w--tab-active">
-                  <div className="product-cms-image-home w-dyn-list">
-                    <div className="w-dyn-empty">
-                      <div>No items found.</div>
-                    </div>
-                  </div>
-                </div>
-              )}
-              {activeView === "list" && (
-                <div className="w-tab-pane w--tab-active">
-                  <div className="product-cms-list w-dyn-list">
-                    <div className="w-dyn-empty">
-                      <div>No items found.</div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div className="button-view-product">
-            <Link to="/store" className="button-product w-button">
-              View All
-            </Link>
-          </div>
-        </div>
-      </div> */}
-
-
       <Blog />
       <HomeAbout />
     </div>
