@@ -38,10 +38,10 @@ const Homeabout = () => {
       className="relative w-full h-screen bg-white overflow-hidden flex justify-center items-center z-50 text-black"
     >
       {/* Side Labels */}
-      <div className="absolute left-10 md:left-20 top-1/2 -translate-y-1/2 text-sm md:text-base font-medium z-20">
+      <div className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 text-sm md:text-base font-medium z-20">
         Artists
       </div>
-      <div className="absolute right-10 md:right-20 top-1/2 -translate-y-1/2 text-sm md:text-base font-medium z-20">
+      <div className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 text-sm md:text-base font-medium z-20">
         Designer
       </div>
 
