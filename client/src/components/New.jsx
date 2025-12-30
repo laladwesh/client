@@ -28,7 +28,7 @@ const ArrowRight = () => (
 // --- Main Component ---
 const ProductDisplay = ({isStore = false}) => {
   const navigate = useNavigate();
-  const [view, setView] = useState('grid'); // 'grid' or 'list'
+  const [view, setView] = useState('list'); // 'grid' or 'list'
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState('All'); // 'All', 'Roz Roz', 'Kuch Kuch'
 
