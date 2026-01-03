@@ -121,6 +121,9 @@ export default function SignUpSidebar() {
         setClosing(true);
         setIsOpen(false);
         setTimeout(() => setMounted(false), 300);
+        
+        // Dispatch login success event so cart can proceed to checkout
+        window.dispatchEvent(new CustomEvent('auth:login-success'));
       }
     } catch (e) {
       console.error(e);
@@ -161,6 +164,9 @@ export default function SignUpSidebar() {
       setClosing(true);
       setIsOpen(false);
       setTimeout(() => setMounted(false), 300);
+      
+      // Dispatch login success event so cart can proceed to checkout
+      window.dispatchEvent(new CustomEvent('auth:login-success'));
     } catch (e) {
       console.error(e);
       setError("Failed to create account");
@@ -187,6 +193,9 @@ export default function SignUpSidebar() {
       setClosing(true);
       setIsOpen(false);
       setTimeout(() => setMounted(false), 300);
+      
+      // Dispatch login success event so cart can proceed to checkout
+      window.dispatchEvent(new CustomEvent('auth:login-success'));
     } catch (e) {
       setError("Demo login failed");
     }
