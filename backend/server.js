@@ -10,6 +10,7 @@ import blogsRoutes from './routes/blogs.js';
 import adminApiRoutes from './routes/adminApi.js';
 import usersRoutes from './routes/users.js';
 import cartRoutes from './routes/cart.js';
+import paymentRoutes from './routes/payment.js';
 
 dotenv.config();
 
@@ -30,6 +31,7 @@ app.use('/api/blogs', blogsRoutes);
 app.use('/api/admin', adminApiRoutes);
 app.use('/api/users', usersRoutes);
 app.use('/api/cart', cartRoutes);
+app.use('/api/payment', paymentRoutes);
 // AdminJS dashboard (protected by existing JWT + admin middleware)
 import { protect, admin } from './middleware/auth.js';
 import adminRouter from './adminjs.js';
