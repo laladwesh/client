@@ -8,6 +8,10 @@ const settingsSchema = new mongoose.Schema({
     default: 'dropdown_options'
   },
   dropdownOptions: {
+    collection: {
+      type: [String],
+      default: ['Roz Roz', 'Kuch Roz']
+    },
     productType: {
       type: [String],
       default: ['Top', 'Skirt', 'Dress', 'Accessory', 'Pants', 'Kurti', 'Shirt', 'Shrug', 'Jacket', 'Shorts', 'Bottom']

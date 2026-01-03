@@ -59,6 +59,7 @@ const emptyBlog = { title: '', subtitle: '', slug: '', excerpt: '', content: '',
 
 // --- Default Dropdown Options (Can be managed via Settings) ---
 const defaultDropdownOptions = {
+  collection: ['Roz Roz', 'Kuch Roz'],
   productType: ['Top', 'Skirt', 'Dress', 'Accessory', 'Pants', 'Kurti', 'Shirt', 'Shrug', 'Jacket', 'Shorts', 'Bottom'],
   color: ['Red', 'Blue', 'Yellow', 'Green', 'Black', 'Indigo', 'Brown', 'Teal', 'Off White', 'White', 'Brick Red', 'Orange', 'Pink', 'Multicolour'],
   fabricType: ['Modal', '60-60 Cambric Cotton', 'Mul Cotton', 'Cotton Blend Canderi Silk', 'Maheshwari Silk', 'Slub Cotton', 'cotton blend Linen', 'Cotton'],
@@ -275,6 +276,7 @@ const SettingsPanel = ({ dropdownOptions, setDropdownOptions }) => {
   const token = localStorage.getItem('token') || localStorage.getItem('adminToken');
 
   const fieldLabels = {
+    collection: 'Collection',
     productType: 'Product Type',
     color: 'Color',
     fabricType: 'Fabric Type',
@@ -1001,7 +1003,13 @@ export default function Admin() {
                       {productFormTab === 'basic' && (
                         <React.Fragment>
                           <InputGroup label="Product Name" name="product" formData={formData} onChange={handleInputChange} />
-                          <InputGroup label="Category" name="category" formData={formData} onChange={handleInputChange} />
+                          <SelectGroup 
+                            label="Collection" 
+                            name="category"
+                            options={dropdownOptions.collection}
+                            formData={formData} 
+                            onChange={handleInputChange} 
+                          />
                           <InputGroup label="Slug (URL)" name="slug" formData={formData} onChange={handleInputChange} />
                           <SelectGroup 
                             label="Product Type" 
