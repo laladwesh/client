@@ -86,6 +86,28 @@ const InputGroup = ({ label, name, type = "text", placeholder, colSpan = 1, form
   );
 };
 
+const SelectGroup = ({ label, name, options, colSpan = 1, formData, onChange }) => {
+  const value = formData && formData[name] !== undefined && formData[name] !== null ? formData[name] : '';
+  return (
+    <div className={colSpan === 2 ? "col-span-2" : ""}>
+      <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">{label}</label>
+      <select
+        name={name}
+        value={value}
+        onChange={onChange}
+        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-shadow bg-white cursor-pointer"
+      >
+        <option value="">Select {label}</option>
+        {options.map((option) => (
+          <option key={option} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+};
+
 const TabButton = ({ id, label, icon, activeTab, setActiveTab, setSearchQuery }) => (
   <button
     onClick={() => { setActiveTab(id); setSearchQuery(''); }}
@@ -778,22 +800,151 @@ export default function Admin() {
                           <InputGroup label="Product Name" name="product" formData={formData} onChange={handleInputChange} />
                           <InputGroup label="Category" name="category" formData={formData} onChange={handleInputChange} />
                           <InputGroup label="Slug (URL)" name="slug" formData={formData} onChange={handleInputChange} />
-                          <InputGroup label="Product Type" name="productType" formData={formData} onChange={handleInputChange} />
+                          <SelectGroup 
+                            label="Product Type" 
+                            name="productType" 
+                            options={[
+                              'Top',
+                              'Skirt',
+                              'Dress',
+                              'Accessory',
+                              'Pants',
+                              'Kurti',
+                              'Shirt',
+                              'Shrug',
+                              'Jacket',
+                              'Shorts',
+                              'Bottom'
+                            ]}
+                            formData={formData} 
+                            onChange={handleInputChange} 
+                          />
                           <InputGroup label="Description" name="productDescription" type="textarea" colSpan={2} formData={formData} onChange={handleInputChange} />
                           <InputGroup label="Show on Homepage" name="isShownInHomepage" type="checkbox" colSpan={2} formData={formData} onChange={handleInputChange} />
                         </React.Fragment>
                       )}
                       {productFormTab === 'fabric' && (
                           <React.Fragment>
-                          <InputGroup label="Print / Pattern" name="print" formData={formData} onChange={handleInputChange} />
-                          <InputGroup label="Color" name="color" formData={formData} onChange={handleInputChange} />
-                          <InputGroup label="Fabric Type" name="fabricType" formData={formData} onChange={handleInputChange} />
-                          <InputGroup label="Fabric Pattern" name="fabricPattern" formData={formData} onChange={handleInputChange} />
+                          <SelectGroup 
+                            label="Fabric Print" 
+                            name="print" 
+                            options={[
+                              'Daboo (Mud Resist Technique)',
+                              'block Print',
+                              'Bagru',
+                              'Kalamkari',
+                              'Black and White',
+                              'Ajrak',
+                              'Tie and Dye',
+                              'Patch Work with Kantha',
+                              'Ikat',
+                              'Solid Dye'
+                            ]}
+                            formData={formData} 
+                            onChange={handleInputChange} 
+                          />
+                          <SelectGroup 
+                            label="Color" 
+                            name="color" 
+                            options={[
+                              'Red',
+                              'Blue',
+                              'Yellow',
+                              'Green',
+                              'Black',
+                              'Indigo',
+                              'Brown',
+                              'Teal',
+                              'Off White',
+                              'White',
+                              'Brick Red',
+                              'Orange',
+                              'Pink',
+                              'Multicolour'
+                            ]}
+                            formData={formData} 
+                            onChange={handleInputChange} 
+                          />
+                          <SelectGroup 
+                            label="Fabric Type" 
+                            name="fabricType" 
+                            options={[
+                              'Modal',
+                              '60-60 Cambric Cotton',
+                              'Mul Cotton',
+                              'Cotton Blend Canderi Silk',
+                              'Maheshwari Silk',
+                              'Slub Cotton',
+                              'cotton blend Linen',
+                              'Cotton'
+                            ]}
+                            formData={formData} 
+                            onChange={handleInputChange} 
+                          />
+                          <SelectGroup 
+                            label="Fabric Pattern" 
+                            name="fabricPattern" 
+                            options={[
+                              'Bandhani',
+                              'Floral',
+                              'Plain',
+                              'Motif',
+                              'Stripes',
+                              'all over',
+                              'Animal',
+                              'Lahriya'
+                            ]}
+                            formData={formData} 
+                            onChange={handleInputChange} 
+                          />
                           <InputGroup label="Material Composition" name="material" formData={formData} onChange={handleInputChange} />
-                          <InputGroup label="Sleeves Style" name="sleeves" formData={formData} onChange={handleInputChange} />
-                          <InputGroup label="Closure Type" name="closure" formData={formData} onChange={handleInputChange} />
+                          <SelectGroup 
+                            label="Sleeves Style" 
+                            name="sleeves" 
+                            options={[
+                              'Sleeveless',
+                              'Full Sleeves',
+                              '3/4th Sleeves',
+                              'Half Sleeves',
+                              'Puff Sleeves',
+                              'Flared Sleeves',
+                              'NA'
+                            ]}
+                            formData={formData} 
+                            onChange={handleInputChange} 
+                          />
+                          <SelectGroup 
+                            label="Closure Type" 
+                            name="closure" 
+                            options={[
+                              'Touch Buttons',
+                              'Buttons',
+                              'Hooks',
+                              'String',
+                              'Zip',
+                              'Elastic'
+                            ]}
+                            formData={formData} 
+                            onChange={handleInputChange} 
+                          />
                           <div className="grid grid-cols-2 gap-2">
-                             <InputGroup label="Length" name="length" formData={formData} onChange={handleInputChange} />
+                             <SelectGroup 
+                               label="Length" 
+                               name="length" 
+                               options={[
+                                 'Full',
+                                 'Knee',
+                                 'Maxi',
+                                 'Mini',
+                                 'Midi',
+                                 'short',
+                                 'crop',
+                                 'midi',
+                                 'standard'
+                               ]}
+                               formData={formData} 
+                               onChange={handleInputChange} 
+                             />
                              <InputGroup label="Length (Inch)" name="lengthInInches" type="number" formData={formData} onChange={handleInputChange} />
                           </div>
                           <InputGroup label="Features (comma separated)" name="features" colSpan={2} placeholder="e.g. Breathable, Lightweight, Cotton" formData={formData} onChange={handleInputChange} />
