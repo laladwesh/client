@@ -7,6 +7,7 @@ import {
   updateProduct,
   deleteProduct,
   uploadProductImage,
+  reorderProductImages,
 } from '../controllers/productController.js';
 import { protect, admin } from '../middleware/auth.js';
 
@@ -23,6 +24,8 @@ router.delete('/:id', protect, admin, deleteProduct);
 
 // Upload image for product (form field name: 'image')
 router.post('/:id/images', protect, admin, upload.single('image'), uploadProductImage);
+// Reorder product images
+router.put('/:id/images/reorder', protect, admin, reorderProductImages);
 // Remove image from product
 router.delete('/:id/images', protect, admin, async (req, res, next) => {
   // express.json middleware should parse body; forward to controller
