@@ -13,14 +13,15 @@ import Blogs from './pages/Blogs';
 import Contact from './pages/Contact';
 import FAQ from './pages/FAQ';
 import PhotoBooth from './pages/PhotoBooth';
-// SignUp moved to a sidebar (SignUpSidebar)
 import Admin from './pages/Admin';
 import AdminRoute from './components/AdminRoute';
-import './App.css';
 import ProductPage from './pages/ProductPage';
 import BlogPage from './pages/BlogPage';
 import SignUp from './pages/SignUp';
 import FaqsPage from './pages/FaqsPage';
+import Orders from './pages/Orders';
+import Checkout from './pages/Checkout';
+import './App.css';
 
 
 function App() {
@@ -177,7 +178,29 @@ function App() {
             </>
           } />
 
-<Route path="/sign-up" element={
+          <Route path="/orders" element={
+            <>
+              <div className="page-content">
+                <Banner />
+                <Navbar />
+                <Orders />
+              </div>
+              <Footer />
+            </>
+          } />
+
+          <Route path="/checkout" element={
+            <>
+              <div className="page-content">
+                <Banner />
+                <Navbar />
+                <Checkout />
+              </div>
+              <Footer />
+            </>
+          } />
+
+          <Route path="/sign-up" element={
             <>
               <div className="page-content">
                 <Banner />
