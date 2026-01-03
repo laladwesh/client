@@ -135,3 +135,27 @@ const removeProductImage = asyncHandler(async (req, res) => {
 });
 
 export { removeProductImage };
+
+// PUT /api/products/:id/images/reorder (admin)
+const reorderProductImages = asyncHandler(async (req, res) => {
+  const product = await Product.findById(req.params.id);
+  if (!product) {
+    res.status(404);
+    throw new Error('Product not found');
+  }
+
+  const { images } = req.body;
+  if (!Array.isArray(images)) {
+    res.status(400);
+    throw new Error('Images array is required');
+  }
+
+  // Update the images array with the new order
+  product.images = images;
+  product.updatedAt = Date.now();
+  await product.save();
+
+  res.json({ message: 'Images reordered successfully', product });
+});
+
+export { reorderProductImages };
