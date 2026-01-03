@@ -40,6 +40,9 @@ export default function Checkout() {
   const [discountCode, setDiscountCode] = useState("");
   const [appliedDiscount, setAppliedDiscount] = useState(null);
 
+  // Payment method state
+  const [paymentMethod, setPaymentMethod] = useState("Razorpay"); // "Razorpay" or "COD"
+
   // New state for personal details editing
   const [editingPersonalDetails, setEditingPersonalDetails] = useState(false);
   const [tempName, setTempName] = useState("");
@@ -54,6 +57,9 @@ export default function Checkout() {
   
   // Bill sidebar state
   const [billSidebarOpen, setBillSidebarOpen] = useState(false);
+  
+  // Loading state
+  const [isPlacingOrder, setIsPlacingOrder] = useState(false);
 
   useEffect(() => {
     // Check if user is logged in
@@ -216,6 +222,8 @@ export default function Checkout() {
       return;
     }
 
+    setIsPlacingOrder(true);
+    
     try {
       // Sync cart to server
       await apiUpdateCart(
@@ -235,12 +243,29 @@ export default function Checkout() {
           size: i.size,
         })),
         shippingAddress: addr,
-        paymentMethod: "Razorpay",
+        paymentMethod: paymentMethod, // Use selected payment method
       });
 
+      // Handle COD vs Razorpay
+      if (paymentMethod === "COD") {
+        // For COD, order is placed successfully without payment
+        toast.success("Order placed successfully! Pay on delivery");
+        // Clear cart
+        setItems([]);
+        localStorage.setItem("cart", JSON.stringify([]));
+        syncToServer([]);
+        window.dispatchEvent(new Event("cart:updated"));
+        // Navigate to orders page
+        navigate("/orders");
+        setIsPlacingOrder(false);
+        return;
+      }
+
+      // Razorpay payment flow
       // Load Razorpay script
       const scriptLoaded = await loadRazorpayScript();
       if (!scriptLoaded) {
+        setIsPlacingOrder(false);
         toast.error("Failed to load payment gateway");
         return;
       }
@@ -304,6 +329,7 @@ export default function Checkout() {
         },
         modal: {
           ondismiss: function () {
+            setIsPlacingOrder(false);
             toast.error("Payment cancelled");
           },
         },
@@ -311,8 +337,10 @@ export default function Checkout() {
 
       const paymentObject = new window.Razorpay(options);
       paymentObject.open();
+      setIsPlacingOrder(false); // Set loading false when Razorpay modal opens
     } catch (err) {
       console.error(err);
+      setIsPlacingOrder(false);
       toast.error("Could not place order");
     }
   };
@@ -690,20 +718,104 @@ export default function Checkout() {
           </div>
         </div>
 
+        {/* ======================= Step 04 - Payment Method ======================= */}
+        <div className="w-full border-b border-gray-300 pb-12 mb-12">
+          <div className="flex w-full items-start">
+            {/* Column 1 */}
+            <div className="w-32 shrink-0 pt-3">
+              <span className="text-sm font-medium text-black">Step 04</span>
+            </div>
+
+            {/* Column 2 */}
+            <div className="flex-1 pr-8">
+              <h2 className="text-6xl font-medium text-black -mt-2 tracking-tight leading-tight">
+                Payment
+                <br />
+                Method
+              </h2>
+            </div>
+
+            {/* Column 3 & 4 */}
+            <div className="w-1/2 shrink-0 flex justify-between pt-3">
+              <div className="grow space-y-4">
+                {/* Razorpay Option */}
+                <div 
+                  onClick={() => setPaymentMethod("Razorpay")}
+                  className={`p-4 border-2 cursor-pointer transition-all ${
+                    paymentMethod === "Razorpay" 
+                      ? "border-black bg-gray-50" 
+                      : "border-gray-300 hover:border-gray-400"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                      paymentMethod === "Razorpay" ? "border-black" : "border-gray-300"
+                    }`}>
+                      {paymentMethod === "Razorpay" && (
+                        <div className="w-3 h-3 rounded-full bg-black"></div>
+                      )}
+                    </div>
+                    <div>
+                      <div className="text-base font-semibold text-black">
+                        Pay Online (Razorpay)
+                      </div>
+                      <div className="text-sm text-gray-600">
+                        Credit/Debit Card, UPI, Net Banking
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* COD Option */}
+                <div 
+                  onClick={() => setPaymentMethod("COD")}
+                  className={`p-4 border-2 cursor-pointer transition-all ${
+                    paymentMethod === "COD" 
+                      ? "border-black bg-gray-50" 
+                      : "border-gray-300 hover:border-gray-400"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                      paymentMethod === "COD" ? "border-black" : "border-gray-300"
+                    }`}>
+                      {paymentMethod === "COD" && (
+                        <div className="w-3 h-3 rounded-full bg-black"></div>
+                      )}
+                    </div>
+                    <div>
+                      <div className="text-base font-semibold text-black">
+                        Cash on Delivery (COD)
+                      </div>
+                      <div className="text-sm text-gray-600">
+                        Pay when you receive your order
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="px-16 shrink-0">
+                {/* Empty space or info */}
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Continue Button */}
         <div className="flex justify-end">
           <button
             type="button"
             onClick={placeOrder}
-            disabled={!selectedAddressId && addresses.length === 0}
+            disabled={(!selectedAddressId && addresses.length === 0) || isPlacingOrder}
             className="group bg-black text-white px-12 py-3 flex  justify-between text-base font-semibold tracking-wide disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
             <div className="relative h-5 overflow-hidden">
               <div className="relative flex flex-col transition-transform duration-300 ease-in-out group-hover:-translate-y-1/2">
                 <span className="flex font-bdogrotesk h-5 items-center">
-                  Continue
+                  {isPlacingOrder ? 'Processing...' : 'Continue'}
                 </span>
-                <span className="flex h-5 items-center">Continue</span>
+                <span className="flex h-5 items-center">{isPlacingOrder ? 'Processing...' : 'Continue'}</span>
               </div>
             </div>
           </button>
@@ -833,7 +945,7 @@ export default function Checkout() {
           taxPrice: taxAmount,
           totalPrice: total,
           createdAt: new Date().toISOString(),
-          paymentMethod: 'Not Paid Yet'
+          paymentMethod: paymentMethod === 'COD' ? 'Cash on Delivery' : 'Razorpay (Online Payment)'
         }}
       />
     </div>
