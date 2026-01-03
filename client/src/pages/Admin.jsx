@@ -9,6 +9,7 @@ import {
   uploadBlogImage, deleteBlogImage,
   fetchUsers, updateUser, deleteUser,
   reorderProductImages,
+  fetchDropdownOptions, updateDropdownOptions,
 } from '../services/adminService';
 import { getAllOrders, updateOrderStatus } from '../services/orderService';
 import {
@@ -39,7 +40,8 @@ const Icons = {
   X: () => <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>,
   Upload: () => <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>,
   Trash: () => <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>,
-  Logout: () => <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
+  Logout: () => <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>,
+  Settings: () => <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
 };
 
 // --- Initial States ---
@@ -54,6 +56,18 @@ const emptyProduct = {
 };
 
 const emptyBlog = { title: '', subtitle: '', slug: '', excerpt: '', content: '', images: [], tags: [] };
+
+// --- Default Dropdown Options (Can be managed via Settings) ---
+const defaultDropdownOptions = {
+  productType: ['Top', 'Skirt', 'Dress', 'Accessory', 'Pants', 'Kurti', 'Shirt', 'Shrug', 'Jacket', 'Shorts', 'Bottom'],
+  color: ['Red', 'Blue', 'Yellow', 'Green', 'Black', 'Indigo', 'Brown', 'Teal', 'Off White', 'White', 'Brick Red', 'Orange', 'Pink', 'Multicolour'],
+  fabricType: ['Modal', '60-60 Cambric Cotton', 'Mul Cotton', 'Cotton Blend Canderi Silk', 'Maheshwari Silk', 'Slub Cotton', 'cotton blend Linen', 'Cotton'],
+  fabricPrint: ['Daboo (Mud Resist Technique)', 'block Print', 'Bagru', 'Kalamkari', 'Black and White', 'Ajrak', 'Tie and Dye', 'Patch Work with Kantha', 'Ikat', 'Solid Dye'],
+  fabricPattern: ['Bandhani', 'Floral', 'Plain', 'Motif', 'Stripes', 'all over', 'Animal', 'Lahriya'],
+  length: ['Full', 'Knee', 'Maxi', 'Mini', 'Midi', 'short', 'crop', 'midi', 'standard'],
+  sleeves: ['Sleeveless', 'Full Sleeves', '3/4th Sleeves', 'Half Sleeves', 'Puff Sleeves', 'Flared Sleeves', 'NA'],
+  closure: ['Touch Buttons', 'Buttons', 'Hooks', 'String', 'Zip', 'Elastic']
+};
 
 // --- STABLE EXTERNAL COMPONENTS (Prevents focus loss) ---
 
@@ -253,6 +267,169 @@ const ImageUploadSection = ({ images, fileMap, setFileMap, onDeleteImage, onReor
   );
 };
 
+// --- Settings Panel Component ---
+const SettingsPanel = ({ dropdownOptions, setDropdownOptions }) => {
+  const [editingField, setEditingField] = useState(null);
+  const [newOption, setNewOption] = useState('');
+  const [saving, setSaving] = useState(false);
+  const token = localStorage.getItem('token') || localStorage.getItem('adminToken');
+
+  const fieldLabels = {
+    productType: 'Product Type',
+    color: 'Color',
+    fabricType: 'Fabric Type',
+    fabricPrint: 'Fabric Print',
+    fabricPattern: 'Fabric Pattern',
+    length: 'Length',
+    sleeves: 'Sleeves',
+    closure: 'Closure'
+  };
+
+  const saveToBackend = async (updated) => {
+    setSaving(true);
+    try {
+      await updateDropdownOptions(updated, token);
+      setDropdownOptions(updated);
+    } catch (error) {
+      console.error('Failed to save:', error);
+      toast.error('Failed to save to database');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleAddOption = async (field) => {
+    if (!newOption.trim()) return;
+    
+    const updated = {
+      ...dropdownOptions,
+      [field]: [...dropdownOptions[field], newOption.trim()]
+    };
+    
+    await saveToBackend(updated);
+    setNewOption('');
+    setEditingField(null);
+    toast.success(`Added "${newOption}" to ${fieldLabels[field]}`);
+  };
+
+  const handleRemoveOption = async (field, option) => {
+    const updated = {
+      ...dropdownOptions,
+      [field]: dropdownOptions[field].filter(opt => opt !== option)
+    };
+    
+    await saveToBackend(updated);
+    toast.success(`Removed "${option}" from ${fieldLabels[field]}`);
+  };
+
+  const handleResetToDefaults = async () => {
+    await saveToBackend(defaultDropdownOptions);
+    toast.success('Reset to default options');
+  };
+
+  return (
+    <div className="space-y-6">
+      {saving && (
+        <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 flex items-center gap-2">
+          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+          <span className="text-sm text-blue-800 font-medium">Saving to database...</span>
+        </div>
+      )}
+      
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+        <div className="flex justify-between items-center mb-6">
+          <div>
+            <h3 className="text-lg font-bold text-gray-900">Dropdown Options Management</h3>
+            <p className="text-sm text-gray-500 mt-1">Manage dropdown options for product fields. Changes sync across all devices.</p>
+          </div>
+          <button
+            onClick={handleResetToDefaults}
+            disabled={saving}
+            className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
+          >
+            Reset to Defaults
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {Object.keys(dropdownOptions).map((field) => (
+            <div key={field} className="border border-gray-200 rounded-xl p-4 bg-gray-50">
+              <div className="flex justify-between items-center mb-3">
+                <h4 className="font-bold text-gray-800 text-sm uppercase tracking-wide">{fieldLabels[field]}</h4>
+                <button
+                  onClick={() => setEditingField(editingField === field ? null : field)}
+                  className="text-indigo-600 hover:text-indigo-800 text-xs font-medium"
+                >
+                  {editingField === field ? 'Cancel' : '+ Add New'}
+                </button>
+              </div>
+
+              {editingField === field && (
+                <div className="flex gap-2 mb-3">
+                  <input
+                    type="text"
+                    value={newOption}
+                    onChange={(e) => setNewOption(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && handleAddOption(field)}
+                    placeholder={`New ${fieldLabels[field]}...`}
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    autoFocus
+                  />
+                  <button
+                    onClick={() => handleAddOption(field)}
+                    className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors"
+                  >
+                    Add
+                  </button>
+                </div>
+              )}
+
+              <div className="flex flex-wrap gap-2">
+                {dropdownOptions[field].map((option, idx) => (
+                  <div
+                    key={idx}
+                    className="inline-flex items-center gap-2 px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-sm group hover:border-red-300 transition-colors"
+                  >
+                    <span className="text-gray-700">{option}</span>
+                    <button
+                      onClick={() => handleRemoveOption(field, option)}
+                      className="text-gray-400 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity"
+                      title="Remove"
+                    >
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+        <div className="flex items-start gap-3">
+          <svg className="w-5 h-5 text-blue-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <div className="flex-1">
+            <h4 className="font-bold text-blue-900 text-sm mb-1">How it works</h4>
+            <ul className="text-sm text-blue-800 space-y-1">
+              <li>• Add new options by clicking "+ Add New" and typing the option name</li>
+              <li>• Remove options by hovering over them and clicking the × button</li>
+              <li>• Changes are saved automatically to the database</li>
+              <li>• These options sync across all devices and admins</li>
+              <li>• Options appear in product add/edit forms immediately</li>
+              <li>• Click "Reset to Defaults" to restore original options</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // --- MAIN COMPONENT ---
 
 export default function Admin() {
@@ -281,12 +458,35 @@ export default function Admin() {
   // Confirm Modal State - MOVED TO TOP to avoid Reference Errors
   const [confirm, setConfirm] = useState({ open: false, title: '', description: '', onConfirm: () => {}, onCancel: () => {} });
 
+  // Dropdown Options State (managed in Settings - now from backend)
+  const [dropdownOptions, setDropdownOptions] = useState(defaultDropdownOptions);
+  const [optionsLoading, setOptionsLoading] = useState(true);
+
   // --- Effects ---
   useEffect(() => {
     if (!token || !isAdmin) navigate('/');
     else fetchData();
     // eslint-disable-next-line
   }, [activeTab]);
+
+  // Fetch dropdown options on mount
+  useEffect(() => {
+    const loadDropdownOptions = async () => {
+      try {
+        const options = await fetchDropdownOptions(token);
+        setDropdownOptions(options);
+      } catch (error) {
+        console.error('Failed to fetch dropdown options:', error);
+        toast.error('Failed to load dropdown options');
+      } finally {
+        setOptionsLoading(false);
+      }
+    };
+
+    if (token && isAdmin) {
+      loadDropdownOptions();
+    }
+  }, [token, isAdmin]);
 
   const fetchData = async () => {
     setLoading(true);
@@ -500,6 +700,7 @@ export default function Admin() {
           <TabButton id="orders" label="Orders" icon={<Icons.ShoppingBag />} activeTab={activeTab} setActiveTab={setActiveTab} setSearchQuery={setSearchQuery} />
           <TabButton id="blogs" label="Blogs" icon={<Icons.FileText />} activeTab={activeTab} setActiveTab={setActiveTab} setSearchQuery={setSearchQuery} />
           <TabButton id="users" label="Users" icon={<Icons.Users />} activeTab={activeTab} setActiveTab={setActiveTab} setSearchQuery={setSearchQuery} />
+          <TabButton id="settings" label="Settings" icon={<Icons.Settings />} activeTab={activeTab} setActiveTab={setActiveTab} setSearchQuery={setSearchQuery} />
         </nav>
         <div className="p-6 border-t border-gray-100">
             <div className="flex items-center gap-3 mb-6 bg-gray-50 p-3 rounded-xl border border-gray-100">
@@ -543,7 +744,7 @@ export default function Admin() {
                 className="pl-10 pr-4 py-2.5 w-64 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 focus:outline-none transition-all"
               />
             </div>
-            {activeTab !== 'orders' && (
+            {activeTab !== 'orders' && activeTab !== 'settings' && (
               <button
                 onClick={() => handleOpenModal()}
                 className="flex items-center px-5 py-2.5 bg-gray-900 text-white rounded-xl hover:bg-black shadow-lg hover:shadow-lg transition-all active:scale-95 font-medium"
@@ -562,6 +763,8 @@ export default function Admin() {
               <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-600 mb-4"></div>
               Loading NUFAB data...
             </div>
+          ) : activeTab === 'settings' ? (
+            <SettingsPanel dropdownOptions={dropdownOptions} setDropdownOptions={setDropdownOptions} />
           ) : (
             <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
               <table className="min-w-full divide-y divide-gray-100">
@@ -803,19 +1006,7 @@ export default function Admin() {
                           <SelectGroup 
                             label="Product Type" 
                             name="productType" 
-                            options={[
-                              'Top',
-                              'Skirt',
-                              'Dress',
-                              'Accessory',
-                              'Pants',
-                              'Kurti',
-                              'Shirt',
-                              'Shrug',
-                              'Jacket',
-                              'Shorts',
-                              'Bottom'
-                            ]}
+                            options={dropdownOptions.productType}
                             formData={formData} 
                             onChange={handleInputChange} 
                           />
@@ -828,72 +1019,28 @@ export default function Admin() {
                           <SelectGroup 
                             label="Fabric Print" 
                             name="print" 
-                            options={[
-                              'Daboo (Mud Resist Technique)',
-                              'block Print',
-                              'Bagru',
-                              'Kalamkari',
-                              'Black and White',
-                              'Ajrak',
-                              'Tie and Dye',
-                              'Patch Work with Kantha',
-                              'Ikat',
-                              'Solid Dye'
-                            ]}
+                            options={dropdownOptions.fabricPrint}
                             formData={formData} 
                             onChange={handleInputChange} 
                           />
                           <SelectGroup 
                             label="Color" 
                             name="color" 
-                            options={[
-                              'Red',
-                              'Blue',
-                              'Yellow',
-                              'Green',
-                              'Black',
-                              'Indigo',
-                              'Brown',
-                              'Teal',
-                              'Off White',
-                              'White',
-                              'Brick Red',
-                              'Orange',
-                              'Pink',
-                              'Multicolour'
-                            ]}
+                            options={dropdownOptions.color}
                             formData={formData} 
                             onChange={handleInputChange} 
                           />
                           <SelectGroup 
                             label="Fabric Type" 
                             name="fabricType" 
-                            options={[
-                              'Modal',
-                              '60-60 Cambric Cotton',
-                              'Mul Cotton',
-                              'Cotton Blend Canderi Silk',
-                              'Maheshwari Silk',
-                              'Slub Cotton',
-                              'Cotton blend Linen',
-                              'Cotton'
-                            ]}
+                            options={dropdownOptions.fabricType}
                             formData={formData} 
                             onChange={handleInputChange} 
                           />
                           <SelectGroup 
                             label="Fabric Pattern" 
                             name="fabricPattern" 
-                            options={[
-                              'Bandhani',
-                              'Floral',
-                              'Plain',
-                              'Motif',
-                              'Stripes',
-                              'All over',
-                              'Animal',
-                              'Lahriya'
-                            ]}
+                            options={dropdownOptions.fabricPattern}
                             formData={formData} 
                             onChange={handleInputChange} 
                           />
@@ -901,29 +1048,14 @@ export default function Admin() {
                           <SelectGroup 
                             label="Sleeves Style" 
                             name="sleeves" 
-                            options={[
-                              'Sleeveless',
-                              'Full Sleeves',
-                              '3/4th Sleeves',
-                              'Half Sleeves',
-                              'Puff Sleeves',
-                              'Flared Sleeves',
-                              'N/A'
-                            ]}
+                            options={dropdownOptions.sleeves}
                             formData={formData} 
                             onChange={handleInputChange} 
                           />
                           <SelectGroup 
                             label="Closure Type" 
                             name="closure" 
-                            options={[
-                              'Touch Buttons',
-                              'Buttons',
-                              'Hooks',
-                              'String',
-                              'Zip',
-                              'Elastic'
-                            ]}
+                            options={dropdownOptions.closure}
                             formData={formData} 
                             onChange={handleInputChange} 
                           />
@@ -931,17 +1063,7 @@ export default function Admin() {
                              <SelectGroup 
                                label="Length" 
                                name="length" 
-                               options={[
-                                 'Full',
-                                 'Knee',
-                                 'Maxi',
-                                 'Mini',
-                                 'Midi',
-                                 'Short',
-                                 'Crop',
-                                 'Midi',
-                                 'Standard'
-                               ]}
+                               options={dropdownOptions.length}
                                formData={formData} 
                                onChange={handleInputChange} 
                              />
