@@ -44,3 +44,48 @@ export const updateOrderStatus = async (id, status) => {
     throw error.response?.data || error;
   }
 };
+
+export const updateOrderStage = async (id, stage) => {
+  try {
+    const response = await api.put(`/orders/${id}/stage`, { stage });
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error;
+  }
+};
+
+export const trackOrder = async (id) => {
+  try {
+    const response = await api.get(`/orders/${id}/track`);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error;
+  }
+};
+
+export const addDelhiveryWaybill = async (id, waybill, orderId) => {
+  try {
+    const response = await api.put(`/orders/${id}/delhivery/waybill`, { waybill, orderId });
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error;
+  }
+};
+
+export const createDelhiveryShipment = async (id) => {
+  try {
+    const response = await api.post(`/orders/${id}/delhivery/shipment`);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error;
+  }
+};
+
+export const cancelDelhiveryShipment = async (id) => {
+  try {
+    const response = await api.delete(`/orders/${id}/delhivery/cancel`);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error;
+  }
+};
