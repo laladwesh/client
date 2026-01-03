@@ -16,7 +16,6 @@ const ProductPage = () => {
   const [product, setProduct] = useState(null); // normalized UI product
   const [suggestions, setSuggestions] = useState([]);
 
-  const [selectedImage, setSelectedImage] = useState(0);
   const [selectedSize, setSelectedSize] = useState(null);
   const [qty, setQty] = useState(1);
   const [wishlist, setWishlist] = useState(() => {
@@ -55,7 +54,7 @@ const ProductPage = () => {
           background: '#111', color: '#fff', padding: '12px 16px', borderRadius: 8, boxShadow: '0 6px 20px rgba(0,0,0,0.12)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <div style={{ fontWeight: 600 }}>{rawProduct.product || rawProduct.title}</div>
+            <div style={{ fontWeight: 600 }}>Added to cart: {rawProduct.product || rawProduct.title}</div>
             <div style={{ marginLeft: 'auto' }}>
               <button onClick={() => toast.dismiss(t.id)} style={{ background: 'transparent', border: 'none', color: '#fff', opacity: 0.85 }}>Close</button>
             </div>
