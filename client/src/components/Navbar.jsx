@@ -101,26 +101,26 @@ const Navbar = () => {
 
   return (
     <div 
-      className={`navbar-logo-center-home p-0 transition-all duration-500 ease-in-out ${isHomePage ? (isSticky ? 'fixed top-0 left-0 right-0 w-full z-[9999] bg-black' : 'absolute left-0 right-0 w-full z-[9999] bg-transparent top-12') : 'relative z-50 bg-white'}`}
+      className={`navbar-logo-center-home p-0 transition-all duration-300 ease-in-out ${isHomePage ? (isSticky ? 'fixed top-0 left-0 right-0 w-full z-[9999] bg-black' : 'absolute left-0 right-0 w-full z-[9999] bg-transparent top-12') : 'relative z-50 bg-white'}`}
       style={isHomePage && !isSticky ? { backgroundColor: 'transparent', backgroundImage: 'none' } : {}}
     >
       <div 
-        className={`navbar-logo-center-container-home w-nav px-0 transition-all duration-500 ease-in-out ${isHomePage ? (isSticky ? 'bg-black' : 'bg-transparent') : 'bg-white'}`}
+        className={`navbar-logo-center-container-home w-nav px-0 transition-all duration-300 ease-in-out ${isHomePage ? (isSticky ? 'bg-black' : 'bg-transparent') : 'bg-white'}`}
         style={isHomePage && !isSticky ? { backgroundColor: 'transparent', backgroundImage: 'none' } : {}}
       >
         <div 
-          className={`container-navbar-home px-0 max-w-full transition-all duration-500 ease-in-out ${isHomePage ? (isSticky ? 'bg-black' : 'bg-transparent') : 'bg-white'}`}
+          className={`container-navbar-home px-0 max-w-full transition-all duration-300 ease-in-out ${isHomePage ? (isSticky ? 'bg-black' : 'bg-transparent') : 'bg-white'}`}
           style={isHomePage && !isSticky ? { backgroundColor: 'transparent', backgroundImage: 'none' } : {}}
         >
-          <div className={`navbar-wrapper-home px-0 m-0 transition-all duration-500 ease-in-out ${isHomePage ? (isSticky ? 'bg-black' : 'bg-transparent') : 'bg-white'}`}
+          <div className={`navbar-wrapper-home px-0 m-0 transition-all duration-300 ease-in-out ${isHomePage ? (isSticky ? 'bg-black' : 'bg-transparent') : 'bg-white'}`}
             style={isHomePage && !isSticky ? { backgroundColor: 'transparent', backgroundImage: 'none' } : {}}
           >
             <Link to="/" className={`navbar-logo-wrapper-home w-nav-brand ${isHomePage && !isSticky ? 'opacity-0' : 'opacity-100'}`}>
               <img width="122" loading="lazy" alt="Nufab Logo" src={logoSrc} />
             </Link>
             
-            <nav role="navigation" className={`nav-menu-wrapper-three-home w-nav-menu pl-0 ml-0 ${isMenuOpen ? 'w--open' : ''}`}>
-              <div className="nav-menu-three-home pl-0 ml-0">
+            <nav role="navigation" className={`w-full justify-evenly  pl-0 ml-0 ${isMenuOpen ? 'w--open' : ''}`}>
+              <div className="flex justify-between pl-0 ml-0">
                 <ul className="nav-menu-block-home w-list-unstyled space-x-5 pl-0 ml-0 gap-0">
                   <li className="pl-0 ml-0">
                     <button 
@@ -228,7 +228,7 @@ const Navbar = () => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 autoFocus
-                className="w-full py-3 px-4 text-base border-2 border-gray-300 rounded-lg outline-none transition-colors duration-200 focus:border-blue-500"
+                className="w-full py-3 px-4 text-base border-2 border-gray-300 rounded-lg outline-none transition-colors duration-300 focus:border-blue-500"
               />
             </div>
 
@@ -247,7 +247,7 @@ const Navbar = () => {
                   {filteredProducts.map(product => (
                     <div 
                       key={product.id}
-                      className="flex gap-4 p-4 border border-gray-200 rounded-lg cursor-pointer transition-all duration-200 hover:bg-gray-50 hover:border-gray-300"
+                      className="flex gap-4 p-4 border border-gray-200 rounded-lg cursor-pointer transition-all duration-300 hover:bg-gray-50 hover:border-gray-300"
                     >
                       <div className="w-20 h-20 bg-gray-100 rounded-md flex items-center justify-center text-xs text-gray-500">
                         No Image
@@ -282,7 +282,7 @@ const Navbar = () => {
 
       {/* Collections Dropdown */}
       <div 
-        className="fixed top-0 left-0 right-0 bg-white z-[9998] transition-transform duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] overflow-hidden"
+        className="fixed top-0 left-0 right-0 bg-white z-[9998] transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] overflow-hidden"
         style={{
           transform: isCollectionsOpen ? 'translateY(0)' : 'translateY(-100%)',
           boxShadow: isCollectionsOpen ? '0 4px 20px rgba(0, 0, 0, 0.1)' : 'none'
@@ -311,7 +311,7 @@ const Navbar = () => {
                 setIsCollectionsOpen(false);
                 navigate('/store');
               }}
-              className="cursor-pointer flex items-end gap-3 md:gap-5 hover:opacity-95 transition-opacity duration-200"
+              className="cursor-pointer flex items-end gap-3 md:gap-5 hover:opacity-95 transition-opacity duration-300"
             >
               {/* Image */}
               <div className="w-24 h-44 md:w-32 md:h-56 lg:w-36 lg:h-60 bg-gray-100 overflow-hidden">
