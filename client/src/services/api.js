@@ -31,6 +31,13 @@ api.interceptors.response.use(
       // Unauthorized - clear token and open login sidebar
       localStorage.removeItem('token');
       localStorage.removeItem('user');
+      localStorage.removeItem('adminToken');
+      localStorage.removeItem('userRole');
+      localStorage.removeItem('spirit:user');
+      
+      // Dispatch logout event
+      window.dispatchEvent(new Event('auth:logout'));
+      
       try {
         window.dispatchEvent(new CustomEvent('signup:toggle', { detail: { open: true } }));
       } catch (e) {}
