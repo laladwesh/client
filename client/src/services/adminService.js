@@ -137,6 +137,16 @@ export async function deleteProductImage(productId, imageUrl, token) {
   return res.json();
 }
 
+export async function reorderProductImages(productId, images, token) {
+  const res = await fetch(`${API}/products/${productId}/images/reorder`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...authHeader(token) },
+    body: JSON.stringify({ images }),
+  });
+  if (!res.ok) throw new Error('Reorder images failed');
+  return res.json();
+}
+
 export async function deleteBlogImage(blogId, imageUrl, token) {
   const res = await fetch(`${API}/blogs/${blogId}/images`, {
     method: 'DELETE',
