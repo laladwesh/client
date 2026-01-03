@@ -875,7 +875,7 @@ export default function Admin() {
                               'Cotton Blend Canderi Silk',
                               'Maheshwari Silk',
                               'Slub Cotton',
-                              'cotton blend Linen',
+                              'Cotton blend Linen',
                               'Cotton'
                             ]}
                             formData={formData} 
@@ -890,7 +890,7 @@ export default function Admin() {
                               'Plain',
                               'Motif',
                               'Stripes',
-                              'all over',
+                              'All over',
                               'Animal',
                               'Lahriya'
                             ]}
@@ -908,7 +908,7 @@ export default function Admin() {
                               'Half Sleeves',
                               'Puff Sleeves',
                               'Flared Sleeves',
-                              'NA'
+                              'N/A'
                             ]}
                             formData={formData} 
                             onChange={handleInputChange} 
@@ -937,10 +937,10 @@ export default function Admin() {
                                  'Maxi',
                                  'Mini',
                                  'Midi',
-                                 'short',
-                                 'crop',
-                                 'midi',
-                                 'standard'
+                                 'Short',
+                                 'Crop',
+                                 'Midi',
+                                 'Standard'
                                ]}
                                formData={formData} 
                                onChange={handleInputChange} 
