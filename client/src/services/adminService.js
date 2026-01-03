@@ -161,3 +161,22 @@ export async function adminLoginWithToken(token) {
   // optional helper to verify token and fetch user; backend lacks a verify endpoint so we rely on stored user
   return { token };
 }
+
+// Settings - Dropdown Options
+export async function fetchDropdownOptions(token) {
+  const res = await fetch(`${API}/settings/dropdown-options`, {
+    headers: { ...authHeader(token) }
+  });
+  if (!res.ok) throw new Error('Failed to fetch dropdown options');
+  return res.json();
+}
+
+export async function updateDropdownOptions(dropdownOptions, token) {
+  const res = await fetch(`${API}/settings/dropdown-options`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...authHeader(token) },
+    body: JSON.stringify({ dropdownOptions }),
+  });
+  if (!res.ok) throw new Error('Failed to update dropdown options');
+  return res.json();
+}
