@@ -1,14 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import ConfirmModal from '../components/ConfirmModal';
+import AdminOrderDetails from '../components/AdminOrderDetails';
 import { useNavigate } from 'react-router-dom';
 import {
   fetchProducts, createProduct, updateProduct, uploadProductImage, deleteProductImage, deleteProduct,
   fetchBlogs, createBlog, updateBlog, deleteBlog,
   uploadBlogImage, deleteBlogImage,
   fetchUsers, updateUser, deleteUser,
+  reorderProductImages,
 } from '../services/adminService';
 import { getAllOrders, updateOrderStatus } from '../services/orderService';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  rectSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 // --- Icons (SVG Components) ---
 const Icons = {
@@ -81,46 +99,137 @@ const TabButton = ({ id, label, icon, activeTab, setActiveTab, setSearchQuery })
   </button>
 );
 
-const ImageUploadSection = ({ images, fileMap, setFileMap, onDeleteImage }) => (
-  <div className="col-span-2 space-y-4">
-    <div>
-      <label className="block text-sm font-medium text-gray-700">Gallery</label>
-      <div className="flex flex-wrap gap-4 mt-3">
-        {images?.map((img, i) => (
-          <div key={i} className="relative group w-24 h-24">
-            <img src={img} alt="preview" className="w-full h-full object-cover rounded-lg shadow-sm border border-gray-200" />
-            <button
-              type="button"
-              onClick={() => onDeleteImage(img)}
-              className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 shadow-md hover:bg-black opacity-0 group-hover:opacity-100 transition-all transform scale-90 group-hover:scale-100"
-            >
-              <Icons.X />
-            </button>
-          </div>
-        ))}
-        {(!images || images.length === 0) && (
-          <div className="w-24 h-24 bg-gray-50 rounded-lg border border-dashed border-gray-300 flex items-center justify-center text-xs text-gray-400">
+// Sortable Image Item Component
+const SortableImageItem = ({ img, index, onDeleteImage }) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: img });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+      className="relative group w-24 h-24 cursor-move"
+    >
+      <img
+        src={img}
+        alt="preview"
+        className="w-full h-full object-cover rounded-lg shadow-sm border border-gray-200"
+      />
+      <div className="absolute top-1 left-1 bg-black/60 text-white text-xs px-1.5 py-0.5 rounded">
+        {index + 1}
+      </div>
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          onDeleteImage(img);
+        }}
+        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 shadow-md hover:bg-black opacity-0 group-hover:opacity-100 transition-all transform scale-90 group-hover:scale-100 z-10"
+      >
+        <Icons.X />
+      </button>
+    </div>
+  );
+};
+
+const ImageUploadSection = ({ images, fileMap, setFileMap, onDeleteImage, onReorderImages }) => {
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+
+    if (active.id !== over.id) {
+      const oldIndex = images.indexOf(active.id);
+      const newIndex = images.indexOf(over.id);
+      const newImages = arrayMove(images, oldIndex, newIndex);
+      onReorderImages(newImages);
+    }
+  };
+
+  return (
+    <div className="col-span-2 space-y-4">
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Gallery
+          {images && images.length > 0 && (
+            <span className="text-xs text-gray-500 ml-2">
+              (Drag to reorder - Order: 1, 2, 3...)
+            </span>
+          )}
+        </label>
+        {images && images.length > 0 ? (
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext items={images} strategy={rectSortingStrategy}>
+              <div className="flex flex-wrap gap-4 mt-3">
+                {images.map((img, i) => (
+                  <SortableImageItem
+                    key={img}
+                    img={img}
+                    index={i}
+                    onDeleteImage={onDeleteImage}
+                  />
+                ))}
+              </div>
+            </SortableContext>
+          </DndContext>
+        ) : (
+          <div className="w-24 h-24 bg-gray-50 rounded-lg border border-dashed border-gray-300 flex items-center justify-center text-xs text-gray-400 mt-3">
             No Images
           </div>
         )}
       </div>
-    </div>
-    <div className="border-t border-gray-100 pt-4">
-      <label className="block text-sm font-medium text-gray-700 mb-2">Upload New</label>
-      <label className="flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer hover:bg-gray-50 transition-colors group">
-        <div className="space-y-1 text-center">
-          <div className="text-gray-400 group-hover:text-black transition-colors"><Icons.Upload /></div>
-          <div className="flex text-sm text-gray-600">
-            <span className="font-medium text-indigo-600 group-hover:text-black">Click to upload</span>
-            <p className="pl-1">or drag and drop</p>
+      <div className="border-t border-gray-100 pt-4">
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Upload New
+        </label>
+        <label className="flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer hover:bg-gray-50 transition-colors group">
+          <div className="space-y-1 text-center">
+            <div className="text-gray-400 group-hover:text-black transition-colors">
+              <Icons.Upload />
+            </div>
+            <div className="flex text-sm text-gray-600">
+              <span className="font-medium text-indigo-600 group-hover:text-black">
+                Click to upload
+              </span>
+              <p className="pl-1">or drag and drop</p>
+            </div>
+            <p className="text-xs text-gray-500">
+              {fileMap ? fileMap.name : 'PNG, JPG up to 5MB'}
+            </p>
           </div>
-          <p className="text-xs text-gray-500">{fileMap ? fileMap.name : "PNG, JPG up to 5MB"}</p>
-        </div>
-        <input type="file" className="sr-only" onChange={(e) => setFileMap(e.target.files[0])} />
-      </label>
+          <input
+            type="file"
+            className="sr-only"
+            onChange={(e) => setFileMap(e.target.files[0])}
+          />
+        </label>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 // --- MAIN COMPONENT ---
 
@@ -142,6 +251,10 @@ export default function Admin() {
   const [formData, setFormData] = useState({});
   const [fileMap, setFileMap] = useState(null); 
   const [productFormTab, setProductFormTab] = useState('basic'); 
+
+  // Order Details Modal State
+  const [isOrderDetailsOpen, setIsOrderDetailsOpen] = useState(false);
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
 
   // Confirm Modal State - MOVED TO TOP to avoid Reference Errors
   const [confirm, setConfirm] = useState({ open: false, title: '', description: '', onConfirm: () => {}, onCancel: () => {} });
@@ -172,6 +285,15 @@ export default function Admin() {
 
   // --- Handlers ---
   const handleOpenModal = (item = null) => {
+    // For orders, use the order details modal instead
+    if (activeTab === 'orders') {
+      if (item) {
+        setSelectedOrderId(item._id);
+        setIsOrderDetailsOpen(true);
+      }
+      return;
+    }
+
     setFileMap(null);
     setProductFormTab('basic'); 
     if (item) {
@@ -211,6 +333,25 @@ export default function Admin() {
       },
       onCancel: () => setConfirm(c => ({ ...c, open: false }))
     });
+  };
+
+  const handleReorderImages = async (newImages) => {
+    // Update local state immediately for smooth UX
+    setFormData(prev => ({ ...prev, images: newImages }));
+    
+    // If editing an existing product, save to backend
+    if (modalMode === 'edit' && formData._id) {
+      try {
+        if (activeTab === 'products') {
+          await reorderProductImages(formData._id, newImages, token);
+          toast.success('Image order saved');
+        }
+        // Note: You can add similar logic for blogs if needed
+      } catch (e) {
+        toast.error('Failed to save image order');
+        console.error(e);
+      }
+    }
   };
 
   const handleUserRoleToggle = async (user) => {
@@ -533,7 +674,7 @@ export default function Admin() {
                           <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex items-center justify-end gap-2">
                             <button
                               onClick={() => handleOpenModal(item)}
-                              className="text-indigo-600 hover:text-black bg-indigo-50 hover:bg-black p-2 rounded-lg transition-colors"
+                              className="text-indigo-600 hover:text-indigo-600 bg-indigo-50 hover:bg-indigo-100 p-2 rounded-lg transition-colors"
                               title="View"
                             >
                               View
@@ -684,6 +825,7 @@ export default function Admin() {
                           fileMap={fileMap} 
                           setFileMap={setFileMap} 
                           onDeleteImage={handleDeleteImage} 
+                          onReorderImages={handleReorderImages}
                         />
                       )}
                     </div>
@@ -708,6 +850,7 @@ export default function Admin() {
                           fileMap={fileMap} 
                           setFileMap={setFileMap} 
                           onDeleteImage={handleDeleteImage} 
+                          onReorderImages={handleReorderImages}
                         />
                       </div>
 
@@ -811,6 +954,33 @@ export default function Admin() {
           </div>
         </div>
       )}
+
+      {/* --- ORDER DETAILS MODAL --- */}
+      {isOrderDetailsOpen && selectedOrderId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6" role="dialog" aria-modal="true">
+          {/* Backdrop */}
+          <div 
+            className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity" 
+            onClick={() => {
+              setIsOrderDetailsOpen(false);
+              setSelectedOrderId(null);
+            }}
+          ></div>
+
+          {/* Modal Panel */}
+          <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-6xl max-h-[90vh] overflow-hidden flex flex-col transform transition-all animate-fade-in-up">
+            <AdminOrderDetails 
+              orderId={selectedOrderId} 
+              onClose={() => {
+                setIsOrderDetailsOpen(false);
+                setSelectedOrderId(null);
+                fetchData(); // Refresh orders list after closing
+              }} 
+            />
+          </div>
+        </div>
+      )}
+
       <ConfirmModal open={confirm.open} title={confirm.title} description={confirm.description} onConfirm={confirm.onConfirm} onCancel={confirm.onCancel} />
     </div>
   );
