@@ -22,6 +22,25 @@ const orderSchema = new mongoose.Schema({
   shippingPrice: { type: Number },
   totalPrice: { type: Number },
   status: { type: String, enum: ['pending','paid','shipped','delivered','cancelled'], default: 'pending' },
+  // Order stages for tracking
+  orderStage: { 
+    type: String, 
+    enum: ['ordered', 'being_made', 'shipped', 'delivered', 'cancelled'], 
+    default: 'ordered' 
+  },
+  stageHistory: [{
+    stage: { type: String },
+    timestamp: { type: Date, default: Date.now },
+    updatedBy: { type: String }
+  }],
+  // Delhivery tracking fields
+  delhivery: {
+    waybill: { type: String }, // Delhivery tracking/waybill number
+    orderId: { type: String }, // Your reference order ID
+    shipmentStatus: { type: String }, // Latest status from Delhivery
+    scans: [{ type: Object }], // Tracking scan history
+    lastUpdated: { type: Date }, // Last time tracking was updated
+  },
   createdAt: { type: Date, default: Date.now },
 });
 
