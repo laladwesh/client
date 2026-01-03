@@ -32,6 +32,7 @@ const ProductDisplay = ({isStore = false}) => {
   const [view, setView] = useState('grid'); // 'grid' or 'list'
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState('All'); // 'All', 'Roz Roz', 'Kuch Kuch'
+  const [hoveredProduct, setHoveredProduct] = useState(null); // Track hovered product for image change
 
   // products loaded from backend
   const [products, setProducts] = useState([]);
@@ -186,12 +187,33 @@ const ProductDisplay = ({isStore = false}) => {
                   style={{ flexBasis: `${100 / itemsPerView}%` }}
                 >
                   {/* 1. Image */}
-                  <div className="flex-grow w-full bg-gray-100 overflow-hidden flex items-center justify-center">
+                  <div 
+                    className="flex-grow w-full bg-gray-100 overflow-hidden flex items-center justify-center cursor-pointer relative"
+                    onMouseEnter={() => setHoveredProduct(product._id || product.id)}
+                    onMouseLeave={() => setHoveredProduct(null)}
+                  >
+                    {/* First Image */}
                     <img
                       src={(product.images && product.images[0]) || product.imageUrl || ''}
                       alt={product.product || product.name}
-                      className="w-full h-full object-cover"
+                      className={`w-full h-full object-cover transition-opacity duration-100 ${
+                        hoveredProduct === (product._id || product.id) && product.images && product.images[1] 
+                          ? 'opacity-0' 
+                          : 'opacity-100'
+                      }`}
                     />
+                    {/* Second Image (Preloaded, shown on hover) */}
+                    {product.images && product.images[1] && (
+                      <img
+                        src={product.images[1]}
+                        alt={product.product || product.name}
+                        className={`w-full h-full object-cover transition-opacity duration-100 absolute inset-0 ${
+                          hoveredProduct === (product._id || product.id) 
+                            ? 'opacity-100' 
+                            : 'opacity-0'
+                        }`}
+                      />
+                    )}
                   </div>
                   <div className="product-info mt-2 pb-6">
                     <h3 className="text-base font-medium mb-3 ml-1 px-0 font-bdogrotesk text-left">{product.product || product.name}</h3>
@@ -226,8 +248,33 @@ const ProductDisplay = ({isStore = false}) => {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-2">
             {filteredProducts.map((product) => (
               <div key={product._id || product.id} className="flex flex-col bg-white">
-                <div className="w-full bg-gray-100 overflow-hidden">
-                  <img src={(product.images && product.images[0]) || product.imageUrl || ''} alt={product.product || product.name} className="w-full h-56 md:h-72 lg:h-[75vh] object-cover" />
+                <div 
+                  className="w-full bg-gray-100 overflow-hidden cursor-pointer relative"
+                  onMouseEnter={() => setHoveredProduct(product._id || product.id)}
+                  onMouseLeave={() => setHoveredProduct(null)}
+                >
+                  {/* First Image */}
+                  <img 
+                    src={(product.images && product.images[0]) || product.imageUrl || ''}
+                    alt={product.product || product.name} 
+                    className={`w-full h-56 md:h-72 lg:h-[75vh] object-cover transition-opacity duration-300 ${
+                      hoveredProduct === (product._id || product.id) && product.images && product.images[1] 
+                        ? 'opacity-0' 
+                        : 'opacity-100'
+                    }`}
+                  />
+                  {/* Second Image (Preloaded, shown on hover) */}
+                  {product.images && product.images[1] && (
+                    <img 
+                      src={product.images[1]}
+                      alt={product.product || product.name} 
+                      className={`w-full h-56 md:h-72 lg:h-[75vh] object-cover transition-opacity duration-300 absolute inset-0 ${
+                        hoveredProduct === (product._id || product.id) 
+                          ? 'opacity-100' 
+                          : 'opacity-0'
+                      }`}
+                    />
+                  )}
                 </div>
                 <div className="pb-2 pt-2 px-0 space-y-3">
                   <h3 className="text-base font-medium ml-1 px-0 font-bdogrotesk text-left">{product.product || product.name}</h3>
