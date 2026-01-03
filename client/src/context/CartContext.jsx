@@ -78,7 +78,8 @@ export const CartProvider = ({ children }) => {
         stock: getStockForSize(product, size)
       }];
     });
-    toast.success('Added to cart');
+    const productName = product.product || product.title || 'Product';
+    toast.success(`Added to cart: ${productName}`);
   };
 
   const removeFromCart = (productId, size) => {
